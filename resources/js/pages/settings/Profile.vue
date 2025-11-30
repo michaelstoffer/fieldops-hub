@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
+import { edit } from '@/routes/profile/index';
+import { send } from '@/routes/verification/index';
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 
 import DeleteUser from '@/components/DeleteUser.vue';

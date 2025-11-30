@@ -1,5 +1,6 @@
 <?php
 
+//use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,14 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+//Route::middleware(['auth', 'verified'])
+//    ->prefix('owner')
+//    ->name('owner.')
+//    ->group(function () {
+//        Route::get('/dashboard', [DashboardController::class, 'index'])
+//            ->name('dashboard');
+//    });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

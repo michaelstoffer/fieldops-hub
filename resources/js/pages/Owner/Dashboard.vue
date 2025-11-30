@@ -1,5 +1,5 @@
 <script setup>
-import OwnerLayout from '@/Layouts/OwnerLayout.vue';
+import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, usePage } from '@inertiajs/vue3';
 
 const page = usePage();

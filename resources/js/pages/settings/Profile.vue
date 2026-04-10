@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
+import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController.ts';
+import { edit } from '@/routes/profile/index.ts';
+import { send } from '@/routes/verification/index.ts';
 import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 
 import DeleteUser from '@/components/DeleteUser.vue';
@@ -83,7 +83,7 @@ const user = page.props.auth.user;
                             <Link
                                 :href="send()"
                                 as="button"
-                                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
+                                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current!"
                             >
                                 Click here to resend the verification email.
                             </Link>

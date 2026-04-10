@@ -2,6 +2,16 @@
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
+interface Property {
+    id: number;
+    name: string | null;
+    address_line1: string;
+    address_line2: string | null;
+    city: string;
+    state: string;
+    postal_code: string;
+}
+
 interface Customer {
     id: number;
     first_name: string;
@@ -11,6 +21,7 @@ interface Customer {
     mobile: string | null;
     notes: string | null;
     created_at: string;
+    properties: Property[];
 }
 
 const props = defineProps<{ customer: Customer }>();
@@ -18,6 +29,12 @@ const props = defineProps<{ customer: Customer }>();
 function archiveCustomer() {
     if (confirm(`Archive ${props.customer.first_name} ${props.customer.last_name}? They can be restored later.`)) {
         router.delete(`/owner/customers/${props.customer.id}`);
+    }
+}
+
+function removeProperty(property: Property) {
+    if (confirm('Remove this property? It can be restored later.')) {
+        router.delete(`/owner/properties/${property.id}`);
     }
 }
 </script>
@@ -109,10 +126,33 @@ function archiveCustomer() {
                 <div class="rounded-xl bg-white shadow">
                     <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
                         <h3 class="text-sm font-semibold text-slate-700">Properties</h3>
+                        <Link
+                            :href="`/owner/customers/${customer.id}/properties/create`"
+                            class="text-xs font-medium text-slate-500 hover:text-slate-800"
+                        >
+                            + Add Property
+                        </Link>
                     </div>
-                    <div class="px-5 py-8 text-center text-sm text-slate-400">
+                    <div v-if="customer.properties.length === 0" class="px-5 py-8 text-center text-sm text-slate-400">
                         No properties yet.
                     </div>
+                    <ul v-else class="divide-y divide-slate-100">
+                        <li
+                            v-for="property in customer.properties"
+                            :key="property.id"
+                            class="flex items-start justify-between px-5 py-3"
+                        >
+                            <div class="text-sm">
+                                <p v-if="property.name" class="font-medium text-slate-700">{{ property.name }}</p>
+                                <p class="text-slate-600">{{ property.address_line1 }}<span v-if="property.address_line2">, {{ property.address_line2 }}</span></p>
+                                <p class="text-slate-500">{{ property.city }}, {{ property.state }} {{ property.postal_code }}</p>
+                            </div>
+                            <div class="ml-4 flex shrink-0 gap-3 text-xs">
+                                <Link :href="`/owner/properties/${property.id}/edit`" class="text-slate-500 hover:text-slate-800">Edit</Link>
+                                <button type="button" class="text-red-500 hover:text-red-700" @click="removeProperty(property)">Remove</button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
                 <div class="rounded-xl bg-white shadow">

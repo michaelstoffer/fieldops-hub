@@ -99,4 +99,16 @@ class Job extends Model
     {
         return $this->status === self::STATUS_CANCELLED;
     }
+
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_SCHEDULED   => 'Scheduled',
+            self::STATUS_EN_ROUTE    => 'En Route',
+            self::STATUS_IN_PROGRESS => 'In Progress',
+            self::STATUS_COMPLETED   => 'Completed',
+            self::STATUS_CANCELLED   => 'Cancelled',
+            self::STATUS_ON_HOLD     => 'On Hold',
+        ];
+    }
 }

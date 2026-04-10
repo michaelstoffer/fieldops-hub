@@ -25,10 +25,10 @@ const props = defineProps({
                     Customers
                 </Link>
                 <Link href="/owner/jobs" class="block px-3 py-2 rounded-md hover:bg-slate-800">
-                    Jobs / Work Orders
+                    Jobs
                 </Link>
-                <Link href="/owner/schedule" class="block px-3 py-2 rounded-md hover:bg-slate-800">
-                    Schedule
+                <Link href="/owner/calendar" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Calendar
                 </Link>
             </nav>
         </aside>

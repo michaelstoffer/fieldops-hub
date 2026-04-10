@@ -41,6 +41,8 @@ class CustomerController extends Controller
     {
         abort_unless($customer->organization_id === $request->user()->organization_id, 403);
 
+        $customer->load('properties');
+
         return inertia('Owner/Customers/Show', [
             'customer' => $customer,
         ]);

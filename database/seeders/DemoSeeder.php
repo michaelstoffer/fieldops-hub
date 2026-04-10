@@ -24,6 +24,7 @@ class DemoSeeder extends Seeder
         );
 
         $users = [
+            ['name' => 'Admin User', 'email' => 'admin@demo.test', 'role' => 'admin'],
             ['name' => 'Alice Owner', 'email' => 'owner@demo.test', 'role' => 'owner'],
             ['name' => 'Bob Dispatcher', 'email' => 'dispatcher@demo.test', 'role' => 'dispatcher'],
             ['name' => 'Carol Tech', 'email' => 'tech@demo.test', 'role' => 'technician'],

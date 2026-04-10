@@ -38,6 +38,8 @@ Route::middleware(['auth', 'verified'])
 
         Route::resource('jobs', JobController::class);
         Route::patch('/jobs/{job}/status', [JobController::class, 'updateStatus'])->name('jobs.status');
+        Route::patch('/jobs/{job}/reschedule', [JobController::class, 'reschedule'])->name('jobs.reschedule');
+        Route::patch('/jobs/{job}/reassign', [JobController::class, 'reassign'])->name('jobs.reassign');
 
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
         Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');

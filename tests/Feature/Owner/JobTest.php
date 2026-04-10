@@ -195,6 +195,92 @@ test('user cannot update status on another org\'s job', function () {
         ->assertForbidden();
 });
 
+// ── Reschedule ────────────────────────────────────────────────────────────────
+
+test('user can reschedule a job', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($customer)->create(['scheduled_at' => '2026-05-01 09:00:00']);
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reschedule", ['scheduled_at' => '2026-06-15T10:30'])
+        ->assertRedirect();
+
+    expect($job->fresh()->scheduled_at->format('Y-m-d H:i'))->toBe('2026-06-15 10:30');
+});
+
+test('reschedule requires a valid date', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($customer)->create();
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reschedule", ['scheduled_at' => 'not-a-date'])
+        ->assertSessionHasErrors(['scheduled_at']);
+});
+
+test('reschedule requires scheduled_at', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($customer)->create();
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reschedule", [])
+        ->assertSessionHasErrors(['scheduled_at']);
+});
+
+test('user cannot reschedule a job from another organization', function () {
+    [$user] = userOrgCustomer();
+    [, , $otherCustomer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($otherCustomer)->create();
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reschedule", ['scheduled_at' => '2026-06-15T10:30'])
+        ->assertForbidden();
+});
+
+// ── Reassign ──────────────────────────────────────────────────────────────────
+
+test('user can reassign a job to a technician', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $technician = User::factory()->create(['organization_id' => $org->id]);
+    $job = Job::factory()->forCustomer($customer)->create(['assigned_to' => null]);
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reassign", ['assigned_to' => $technician->id])
+        ->assertRedirect();
+
+    expect($job->fresh()->assigned_to)->toBe($technician->id);
+});
+
+test('user can unassign a technician by passing null', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $technician = User::factory()->create(['organization_id' => $org->id]);
+    $job = Job::factory()->forCustomer($customer)->create(['assigned_to' => $technician->id]);
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reassign", ['assigned_to' => null])
+        ->assertRedirect();
+
+    expect($job->fresh()->assigned_to)->toBeNull();
+});
+
+test('reassign rejects a non-existent user id', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($customer)->create();
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reassign", ['assigned_to' => 999999])
+        ->assertSessionHasErrors(['assigned_to']);
+});
+
+test('user cannot reassign a job from another organization', function () {
+    [$user] = userOrgCustomer();
+    [, , $otherCustomer] = userOrgCustomer();
+    $job = Job::factory()->forCustomer($otherCustomer)->create();
+
+    $this->actingAs($user)
+        ->patch("/owner/jobs/{$job->id}/reassign", ['assigned_to' => null])
+        ->assertForbidden();
+});
+
 // ── Destroy ───────────────────────────────────────────────────────────────────
 
 test('user can soft-delete their job', function () {

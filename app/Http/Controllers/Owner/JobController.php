@@ -152,4 +152,30 @@ class JobController extends Controller
 
         return redirect()->back()->with('success', 'Status updated.');
     }
+
+    public function reschedule(Request $request, Job $job): RedirectResponse
+    {
+        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+
+        $request->validate([
+            'scheduled_at' => ['required', 'date'],
+        ]);
+
+        $job->update(['scheduled_at' => $request->scheduled_at]);
+
+        return redirect()->back()->with('success', 'Job rescheduled.');
+    }
+
+    public function reassign(Request $request, Job $job): RedirectResponse
+    {
+        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+
+        $request->validate([
+            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
+        ]);
+
+        $job->update(['assigned_to' => $request->assigned_to]);
+
+        return redirect()->back()->with('success', 'Technician updated.');
+    }
 }

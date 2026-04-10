@@ -3,7 +3,7 @@
 use App\Models\User;
 
 test('registration requires name', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => '',
         'email' => 'test@example.com',
         'password' => 'password',
@@ -12,7 +12,7 @@ test('registration requires name', function () {
 });
 
 test('registration requires email', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'Test User',
         'email' => '',
         'password' => 'password',
@@ -21,7 +21,7 @@ test('registration requires email', function () {
 });
 
 test('registration rejects invalid email format', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'Test User',
         'email' => 'not-an-email',
         'password' => 'password',
@@ -32,7 +32,7 @@ test('registration rejects invalid email format', function () {
 test('registration rejects duplicate email', function () {
     User::factory()->create(['email' => 'taken@example.com']);
 
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'Test User',
         'email' => 'taken@example.com',
         'password' => 'password',
@@ -41,7 +41,7 @@ test('registration rejects duplicate email', function () {
 });
 
 test('registration requires password', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => '',
@@ -50,7 +50,7 @@ test('registration requires password', function () {
 });
 
 test('registration requires password confirmation to match', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => 'password1',
@@ -59,7 +59,7 @@ test('registration requires password confirmation to match', function () {
 });
 
 test('registration rejects name exceeding 255 characters', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => str_repeat('a', 256),
         'email' => 'test@example.com',
         'password' => 'password',
@@ -68,7 +68,7 @@ test('registration rejects name exceeding 255 characters', function () {
 });
 
 test('registration creates user with correct attributes', function () {
-    $this->post(route('register.store'), [
+    $this->post('/register', [
         'name' => 'New User',
         'email' => 'newuser@example.com',
         'password' => 'password',

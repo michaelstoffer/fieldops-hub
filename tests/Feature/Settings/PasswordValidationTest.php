@@ -6,8 +6,8 @@ test('password update requires current_password field', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->from(route('user-password.edit'))
-        ->put(route('user-password.update'), [
+        ->from('/settings/password')
+        ->put('/settings/password', [
             'current_password' => '',
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',
@@ -19,8 +19,8 @@ test('password update requires new password field', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->from(route('user-password.edit'))
-        ->put(route('user-password.update'), [
+        ->from('/settings/password')
+        ->put('/settings/password', [
             'current_password' => 'password',
             'password' => '',
             'password_confirmation' => '',
@@ -32,8 +32,8 @@ test('password update requires password confirmation to match', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->from(route('user-password.edit'))
-        ->put(route('user-password.update'), [
+        ->from('/settings/password')
+        ->put('/settings/password', [
             'current_password' => 'password',
             'password' => 'newpassword1',
             'password_confirmation' => 'newpassword2',
@@ -45,8 +45,8 @@ test('password update requires current password to be correct', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->from(route('user-password.edit'))
-        ->put(route('user-password.update'), [
+        ->from('/settings/password')
+        ->put('/settings/password', [
             'current_password' => 'wrong-password',
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',
@@ -58,7 +58,7 @@ test('password update requires current password to be correct', function () {
 });
 
 test('unauthenticated password update is rejected', function () {
-    $this->put(route('user-password.update'), [
+    $this->put('/settings/password', [
         'current_password' => 'password',
         'password' => 'newpassword',
         'password_confirmation' => 'newpassword',
@@ -70,8 +70,8 @@ test('password update is rate limited', function () {
 
     for ($i = 0; $i < 6; $i++) {
         $this->actingAs($user)
-            ->from(route('user-password.edit'))
-            ->put(route('user-password.update'), [
+            ->from('/settings/password')
+            ->put('/settings/password', [
                 'current_password' => 'password',
                 'password' => 'newpassword',
                 'password_confirmation' => 'newpassword',
@@ -79,8 +79,8 @@ test('password update is rate limited', function () {
     }
 
     $response = $this->actingAs($user)
-        ->from(route('user-password.edit'))
-        ->put(route('user-password.update'), [
+        ->from('/settings/password')
+        ->put('/settings/password', [
             'current_password' => 'password',
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',

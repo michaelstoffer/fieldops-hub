@@ -4,6 +4,7 @@ import InputError from '@/components/InputError.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import TextInput from '@/components/TextInput.vue';
+import { confirm } from '@/routes/password';
 import { Head, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -11,7 +12,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.confirm'), {
+    form.post(confirm.url(), {
         onFinish: () => form.reset(),
     });
 };

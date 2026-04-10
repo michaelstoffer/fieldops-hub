@@ -32,12 +32,9 @@ test('two factor challenge can be rendered', function () {
         'two_factor_confirmed_at' => now(),
     ])->save();
 
-    $this->post(route('login'), [
-        'email' => $user->email,
-        'password' => 'password',
-    ]);
-
-    $this->get(route('two-factor.login'))
+    // Breeze's login controller doesn't set Fortify's 2FA session; set it manually
+    $this->withSession(['login.id' => $user->id])
+        ->get(route('two-factor.login'))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('auth/TwoFactorChallenge')

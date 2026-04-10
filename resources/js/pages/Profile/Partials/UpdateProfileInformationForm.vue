@@ -3,6 +3,8 @@ import InputError from '@/components/InputError.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import TextInput from '@/components/TextInput.vue';
+import { update, destroy } from '@/routes/profile';
+import { send } from '@/routes/verification';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps({
@@ -35,7 +37,7 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
+            @submit.prevent="form.patch(update.url())"
             class="mt-6 space-y-6"
         >
             <div>
@@ -73,7 +75,7 @@ const form = useForm({
                 <p class="mt-2 text-sm text-gray-800">
                     Your email address is unverified.
                     <Link
-                        :href="route('verification.send')"
+                        :href="send()"
                         method="post"
                         as="button"
                         class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

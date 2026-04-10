@@ -4,6 +4,7 @@ import InputError from '@/components/InputError.vue';
 import InputLabel from '@/components/InputLabel.vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import TextInput from '@/components/TextInput.vue';
+import { email } from '@/routes/password';
 import { Head, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -17,7 +18,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('password.email'));
+    form.post(email.url());
 };
 </script>
 

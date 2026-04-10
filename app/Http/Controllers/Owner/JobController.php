@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Owner;
 
+use App\Events\JobCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreJobRequest;
 use App\Http\Requests\Owner\UpdateJobRequest;
@@ -85,6 +86,8 @@ class JobController extends Controller
             'organization_id' => $request->user()->organization_id,
             'status'          => Job::STATUS_SCHEDULED,
         ]);
+
+        JobCreated::dispatch($job);
 
         return redirect()->route('owner.jobs.show', $job)
             ->with('success', 'Job created successfully.');

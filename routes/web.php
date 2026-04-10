@@ -1,6 +1,7 @@
 <?php
 
-//use App\Http\Controllers\Owner\DashboardController;
+use App\Http\Controllers\Owner\CustomerController;
+use App\Http\Controllers\Owner\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,16 +15,16 @@ Route::get('/', function () {
     ]);
 });
 
-//Route::middleware(['auth', 'verified'])
-//    ->prefix('owner')
-//    ->name('owner.')
-//    ->group(function () {
-//        Route::get('/dashboard', [DashboardController::class, 'index'])
-//            ->name('dashboard');
-//    });
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('customers', CustomerController::class);
+    });
 
 require __DIR__.'/auth.php';

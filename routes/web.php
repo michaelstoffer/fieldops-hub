@@ -5,6 +5,8 @@ use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\Owner\JobController;
 use App\Http\Controllers\Owner\PropertyController;
+use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
+use App\Http\Controllers\Technician\JobController as TechnicianJobController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,6 +45,15 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
         Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
+    });
+
+Route::middleware(['auth', 'role:technician'])
+    ->prefix('technician')
+    ->name('technician.')
+    ->group(function () {
+        Route::get('/dashboard', [TechnicianDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/jobs', [TechnicianJobController::class, 'index'])->name('jobs.index');
+        Route::get('/jobs/{job}', [TechnicianJobController::class, 'show'])->name('jobs.show');
     });
 
 require __DIR__.'/auth.php';

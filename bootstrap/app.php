@@ -16,22 +16,35 @@ return Application::configure(basePath: dirname(__DIR__))
         then: function () {
             Route::middleware('web')
                 ->group(base_path('routes/settings.php'));
+            Route::middleware('web')
+                ->prefix('api')
+                ->name('api.')
+                ->group(base_path('routes/api.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-            \App\Http\Middleware\HandleInertiaRequests::class,
-            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
-        ]);
-
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
-
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+
+        $middleware->alias([
+            'role'       => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (
+            \Spatie\Permission\Exceptions\UnauthorizedException $e,
+            \Illuminate\Http\Request $request
+        ) {
+            if ($request->header('X-Inertia')) {
+                return redirect()->route('dashboard')
+                    ->with('error', 'You do not have access to that area.');
+            }
+            return response()->json(['message' => 'Forbidden.'], 403);
+        });
     })->create();

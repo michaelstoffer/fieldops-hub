@@ -33,6 +33,7 @@ class Job extends Model
         'customer_id',
         'property_id',
         'job_type_id',
+        'estimate_id',
         'assigned_to',
         'title',
         'description',
@@ -76,6 +77,11 @@ class Job extends Model
     public function jobType(): BelongsTo
     {
         return $this->belongsTo(JobType::class);
+    }
+
+    public function estimate(): BelongsTo
+    {
+        return $this->belongsTo(Estimate::class);
     }
 
     public function assignedTechnician(): BelongsTo

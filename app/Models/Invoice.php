@@ -91,4 +91,37 @@ class Invoice extends Model
     {
         return $this->status === self::STATUS_PAID;
     }
+
+    public function recalculate(): void
+    {
+        $subtotal = $this->lineItems()->selectRaw('SUM(unit_price * quantity) as total')->value('total') ?? 0;
+
+        $taxableSubtotal = $this->lineItems()
+            ->where('is_taxable', true)
+            ->selectRaw('SUM(unit_price * quantity) as total')
+            ->value('total') ?? 0;
+
+        $taxAmount   = round($taxableSubtotal * (float) $this->tax_rate, 2);
+        $total       = round($subtotal + $taxAmount - (float) $this->discount_amount, 2);
+        $balanceDue  = round($total - (float) $this->amount_paid, 2);
+
+        $this->update([
+            'subtotal'    => $subtotal,
+            'tax_amount'  => $taxAmount,
+            'total'       => $total,
+            'balance_due' => $balanceDue,
+        ]);
+    }
+
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_DRAFT   => 'Draft',
+            self::STATUS_SENT    => 'Sent',
+            self::STATUS_PAID    => 'Paid',
+            self::STATUS_PARTIAL => 'Partial',
+            self::STATUS_OVERDUE => 'Overdue',
+            self::STATUS_VOID    => 'Void',
+        ];
+    }
 }

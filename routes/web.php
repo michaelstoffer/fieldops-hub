@@ -3,8 +3,13 @@
 use App\Http\Controllers\Owner\CalendarController;
 use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\DashboardController;
+use App\Http\Controllers\Owner\EstimateController;
+use App\Http\Controllers\Owner\InvoiceController;
 use App\Http\Controllers\Owner\JobController;
 use App\Http\Controllers\Owner\PropertyController;
+use App\Http\Controllers\Owner\StripeController;
+use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\PublicEstimateController;
 use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
 use Illuminate\Foundation\Application;
@@ -45,7 +50,22 @@ Route::middleware(['auth', 'verified'])
 
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
         Route::get('/calendar/events', [CalendarController::class, 'events'])->name('calendar.events');
+
+        Route::resource('estimates', EstimateController::class);
+        Route::post('/estimates/{estimate}/send', [EstimateController::class, 'send'])->name('estimates.send');
+        Route::post('/estimates/{estimate}/convert', [EstimateController::class, 'convertToJob'])->name('estimates.convert');
+
+        Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'destroy']);
+        Route::post('/jobs/{job}/invoice', [InvoiceController::class, 'generateFromJob'])->name('jobs.invoice.generate');
+        Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
+        Route::post('/invoices/{invoice}/void', [InvoiceController::class, 'void'])->name('invoices.void');
+        Route::post('/invoices/{invoice}/checkout', [StripeController::class, 'createCheckoutSession'])->name('invoices.checkout');
     });
+
+// Public estimate page — no auth required
+Route::get('/estimates/{token}', [PublicEstimateController::class, 'show'])->name('estimates.public');
+Route::post('/estimates/{token}/accept', [PublicEstimateController::class, 'accept'])->name('estimates.accept');
+Route::post('/estimates/{token}/decline', [PublicEstimateController::class, 'decline'])->name('estimates.decline');
 
 Route::middleware(['auth', 'role:technician'])
     ->prefix('technician')
@@ -55,5 +75,9 @@ Route::middleware(['auth', 'role:technician'])
         Route::get('/jobs', [TechnicianJobController::class, 'index'])->name('jobs.index');
         Route::get('/jobs/{job}', [TechnicianJobController::class, 'show'])->name('jobs.show');
     });
+
+// Stripe webhook — no auth, CSRF excluded in bootstrap/app.php, signature verified in controller
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])
+    ->name('stripe.webhook');
 
 require __DIR__.'/auth.php';

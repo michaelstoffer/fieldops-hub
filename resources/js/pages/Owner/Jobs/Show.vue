@@ -2,6 +2,14 @@
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
+interface Invoice {
+    id: number;
+    invoice_number: string | null;
+    status: string;
+    total: string;
+    balance_due: string;
+}
+
 interface Job {
     id: number;
     title: string;
@@ -17,6 +25,7 @@ interface Job {
     property: { id: number; address_line1: string; city: string; state: string; postal_code: string } | null;
     job_type: { id: number; name: string; color: string } | null;
     assigned_technician: { id: number; name: string } | null;
+    invoice: Invoice | null;
 }
 
 const props = defineProps<{
@@ -34,6 +43,16 @@ const STATUS_CLASSES: Record<string, string> = {
 };
 
 const statusForm = useForm({ status: props.job.status });
+const generateInvoiceForm = useForm({});
+
+function generateInvoice() {
+    if (!confirm('Generate an invoice from this job\'s line items?')) return;
+    generateInvoiceForm.post(`/owner/jobs/${props.job.id}/invoice`);
+}
+
+function formatCurrency(val: string | number): string {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
+}
 
 function changeStatus(newStatus: string) {
     statusForm.status = newStatus;
@@ -198,6 +217,43 @@ function cancelJob() {
                         <h3 class="text-sm font-semibold text-slate-700">Technician Notes</h3>
                     </div>
                     <p class="px-5 py-4 text-sm text-slate-600 whitespace-pre-wrap">{{ job.technician_notes }}</p>
+                </div>
+
+                <!-- Invoice -->
+                <div class="rounded-xl bg-white shadow">
+                    <div class="border-b border-slate-100 px-5 py-3">
+                        <h3 class="text-sm font-semibold text-slate-700">Invoice</h3>
+                    </div>
+                    <div class="px-5 py-4">
+                        <div v-if="job.invoice" class="flex items-center justify-between">
+                            <div>
+                                <p class="font-mono text-sm font-medium text-slate-700">{{ job.invoice.invoice_number ?? '—' }}</p>
+                                <p class="mt-0.5 text-xs text-slate-500">
+                                    {{ job.invoice.status.charAt(0).toUpperCase() + job.invoice.status.slice(1) }}
+                                    · Total {{ formatCurrency(job.invoice.total) }}
+                                    · Due {{ formatCurrency(job.invoice.balance_due) }}
+                                </p>
+                            </div>
+                            <Link
+                                :href="`/owner/invoices/${job.invoice.id}`"
+                                class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                            >
+                                View Invoice
+                            </Link>
+                        </div>
+                        <div v-else-if="job.status === 'completed'" class="flex items-center justify-between">
+                            <p class="text-sm text-slate-500">No invoice generated yet.</p>
+                            <button
+                                type="button"
+                                class="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                                :disabled="generateInvoiceForm.processing"
+                                @click="generateInvoice"
+                            >
+                                Generate Invoice
+                            </button>
+                        </div>
+                        <p v-else class="text-sm text-slate-400">Available once job is completed.</p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -50,7 +50,7 @@ class JobController extends Controller
     {
         abort_unless($job->organization_id === $request->user()->organization_id, 403);
 
-        $job->load(['customer', 'property', 'jobType', 'assignedTechnician']);
+        $job->load(['customer', 'property', 'jobType', 'assignedTechnician', 'invoice']);
 
         return inertia('Owner/Jobs/Show', [
             'job'      => $job,

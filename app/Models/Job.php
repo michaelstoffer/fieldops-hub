@@ -17,10 +17,15 @@ class Job extends Model
     protected $table = 'field_jobs';
 
     const STATUS_SCHEDULED = 'scheduled';
+
     const STATUS_EN_ROUTE = 'en_route';
+
     const STATUS_IN_PROGRESS = 'in_progress';
+
     const STATUS_COMPLETED = 'completed';
+
     const STATUS_CANCELLED = 'cancelled';
+
     const STATUS_ON_HOLD = 'on_hold';
 
     protected $fillable = [
@@ -34,9 +39,11 @@ class Job extends Model
         'status',
         'scheduled_at',
         'started_at',
+        'arrived_at',
         'completed_at',
         'cancelled_at',
         'technician_notes',
+        'customer_notes',
         'office_notes',
     ];
 
@@ -45,6 +52,7 @@ class Job extends Model
         return [
             'scheduled_at' => 'datetime',
             'started_at' => 'datetime',
+            'arrived_at' => 'datetime',
             'completed_at' => 'datetime',
             'cancelled_at' => 'datetime',
         ];
@@ -80,6 +88,33 @@ class Job extends Model
         return $this->hasMany(JobLineItem::class)->orderBy('sort_order');
     }
 
+    public function checklistItems(): HasMany
+    {
+        return $this->hasMany(JobChecklistItem::class)->orderBy('sort_order');
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Job $job) {
+            if (! $job->job_type_id) {
+                return;
+            }
+
+            $templateItems = JobTypeChecklistItem::where('job_type_id', $job->job_type_id)
+                ->orderBy('sort_order')
+                ->get();
+
+            foreach ($templateItems as $template) {
+                $job->checklistItems()->create([
+                    'job_type_checklist_item_id' => $template->id,
+                    'label' => $template->label,
+                    'sort_order' => $template->sort_order,
+                    'is_required' => $template->is_required,
+                ]);
+            }
+        });
+    }
+
     public function invoice(): HasOne
     {
         return $this->hasOne(Invoice::class);
@@ -103,12 +138,12 @@ class Job extends Model
     public static function statuses(): array
     {
         return [
-            self::STATUS_SCHEDULED   => 'Scheduled',
-            self::STATUS_EN_ROUTE    => 'En Route',
+            self::STATUS_SCHEDULED => 'Scheduled',
+            self::STATUS_EN_ROUTE => 'En Route',
             self::STATUS_IN_PROGRESS => 'In Progress',
-            self::STATUS_COMPLETED   => 'Completed',
-            self::STATUS_CANCELLED   => 'Cancelled',
-            self::STATUS_ON_HOLD     => 'On Hold',
+            self::STATUS_COMPLETED => 'Completed',
+            self::STATUS_CANCELLED => 'Cancelled',
+            self::STATUS_ON_HOLD => 'On Hold',
         ];
     }
 }

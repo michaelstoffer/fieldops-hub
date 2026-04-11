@@ -27,20 +27,12 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             injectRegister: 'auto',
-            // Inertia is server-rendered; don't intercept navigations
-            workbox: {
-                navigateFallback: null,
+            // Use injectManifest so we can write a custom SW with BackgroundSync
+            strategies: 'injectManifest',
+            srcDir: 'resources/js',
+            filename: 'sw.ts',
+            injectManifest: {
                 globPatterns: ['**/*.{js,css,ico,png,svg,woff2}'],
-                runtimeCaching: [
-                    {
-                        urlPattern: /^\/api\/technician\/jobs/,
-                        handler: 'StaleWhileRevalidate',
-                        options: {
-                            cacheName: 'technician-jobs-api',
-                            expiration: { maxAgeSeconds: 60 * 60 * 8 },
-                        },
-                    },
-                ],
             },
             manifest: {
                 name: 'FieldOps Hub – Technician',

@@ -21,7 +21,15 @@ class Attachment extends Model
         'path',
         'mime_type',
         'size',
+        'tag',
     ];
+
+    protected $appends = ['url'];
+
+    public function getUrlAttribute(): string
+    {
+        return \Illuminate\Support\Facades\Storage::disk($this->disk)->url($this->path);
+    }
 
     protected function casts(): array
     {

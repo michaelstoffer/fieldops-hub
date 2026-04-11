@@ -35,4 +35,9 @@ class JobType extends Model
     {
         return $this->hasMany(Job::class);
     }
+
+    public function checklistItems(): HasMany
+    {
+        return $this->hasMany(JobTypeChecklistItem::class)->orderBy('sort_order');
+    }
 }

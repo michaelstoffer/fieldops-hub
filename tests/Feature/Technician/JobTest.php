@@ -266,7 +266,22 @@ test('technician can update job status to en_route', function () {
     expect($job->fresh()->status)->toBe(Job::STATUS_EN_ROUTE);
 });
 
-test('updating status to in_progress sets started_at timestamp', function () {
+test('en_route does not stamp arrived_at', function () {
+    [$technician, , $customer] = techJobSetup();
+
+    $job = Job::factory()->forCustomer($customer)->scheduled()->create([
+        'assigned_to'  => $technician->id,
+        'scheduled_at' => now(),
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/status", ['status' => 'en_route'])
+        ->assertOk();
+
+    expect($job->fresh()->arrived_at)->toBeNull();
+});
+
+test('updating status to in_progress sets both arrived_at and started_at', function () {
     [$technician, , $customer] = techJobSetup();
 
     $job = Job::factory()->forCustomer($customer)->scheduled()->create([
@@ -278,7 +293,31 @@ test('updating status to in_progress sets started_at timestamp', function () {
         ->patchJson("/api/technician/jobs/{$job->id}/status", ['status' => 'in_progress'])
         ->assertOk();
 
-    expect($job->fresh()->started_at)->not->toBeNull();
+    $fresh = $job->fresh();
+    expect($fresh->arrived_at)->not->toBeNull();
+    expect($fresh->started_at)->not->toBeNull();
+});
+
+test('in_progress does not overwrite existing arrived_at or started_at', function () {
+    [$technician, , $customer] = techJobSetup();
+
+    $arrived = now()->subHour()->startOfSecond();
+    $started = now()->subMinutes(45)->startOfSecond();
+    $job = Job::factory()->forCustomer($customer)->create([
+        'assigned_to'  => $technician->id,
+        'scheduled_at' => now(),
+        'status'       => Job::STATUS_ON_HOLD,
+        'arrived_at'   => $arrived,
+        'started_at'   => $started,
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/status", ['status' => 'in_progress'])
+        ->assertOk();
+
+    $fresh = $job->fresh();
+    expect($fresh->arrived_at->equalTo($arrived))->toBeTrue();
+    expect($fresh->started_at->equalTo($started))->toBeTrue();
 });
 
 test('updating status to completed sets completed_at timestamp', function () {
@@ -422,6 +461,72 @@ test('notes update rejects a value exceeding the maximum length', function () {
     $this->actingAs($technician)
         ->patchJson("/api/technician/jobs/{$job->id}/notes", [
             'technician_notes' => str_repeat('x', 5001),
+        ])
+        ->assertUnprocessable();
+});
+
+// ── Customer notes ─────────────────────────────────────────────────────────────
+
+test('technician can save customer-facing notes on a job', function () {
+    [$technician, , $customer] = techJobSetup();
+
+    $job = Job::factory()->forCustomer($customer)->create([
+        'assigned_to'  => $technician->id,
+        'scheduled_at' => now(),
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/customer-notes", [
+            'customer_notes' => 'Replaced filter. No issues found.',
+        ])
+        ->assertOk();
+
+    expect($job->fresh()->customer_notes)->toBe('Replaced filter. No issues found.');
+});
+
+test('technician can clear customer notes by passing null', function () {
+    [$technician, , $customer] = techJobSetup();
+
+    $job = Job::factory()->forCustomer($customer)->create([
+        'assigned_to'    => $technician->id,
+        'scheduled_at'   => now(),
+        'customer_notes' => 'Old customer notes',
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/customer-notes", ['customer_notes' => null])
+        ->assertOk();
+
+    expect($job->fresh()->customer_notes)->toBeNull();
+});
+
+test('technician cannot update customer notes on another technician\'s job', function () {
+    [$technician, $org, $customer] = techJobSetup();
+
+    $other = User::factory()->create(['organization_id' => $org->id]);
+    $job   = Job::factory()->forCustomer($customer)->create([
+        'assigned_to'  => $other->id,
+        'scheduled_at' => now(),
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/customer-notes", [
+            'customer_notes' => 'Sneaky notes',
+        ])
+        ->assertForbidden();
+});
+
+test('customer notes update rejects a value exceeding the maximum length', function () {
+    [$technician, , $customer] = techJobSetup();
+
+    $job = Job::factory()->forCustomer($customer)->create([
+        'assigned_to'  => $technician->id,
+        'scheduled_at' => now(),
+    ]);
+
+    $this->actingAs($technician)
+        ->patchJson("/api/technician/jobs/{$job->id}/customer-notes", [
+            'customer_notes' => str_repeat('x', 5001),
         ])
         ->assertUnprocessable();
 });

@@ -43,6 +43,7 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+          php artisan wayfinder:generate
 
       - name: Build assets
         run: npm run build

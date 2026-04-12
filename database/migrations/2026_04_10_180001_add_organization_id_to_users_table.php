@@ -9,6 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            if (! Schema::hasColumn('users', 'organization_id')) {
+                $table->unsignedBigInteger('organization_id')->nullable()->after('id');
+            }
+
             $table->foreign('organization_id')
                 ->references('id')
                 ->on('organizations')
@@ -20,6 +24,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['organization_id']);
+            if (Schema::hasColumn('users', 'organization_id')) {
+                $table->dropColumn('organization_id');
+            }
         });
     }
 };

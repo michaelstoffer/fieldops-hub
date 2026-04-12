@@ -8,8 +8,11 @@ on:
 permissions:
   contents: read
 
+env:
+  DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+
 jobs:
-  # ── Run tests first ─────────────────────────────────────────────────────────
+  # ── CI: test + build ─────────────────────────────────────────────────────────
   test:
     name: Test Suite
     runs-on: ubuntu-latest
@@ -47,7 +50,8 @@ jobs:
       - name: Run tests
         run: php -d memory_limit=512M vendor/bin/pest --no-coverage
 
-  # ── Deploy via SSH ──────────────────────────────────────────────────────────
+  # ── Deploy via SSH ────────────────────────────────────────────────────────────
+  # Only runs when the DEPLOY_HOST secret is configured.
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -55,9 +59,16 @@ jobs:
     environment: production
 
     steps:
+      - name: Skip if not configured
+        if: env.DEPLOY_HOST == ''
+        run: |
+          echo "DEPLOY_HOST is not set — skipping deployment."
+          exit 0
+
       - uses: actions/checkout@v4
 
       - name: Setup PHP
+        if: env.DEPLOY_HOST != ''
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
@@ -65,18 +76,22 @@ jobs:
           coverage: none
 
       - name: Setup Node
+        if: env.DEPLOY_HOST != ''
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
 
       - name: Install Node deps
+        if: env.DEPLOY_HOST != ''
         run: npm ci
 
-      - name: Install Composer deps (production)
+      - name: Install Composer deps (production, no dev)
+        if: env.DEPLOY_HOST != ''
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
       - name: Build assets
+        if: env.DEPLOY_HOST != ''
         run: npm run build
         env:
           NODE_ENV: production
@@ -88,7 +103,18 @@ jobs:
           VITE_REVERB_PORT: ${{ secrets.VITE_REVERB_PORT }}
           VITE_REVERB_SCHEME: https
 
-      - name: Deploy via SSH (rsync)
+      - name: Sync built assets to server
+        if: env.DEPLOY_HOST != ''
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: public/build
+          target: ${{ secrets.DEPLOY_PATH }}/public
+
+      - name: Deploy via SSH
+        if: env.DEPLOY_HOST != ''
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -97,43 +123,18 @@ jobs:
           script: |
             set -e
             cd ${{ secrets.DEPLOY_PATH }}
-
-            # Pull latest code
             git pull origin production
-
-            # Install PHP dependencies
             composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-
-            # Sync built assets from runner (copied below via scp)
-            # Assets are built on the runner, not on the server, to avoid
-            # needing Node/npm in production.
-
-            # Run migrations (zero-downtime safe: additive only)
             php artisan migrate --force
-
-            # Clear & warm caches
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
             php artisan event:cache
-
-            # Restart queue workers
             php artisan queue:restart
-
-            # Health check — fail deployment if unhealthy
             curl --fail --silent https://${{ secrets.DEPLOY_HOST }}/health || exit 1
 
-      - name: Sync built assets to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          source: 'public/build'
-          target: ${{ secrets.DEPLOY_PATH }}/public
-
       - name: Notify Sentry of release
-        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' }}
+        if: env.DEPLOY_HOST != '' && env.SENTRY_AUTH_TOKEN != ''
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

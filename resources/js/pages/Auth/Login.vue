@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { login } from '@/routes';
-import { request } from '@/routes/password';
 
 defineProps<{
     canResetPassword?: boolean;
@@ -131,7 +130,7 @@ const submit = () => {
                             <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
                             <Link
                                 v-if="canResetPassword"
-                                :href="request()"
+                                href="/forgot-password"
                                 class="text-xs text-blue-600 hover:text-blue-700 font-medium"
                             >
                                 Forgot password?

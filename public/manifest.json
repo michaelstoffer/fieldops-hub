@@ -1,0 +1,25 @@
+{
+    "name": "FieldOps Hub",
+    "short_name": "FieldOps",
+    "description": "Field service management for technicians",
+    "start_url": "/technician/dashboard",
+    "scope": "/technician/",
+    "display": "standalone",
+    "background_color": "#f8fafc",
+    "theme_color": "#0f172a",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ]
+}

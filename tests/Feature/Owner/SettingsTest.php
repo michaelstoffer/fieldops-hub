@@ -3,13 +3,16 @@
 use App\Models\Organization;
 use App\Models\OrganizationSetting;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 function settingsSetup(): array
 {
+    (new RolesAndPermissionsSeeder)->run();
     $org  = Organization::factory()->create();
     $user = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
 
     return [$user, $org];
 }

@@ -25,7 +25,12 @@ class JobController extends Controller
         $orgId = $request->user()->organization_id;
 
         $jobs = Job::where('organization_id', $orgId)
-            ->with(['customer', 'property', 'jobType', 'assignedTechnician'])
+            ->with([
+                'customer:id,first_name,last_name,email',
+                'property:id,address_line1,city,state',
+                'jobType:id,name,color',
+                'assignedTechnician:id,name',
+            ])
             ->when($request->status, fn ($q, $s) => $q->where('status', $s))
             ->when($request->search, function ($q, $search) {
                 $q->where(function ($q) use ($search) {

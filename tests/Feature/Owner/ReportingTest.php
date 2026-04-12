@@ -11,8 +11,10 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 
 function reportingSetup(): array
 {
+    (new RolesAndPermissionsSeeder)->run();
     $org      = Organization::factory()->create();
     $user     = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
     $customer = Customer::factory()->create(['organization_id' => $org->id]);
 
     return [$user, $org, $customer];

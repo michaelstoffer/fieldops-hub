@@ -9,8 +9,10 @@ use App\Http\Controllers\Owner\InvoiceController;
 use App\Http\Controllers\Owner\JobController;
 use App\Http\Controllers\Owner\PropertyController;
 use App\Http\Controllers\Owner\ReportingController;
+use App\Http\Controllers\Owner\SetupController;
 use App\Http\Controllers\Owner\SettingsController;
 use App\Http\Controllers\Owner\StripeController;
+use App\Http\Controllers\HealthController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\PublicEstimateController;
 use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
@@ -32,7 +34,20 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'verified'])
+// Setup wizard — restricted to owner/admin only
+Route::middleware(['auth', 'verified', 'role:owner|admin'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+        Route::get('/setup', [SetupController::class, 'show'])->name('setup');
+        Route::post('/setup/company', [SetupController::class, 'saveCompany'])->name('setup.company');
+        Route::post('/setup/job-types', [SetupController::class, 'addJobType'])->name('setup.job-types.store');
+        Route::delete('/setup/job-types/{jobType}', [SetupController::class, 'removeJobType'])->name('setup.job-types.destroy');
+        Route::post('/setup/technicians', [SetupController::class, 'addTechnician'])->name('setup.technicians.store');
+        Route::post('/setup/complete', [SetupController::class, 'complete'])->name('setup.complete');
+    });
+
+Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
@@ -95,6 +110,10 @@ Route::middleware(['auth', 'role:technician'])
         Route::get('/jobs', [TechnicianJobController::class, 'index'])->name('jobs.index');
         Route::get('/jobs/{job}', [TechnicianJobController::class, 'show'])->name('jobs.show');
     });
+
+// Health checks — no auth, no CSRF, used by uptime monitors and orchestrators
+Route::get('/health', [HealthController::class, 'liveness'])->name('health');
+Route::get('/health/ready', [HealthController::class, 'readiness'])->name('health.ready');
 
 // Stripe webhook — no auth, CSRF excluded in bootstrap/app.php, signature verified in controller
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle'])

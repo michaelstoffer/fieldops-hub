@@ -32,7 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->validateCsrfTokens(except: ['stripe/webhook']);
+        $middleware->validateCsrfTokens(except: ['stripe/webhook', 'health', 'health/ready']);
 
         $middleware->alias([
             'role'       => \Spatie\Permission\Middleware\RoleMiddleware::class,
@@ -40,6 +40,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        \Sentry\Laravel\Integration::handles($exceptions);
+
         $exceptions->render(function (
             \Spatie\Permission\Exceptions\UnauthorizedException $e,
             \Illuminate\Http\Request $request

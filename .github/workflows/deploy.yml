@@ -1,0 +1,143 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - production
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Run tests first ─────────────────────────────────────────────────────────
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install Node deps
+        run: npm ci
+
+      - name: Install Composer deps
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copy .env and generate key
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Run tests
+        run: php -d memory_limit=512M vendor/bin/pest --no-coverage
+
+  # ── Deploy via SSH ──────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: test
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install Node deps
+        run: npm ci
+
+      - name: Install Composer deps (production)
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+      - name: Build assets
+        run: npm run build
+        env:
+          NODE_ENV: production
+          VITE_APP_ENV: production
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_REVERB_APP_KEY: ${{ secrets.VITE_REVERB_APP_KEY }}
+          VITE_REVERB_HOST: ${{ secrets.VITE_REVERB_HOST }}
+          VITE_REVERB_PORT: ${{ secrets.VITE_REVERB_PORT }}
+          VITE_REVERB_SCHEME: https
+
+      - name: Deploy via SSH (rsync)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Pull latest code
+            git pull origin production
+
+            # Install PHP dependencies
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+            # Sync built assets from runner (copied below via scp)
+            # Assets are built on the runner, not on the server, to avoid
+            # needing Node/npm in production.
+
+            # Run migrations (zero-downtime safe: additive only)
+            php artisan migrate --force
+
+            # Clear & warm caches
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan event:cache
+
+            # Restart queue workers
+            php artisan queue:restart
+
+            # Health check — fail deployment if unhealthy
+            curl --fail --silent https://${{ secrets.DEPLOY_HOST }}/health || exit 1
+
+      - name: Sync built assets to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: 'public/build'
+          target: ${{ secrets.DEPLOY_PATH }}/public
+
+      - name: Notify Sentry of release
+        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' }}
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production

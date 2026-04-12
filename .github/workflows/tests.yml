@@ -5,10 +5,12 @@ on:
     branches:
       - develop
       - main
+      - production
   pull_request:
     branches:
       - develop
       - main
+      - production
 
 permissions:
   contents: read

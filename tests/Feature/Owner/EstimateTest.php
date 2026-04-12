@@ -5,11 +5,14 @@ use App\Models\Estimate;
 use App\Models\EstimatePackage;
 use App\Models\Organization;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
 function estimateSetup(): array
 {
+    (new RolesAndPermissionsSeeder)->run();
     $org      = Organization::factory()->create();
     $user     = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
     $customer = Customer::factory()->create(['organization_id' => $org->id]);
 
     return [$user, $org, $customer];

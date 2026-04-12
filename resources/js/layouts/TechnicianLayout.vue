@@ -14,8 +14,8 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
 
 <template>
     <div class="flex min-h-screen flex-col bg-slate-50">
-        <!-- Top bar -->
-        <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm">
+        <!-- Top bar — pt accounts for iOS status bar notch -->
+        <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm pt-[env(safe-area-inset-top,0px)]" style="height: calc(3.5rem + env(safe-area-inset-top, 0px))">
             <span class="text-base font-semibold text-slate-800">{{ title ?? 'FieldOps Hub' }}</span>
             <div class="flex items-center gap-3 text-sm text-slate-500">
                 <!-- Location sharing toggle -->
@@ -48,16 +48,16 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
             </div>
         </header>
 
-        <!-- Page content -->
-        <main class="flex-1 pb-20">
+        <!-- Page content — pb accounts for bottom nav height + iOS home bar -->
+        <main class="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]">
             <slot />
         </main>
 
-        <!-- Bottom navigation -->
-        <nav class="fixed bottom-0 left-0 right-0 z-10 flex border-t border-slate-200 bg-white">
+        <!-- Bottom navigation — extends into iOS home bar safe area -->
+        <nav class="fixed bottom-0 left-0 right-0 z-10 flex border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom,0px)]">
             <Link
                 href="/technician/dashboard"
-                class="flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium text-slate-500 hover:text-slate-900"
+                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-slate-500 hover:text-slate-900 active:text-slate-900"
             >
                 <!-- home icon -->
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -68,7 +68,7 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
             </Link>
             <Link
                 href="/technician/jobs"
-                class="flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium text-slate-500 hover:text-slate-900"
+                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-slate-500 hover:text-slate-900 active:text-slate-900"
             >
                 <!-- briefcase icon -->
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

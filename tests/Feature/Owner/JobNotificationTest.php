@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\MessageDispatcher;
 use App\Services\SmsService;
 use App\Services\TemplateRenderer;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 
@@ -28,9 +29,11 @@ function makeDispatcherWithFakeSms(array &$sent): MessageDispatcher
 
 test('creating a job dispatches the JobCreated event', function () {
     Event::fake();
+    (new RolesAndPermissionsSeeder)->run();
 
     $org      = Organization::factory()->create();
     $user     = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
     $customer = Customer::factory()->create(['organization_id' => $org->id]);
 
     $this->actingAs($user)

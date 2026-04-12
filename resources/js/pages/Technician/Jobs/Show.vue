@@ -552,11 +552,11 @@ const timeline = computed(() => {
                     <li
                         v-for="item in job.checklist_items"
                         :key="item.id"
-                        class="flex items-start gap-3 px-4 py-3"
+                        class="flex items-center gap-3 px-4 py-2"
                     >
                         <button
                             type="button"
-                            class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition"
+                            class="flex h-7 w-7 shrink-0 items-center justify-center rounded border transition"
                             :class="checklistState[item.id]
                                 ? 'border-green-600 bg-green-600 text-white'
                                 : 'border-slate-300 bg-white'"

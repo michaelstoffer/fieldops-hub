@@ -3,13 +3,17 @@
 use App\Models\Customer;
 use App\Models\Organization;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
-// Helper: create a user with an organization
+// Helper: create an owner user with an organization
 function userWithOrg(): User
 {
-    $org = Organization::factory()->create();
+    (new RolesAndPermissionsSeeder)->run();
+    $org  = Organization::factory()->create();
+    $user = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
 
-    return User::factory()->create(['organization_id' => $org->id]);
+    return $user;
 }
 
 // ── Index ────────────────────────────────────────────────────────────────────

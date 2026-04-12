@@ -39,6 +39,25 @@ const props = defineProps({
                 <Link href="/owner/billing" class="block px-3 py-2 rounded-md hover:bg-slate-800">
                     Billing
                 </Link>
+
+                <div class="pt-3 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500">Reports</div>
+                <Link href="/owner/reports/jobs-by-type" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Jobs by Type
+                </Link>
+                <Link href="/owner/reports/job-profitability" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Job Profitability
+                </Link>
+                <Link href="/owner/reports/technician-performance" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Technician Performance
+                </Link>
+
+                <div class="pt-3 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500">Settings</div>
+                <Link href="/owner/settings/company" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Company
+                </Link>
+                <Link href="/owner/settings/integrations" class="block px-3 py-2 rounded-md hover:bg-slate-800">
+                    Integrations
+                </Link>
             </nav>
         </aside>
 

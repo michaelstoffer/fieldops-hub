@@ -4,11 +4,12 @@ use App\Http\Controllers\Owner\BillingController;
 use App\Http\Controllers\Owner\CalendarController;
 use App\Http\Controllers\Owner\DispatchController;
 use App\Http\Controllers\Owner\CustomerController;
-use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\Owner\EstimateController;
 use App\Http\Controllers\Owner\InvoiceController;
 use App\Http\Controllers\Owner\JobController;
 use App\Http\Controllers\Owner\PropertyController;
+use App\Http\Controllers\Owner\ReportingController;
+use App\Http\Controllers\Owner\SettingsController;
 use App\Http\Controllers\Owner\StripeController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\PublicEstimateController;
@@ -35,7 +36,6 @@ Route::middleware(['auth', 'verified'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('customers', CustomerController::class);
 
         // Properties — nested create/store under customer; shallow edit/update/destroy
@@ -62,6 +62,18 @@ Route::middleware(['auth', 'verified'])
         Route::get('/dispatch/technicians/{user}/trail', [DispatchController::class, 'technicianTrail'])->name('dispatch.trail');
 
         Route::get('/billing', [BillingController::class, 'index'])->name('billing');
+
+        // Reporting
+        Route::get('/dashboard', [ReportingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/reports/jobs-by-type', [ReportingController::class, 'jobsByType'])->name('reports.jobs-by-type');
+        Route::get('/reports/job-profitability', [ReportingController::class, 'jobProfitability'])->name('reports.job-profitability');
+        Route::get('/reports/technician-performance', [ReportingController::class, 'technicianPerformance'])->name('reports.technician-performance');
+
+        // Company & integration settings
+        Route::get('/settings/company', [SettingsController::class, 'company'])->name('settings.company');
+        Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company.update');
+        Route::get('/settings/integrations', [SettingsController::class, 'integrations'])->name('settings.integrations');
+        Route::post('/settings/integrations', [SettingsController::class, 'updateIntegrations'])->name('settings.integrations.update');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'destroy']);
         Route::post('/jobs/{job}/invoice', [InvoiceController::class, 'generateFromJob'])->name('jobs.invoice.generate');
         Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');

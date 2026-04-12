@@ -19,7 +19,7 @@ use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardCo
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+$rootRedirect = function () {
     if (auth()->check()) {
         $user = auth()->user();
         if ($user->hasRole('technician')) {
@@ -28,7 +28,12 @@ Route::get('/', function () {
         return redirect()->route('owner.dashboard');
     }
     return redirect()->route('login');
-});
+};
+
+Route::get('/', $rootRedirect);
+
+// Named 'dashboard' route — used by Fortify post-login redirect and internal links
+Route::get('/dashboard', $rootRedirect)->middleware('auth')->name('dashboard');
 
 // Setup wizard — restricted to owner/admin only
 Route::middleware(['auth', 'verified', 'role:owner|admin'])

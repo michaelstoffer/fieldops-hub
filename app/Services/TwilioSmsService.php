@@ -6,23 +6,19 @@ use Twilio\Rest\Client;
 
 class TwilioSmsService implements SmsService
 {
-    private Client $client;
-    private string $from;
-
-    public function __construct()
-    {
-        $this->client = new Client(
-            config('services.twilio.sid'),
-            config('services.twilio.token'),
-        );
-
-        $this->from = config('services.twilio.from');
-    }
-
     public function send(string $to, string $message): void
     {
-        $this->client->messages->create($to, [
-            'from' => $this->from,
+        $sid   = config('services.twilio.sid');
+        $token = config('services.twilio.token');
+        $from  = config('services.twilio.from');
+
+        if (! $sid || ! $token || ! $from) {
+            logger()->warning('Twilio SMS skipped: credentials not configured.', compact('to'));
+            return;
+        }
+
+        (new Client($sid, $token))->messages->create($to, [
+            'from' => $from,
             'body' => $message,
         ]);
     }

@@ -57,6 +57,15 @@ interface Property {
     postal_code: string;
 }
 
+interface JobMessage {
+    id: number;
+    channel: string;
+    event: string;
+    recipient: string;
+    status: string;
+    created_at: string;
+}
+
 interface Job {
     id: number;
     title: string;
@@ -75,6 +84,7 @@ interface Job {
     checklist_items: ChecklistItem[];
     attachments: Attachment[];
     line_items: LineItem[];
+    messages: JobMessage[];
 }
 
 interface LineItem {
@@ -380,6 +390,44 @@ function formatDate(dt: string | null): string {
         hour: 'numeric', minute: '2-digit',
     });
 }
+
+function formatTime(dt: string | null): string {
+    if (!dt) return '—';
+    return new Date(dt).toLocaleString('en-US', {
+        month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit',
+    });
+}
+
+const MSG_EVENT_LABELS: Record<string, string> = {
+    job_scheduled: 'Confirmation sent',
+    job_reminder:  'Reminder sent',
+    en_route:      'En route notification sent',
+    job_completed: 'Completion message sent',
+};
+
+// Combine job timestamps and outbound messages into a single sorted timeline
+const timeline = computed(() => {
+    const entries: { ts: number; label: string; sub?: string; type: 'status' | 'message' }[] = [];
+
+    const add = (dt: string | null, label: string, type: 'status' | 'message' = 'status', sub?: string) => {
+        if (dt) entries.push({ ts: new Date(dt).getTime(), label, sub, type });
+    };
+
+    add(props.job.scheduled_at, 'Scheduled');
+    add(props.job.arrived_at,   'Arrived on site');
+    add(props.job.started_at,   'Work started');
+    add(props.job.completed_at, 'Job completed');
+
+    for (const msg of (props.job.messages ?? [])) {
+        if (msg.status === 'sent') {
+            add(msg.created_at, MSG_EVENT_LABELS[msg.event] ?? msg.event, 'message',
+                msg.channel === 'email' ? 'Email' : 'SMS');
+        }
+    }
+
+    return entries.sort((a, b) => a.ts - b.ts);
+});
 </script>
 
 <template>
@@ -754,6 +802,46 @@ function formatDate(dt: string | null): string {
                     {{ customerNotesForm.customer_notes }}
                 </p>
                 <p v-else class="px-4 py-3 text-sm text-slate-400">No customer notes yet. Tap Edit to add.</p>
+            </div>
+
+            <!-- Activity timeline (#94) -->
+            <div v-if="timeline.length > 0" class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
+                <div class="border-b border-slate-100 px-4 py-3">
+                    <h3 class="text-sm font-semibold text-slate-700">Activity</h3>
+                </div>
+                <ol class="px-4 py-3">
+                    <li
+                        v-for="(entry, i) in timeline"
+                        :key="i"
+                        class="relative flex gap-3 pb-4 last:pb-0"
+                    >
+                        <!-- Connector line -->
+                        <div class="flex flex-col items-center">
+                            <span
+                                class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+                                :class="entry.type === 'message'
+                                    ? 'bg-blue-100 text-blue-600'
+                                    : 'bg-slate-200 text-slate-500'"
+                            >
+                                <!-- envelope for messages, dot for status -->
+                                <svg v-if="entry.type === 'message'" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
+                                    <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
+                                </svg>
+                                <span v-else class="h-1.5 w-1.5 rounded-full bg-slate-500" />
+                            </span>
+                            <div v-if="i < timeline.length - 1" class="mt-1 w-px flex-1 bg-slate-100" />
+                        </div>
+                        <!-- Content -->
+                        <div class="min-w-0 flex-1 pt-0.5">
+                            <p class="text-sm font-medium text-slate-800">{{ entry.label }}</p>
+                            <div class="mt-0.5 flex items-center gap-2">
+                                <span v-if="entry.sub" class="rounded bg-slate-100 px-1 py-0.5 text-xs text-slate-500">{{ entry.sub }}</span>
+                                <span class="text-xs text-slate-400">{{ formatTime(new Date(entry.ts).toISOString()) }}</span>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
             </div>
         </div>
     </TechnicianLayout>

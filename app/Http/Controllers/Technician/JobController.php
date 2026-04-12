@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Technician;
 
+use App\Events\JobStatusChanged;
 use App\Http\Controllers\Controller;
 use App\Models\Attachment;
 use App\Models\Item;
@@ -38,10 +39,10 @@ class JobController extends Controller
     {
         abort_unless($job->assigned_to === $request->user()->id, 403);
 
-        $job->load(['customer', 'property', 'jobType', 'checklistItems', 'attachments', 'lineItems']);
+        $job->load(['customer', 'property', 'jobType', 'checklistItems', 'attachments', 'lineItems', 'messages']);
 
         return inertia('Technician/Jobs/Show', [
-            'job' => $job,
+            'job'      => $job,
             'statuses' => Job::statuses(),
         ]);
     }
@@ -91,7 +92,10 @@ class JobController extends Controller
             default => [],
         };
 
+        $oldStatus = $job->status;
         $job->update(['status' => $request->status, ...$timestamps]);
+
+        JobStatusChanged::dispatch($job->fresh(), $oldStatus, $request->status);
 
         return response()->json(['status' => 'ok', 'data' => $job->fresh()]);
     }

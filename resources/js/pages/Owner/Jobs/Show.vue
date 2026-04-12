@@ -10,6 +10,17 @@ interface Invoice {
     balance_due: string;
 }
 
+interface JobMessage {
+    id: number;
+    channel: string;
+    event: string;
+    recipient: string;
+    body: string;
+    status: string;
+    error: string | null;
+    created_at: string;
+}
+
 interface Job {
     id: number;
     title: string;
@@ -26,12 +37,21 @@ interface Job {
     job_type: { id: number; name: string; color: string } | null;
     assigned_technician: { id: number; name: string } | null;
     invoice: Invoice | null;
+    messages: JobMessage[];
 }
 
 const props = defineProps<{
     job: Job;
     statuses: Record<string, string>;
 }>();
+
+const EVENT_LABELS: Record<string, string> = {
+    job_scheduled: 'Job Scheduled',
+    job_reminder:  'Job Reminder',
+    en_route:      'Technician En Route',
+    job_completed: 'Job Completed',
+};
+
 
 const STATUS_CLASSES: Record<string, string> = {
     scheduled:   'bg-blue-100 text-blue-700',
@@ -217,6 +237,44 @@ function cancelJob() {
                         <h3 class="text-sm font-semibold text-slate-700">Technician Notes</h3>
                     </div>
                     <p class="px-5 py-4 text-sm text-slate-600 whitespace-pre-wrap">{{ job.technician_notes }}</p>
+                </div>
+
+                <!-- Message log (#93) -->
+                <div class="rounded-xl bg-white shadow">
+                    <div class="border-b border-slate-100 px-5 py-3">
+                        <h3 class="text-sm font-semibold text-slate-700">Message Log</h3>
+                    </div>
+                    <div v-if="job.messages && job.messages.length > 0" class="divide-y divide-slate-50">
+                        <div v-for="msg in job.messages" :key="msg.id" class="px-5 py-3">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="shrink-0 rounded-full px-2 py-0.5 text-xs font-medium"
+                                            :class="msg.channel === 'email'
+                                                ? 'bg-blue-100 text-blue-700'
+                                                : 'bg-amber-100 text-amber-700'"
+                                        >
+                                            {{ msg.channel === 'email' ? 'Email' : 'SMS' }}
+                                        </span>
+                                        <span class="text-xs font-medium text-slate-700">
+                                            {{ EVENT_LABELS[msg.event] ?? msg.event }}
+                                        </span>
+                                        <span
+                                            v-if="msg.status === 'failed'"
+                                            class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600"
+                                        >
+                                            Failed
+                                        </span>
+                                    </div>
+                                    <p class="mt-1 truncate text-xs text-slate-500">To: {{ msg.recipient }}</p>
+                                    <p v-if="msg.error" class="mt-0.5 text-xs text-red-500">{{ msg.error }}</p>
+                                </div>
+                                <span class="shrink-0 text-xs text-slate-400">{{ formatDate(msg.created_at) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p v-else class="px-5 py-4 text-sm text-slate-400">No messages sent yet.</p>
                 </div>
 
                 <!-- Invoice -->

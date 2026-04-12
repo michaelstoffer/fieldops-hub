@@ -131,6 +131,11 @@ class Job extends Model
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
+    public function messages(): HasMany
+    {
+        return $this->hasMany(JobMessage::class)->orderByDesc('created_at');
+    }
+
     public function isCompleted(): bool
     {
         return $this->status === self::STATUS_COMPLETED;

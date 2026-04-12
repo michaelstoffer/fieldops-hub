@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Owner\BillingController;
 use App\Http\Controllers\Owner\CalendarController;
+use App\Http\Controllers\Owner\DispatchController;
 use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\DashboardController;
 use App\Http\Controllers\Owner\EstimateController;
@@ -55,6 +56,10 @@ Route::middleware(['auth', 'verified'])
         Route::resource('estimates', EstimateController::class);
         Route::post('/estimates/{estimate}/send', [EstimateController::class, 'send'])->name('estimates.send');
         Route::post('/estimates/{estimate}/convert', [EstimateController::class, 'convertToJob'])->name('estimates.convert');
+
+        Route::get('/dispatch', [DispatchController::class, 'index'])->name('dispatch');
+        Route::get('/dispatch/technicians', [DispatchController::class, 'technicianLocations'])->name('dispatch.technicians');
+        Route::get('/dispatch/technicians/{user}/trail', [DispatchController::class, 'technicianTrail'])->name('dispatch.trail');
 
         Route::get('/billing', [BillingController::class, 'index'])->name('billing');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'destroy']);

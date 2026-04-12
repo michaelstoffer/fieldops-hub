@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Owner\BillingController;
 use App\Http\Controllers\Owner\CalendarController;
 use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\DashboardController;
@@ -55,10 +56,12 @@ Route::middleware(['auth', 'verified'])
         Route::post('/estimates/{estimate}/send', [EstimateController::class, 'send'])->name('estimates.send');
         Route::post('/estimates/{estimate}/convert', [EstimateController::class, 'convertToJob'])->name('estimates.convert');
 
+        Route::get('/billing', [BillingController::class, 'index'])->name('billing');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'destroy']);
         Route::post('/jobs/{job}/invoice', [InvoiceController::class, 'generateFromJob'])->name('jobs.invoice.generate');
         Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
         Route::post('/invoices/{invoice}/void', [InvoiceController::class, 'void'])->name('invoices.void');
+        Route::post('/invoices/{invoice}/payments', [InvoiceController::class, 'recordPayment'])->name('invoices.payments.store');
         Route::post('/invoices/{invoice}/checkout', [StripeController::class, 'createCheckoutSession'])->name('invoices.checkout');
     });
 

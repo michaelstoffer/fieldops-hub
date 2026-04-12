@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface LineItem {
     id: number;
@@ -68,6 +68,31 @@ const sendForm = useForm({});
 const voidForm = useForm({});
 const deleteForm = useForm({});
 const checkoutForm = useForm({});
+
+const showPaymentForm = ref(false);
+const paymentForm = useForm({
+    amount:    '',
+    method:    'cash',
+    reference: '',
+    notes:     '',
+    paid_at:   new Date().toISOString().slice(0, 10),
+});
+
+const PAYMENT_METHODS = [
+    { value: 'cash',          label: 'Cash' },
+    { value: 'check',         label: 'Check' },
+    { value: 'card',          label: 'Card' },
+    { value: 'bank_transfer', label: 'Bank Transfer' },
+];
+
+function submitPayment() {
+    paymentForm.post(`/owner/invoices/${props.invoice.id}/payments`, {
+        onSuccess: () => {
+            showPaymentForm.value = false;
+            paymentForm.reset();
+        },
+    });
+}
 
 function startCheckout() {
     checkoutForm.post(`/owner/invoices/${props.invoice.id}/checkout`);
@@ -280,6 +305,102 @@ function formatCurrency(val: string | number): string {
         <div v-if="invoice.notes" class="mb-6 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
             <p class="mb-1 text-xs font-medium text-slate-400">Notes</p>
             <p class="whitespace-pre-wrap text-sm text-slate-600">{{ invoice.notes }}</p>
+        </div>
+
+        <!-- Record payment -->
+        <div
+            v-if="!['paid', 'void', 'draft'].includes(invoice.status) && Number(invoice.balance_due) > 0"
+            class="mb-6 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200"
+        >
+            <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                <h3 class="text-sm font-semibold text-slate-700">Record Payment</h3>
+                <button
+                    v-if="!showPaymentForm"
+                    type="button"
+                    class="rounded-lg bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
+                    @click="showPaymentForm = true"
+                >
+                    + Record Payment
+                </button>
+            </div>
+            <form v-if="showPaymentForm" class="space-y-4 px-4 py-4" @submit.prevent="submitPayment">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-600">Amount</label>
+                        <div class="relative">
+                            <span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-slate-400">$</span>
+                            <input
+                                v-model="paymentForm.amount"
+                                type="number"
+                                step="0.01"
+                                min="0.01"
+                                :max="invoice.balance_due"
+                                :placeholder="invoice.balance_due"
+                                class="w-full rounded-lg border border-slate-200 py-2 pl-7 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                                :class="{ 'border-red-400': paymentForm.errors.amount }"
+                                required
+                            />
+                        </div>
+                        <p v-if="paymentForm.errors.amount" class="mt-1 text-xs text-red-500">{{ paymentForm.errors.amount }}</p>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-600">Method</label>
+                        <select
+                            v-model="paymentForm.method"
+                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                        >
+                            <option v-for="m in PAYMENT_METHODS" :key="m.value" :value="m.value">{{ m.label }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-600">Date</label>
+                        <input
+                            v-model="paymentForm.paid_at"
+                            type="date"
+                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                            :class="{ 'border-red-400': paymentForm.errors.paid_at }"
+                            required
+                        />
+                        <p v-if="paymentForm.errors.paid_at" class="mt-1 text-xs text-red-500">{{ paymentForm.errors.paid_at }}</p>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-medium text-slate-600">Reference <span class="text-slate-400">(cheque #, receipt, etc.)</span></label>
+                        <input
+                            v-model="paymentForm.reference"
+                            type="text"
+                            placeholder="Optional"
+                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                        />
+                    </div>
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-medium text-slate-600">Notes <span class="text-slate-400">(optional)</span></label>
+                    <textarea
+                        v-model="paymentForm.notes"
+                        rows="2"
+                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                    />
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button
+                        type="button"
+                        class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+                        @click="showPaymentForm = false; paymentForm.reset()"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                        :disabled="paymentForm.processing"
+                    >
+                        Save Payment
+                    </button>
+                </div>
+            </form>
+            <p v-else class="px-4 py-3 text-sm text-slate-400">
+                Balance due: <span class="font-semibold text-slate-700">{{ formatCurrency(invoice.balance_due) }}</span>
+            </p>
         </div>
 
         <!-- Payment history -->

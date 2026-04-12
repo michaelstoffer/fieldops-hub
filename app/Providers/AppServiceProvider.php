@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\JobCreated;
 use App\Listeners\SendJobConfirmationEmail;
 use App\Listeners\SendJobConfirmationSms;
+use App\Services\GeocodingService;
 use App\Services\SmsService;
 use App\Services\TwilioSmsService;
 use Illuminate\Support\Facades\Event;
@@ -16,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(SmsService::class, TwilioSmsService::class);
+
+        $this->app->singleton(GeocodingService::class, fn () =>
+            new GeocodingService(config('services.google.maps_api_key', ''))
+        );
     }
 
     public function boot(): void

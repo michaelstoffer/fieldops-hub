@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
+use App\Http\Controllers\Technician\LocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:technician'])
@@ -31,4 +32,6 @@ Route::middleware(['auth', 'role:technician'])
             ->name('jobs.line-items.destroy');
         Route::get('/catalog', [TechnicianJobController::class, 'catalogItems'])
             ->name('catalog.index');
+        Route::post('/location', [LocationController::class, 'store'])
+            ->name('location.store');
     });

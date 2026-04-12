@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Job;
+use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Response;
 use Inertia\ResponseFactory;
 
@@ -126,6 +128,52 @@ class InvoiceController extends Controller
 
         return redirect()->route('owner.invoices.show', $invoice)
             ->with('success', 'Invoice voided.');
+    }
+
+    // ── Record Payment ────────────────────────────────────────────────────────
+
+    public function recordPayment(Request $request, Invoice $invoice): RedirectResponse
+    {
+        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        abort_unless(! in_array($invoice->status, [Invoice::STATUS_VOID, Invoice::STATUS_PAID]), 422);
+
+        $data = $request->validate([
+            'amount'    => ['required', 'numeric', 'min:0.01', 'max:' . (float) $invoice->balance_due],
+            'method'    => ['required', Rule::in([
+                Payment::METHOD_CASH,
+                Payment::METHOD_CHECK,
+                Payment::METHOD_CARD,
+                Payment::METHOD_BANK_TRANSFER,
+            ])],
+            'reference' => ['nullable', 'string', 'max:255'],
+            'notes'     => ['nullable', 'string', 'max:1000'],
+            'paid_at'   => ['required', 'date'],
+        ]);
+
+        Payment::create([
+            'organization_id' => $invoice->organization_id,
+            'invoice_id'      => $invoice->id,
+            'recorded_by'     => $request->user()->id,
+            'amount'          => $data['amount'],
+            'method'          => $data['method'],
+            'reference'       => $data['reference'] ?? null,
+            'notes'           => $data['notes'] ?? null,
+            'status'          => 'completed',
+            'paid_at'         => $data['paid_at'],
+        ]);
+
+        $newAmountPaid = round((float) $invoice->amount_paid + (float) $data['amount'], 2);
+        $balanceDue    = max(0, round((float) $invoice->total - $newAmountPaid, 2));
+
+        $invoice->update([
+            'amount_paid' => $newAmountPaid,
+            'balance_due' => $balanceDue,
+            'status'      => $balanceDue <= 0 ? Invoice::STATUS_PAID : Invoice::STATUS_PARTIAL,
+            'paid_at'     => $balanceDue <= 0 ? now() : $invoice->paid_at,
+        ]);
+
+        return redirect()->route('owner.invoices.show', $invoice)
+            ->with('success', 'Payment recorded.');
     }
 
     // ── Destroy ───────────────────────────────────────────────────────────────

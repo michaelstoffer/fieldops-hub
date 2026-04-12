@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useLocationSharing } from '@/composables/useLocationSharing';
 import { Link, usePage } from '@inertiajs/vue3';
 
 defineProps<{
@@ -7,6 +8,8 @@ defineProps<{
 
 const page = usePage();
 const user = (page.props.auth as { user: { name: string } }).user;
+
+const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = useLocationSharing();
 </script>
 
 <template>
@@ -15,6 +18,24 @@ const user = (page.props.auth as { user: { name: string } }).user;
         <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm">
             <span class="text-base font-semibold text-slate-800">{{ title ?? 'FieldOps Hub' }}</span>
             <div class="flex items-center gap-3 text-sm text-slate-500">
+                <!-- Location sharing toggle -->
+                <button
+                    type="button"
+                    class="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition"
+                    :class="locationEnabled
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-slate-100 text-slate-500'"
+                    :title="permissionDenied ? 'Location permission denied' : (locationEnabled ? 'Sharing location' : 'Share location')"
+                    @click="toggleLocation"
+                >
+                    <!-- location pin icon -->
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                        <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.083 3.952-5.125 3.952-8.577 0-4.85-3.922-8.773-8.75-8.773S3.75 7.65 3.75 12.5c0 3.452 2.008 6.494 3.952 8.577a19.58 19.58 0 002.683 2.282 16.975 16.975 0 001.144.742zM12.5 15a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" clip-rule="evenodd" />
+                    </svg>
+                    <span v-if="locationEnabled">On</span>
+                    <span v-else>Off</span>
+                </button>
+
                 <span class="hidden sm:inline">{{ user?.name }}</span>
                 <Link
                     href="/logout"

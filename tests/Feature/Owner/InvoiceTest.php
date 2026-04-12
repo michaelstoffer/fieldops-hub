@@ -249,3 +249,134 @@ test('user cannot delete another org\'s invoice', function () {
         ->delete("/owner/invoices/{$invoice->id}")
         ->assertForbidden();
 });
+
+// ── Record Manual Payment ──────────────────────────────────────────────────────
+
+test('user can record a full cash payment', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->sent()->create([
+        'total'       => 250.00,
+        'balance_due' => 250.00,
+        'amount_paid' => 0.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 250.00,
+            'method'  => 'cash',
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertRedirect();
+
+    $invoice->refresh();
+    expect($invoice->status)->toBe(\App\Models\Invoice::STATUS_PAID);
+    expect((float) $invoice->balance_due)->toBe(0.0);
+    expect((float) $invoice->amount_paid)->toBe(250.0);
+    expect($invoice->paid_at)->not->toBeNull();
+
+    $payment = \App\Models\Payment::where('invoice_id', $invoice->id)->first();
+    expect($payment->method)->toBe('cash');
+    expect((float) $payment->amount)->toBe(250.0);
+    expect($payment->recorded_by)->toBe($user->id);
+});
+
+test('user can record a partial check payment', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->sent()->create([
+        'total'       => 500.00,
+        'balance_due' => 500.00,
+        'amount_paid' => 0.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'    => 200.00,
+            'method'    => 'check',
+            'reference' => '1042',
+            'paid_at'   => today()->toDateString(),
+        ])
+        ->assertRedirect();
+
+    $invoice->refresh();
+    expect($invoice->status)->toBe(\App\Models\Invoice::STATUS_PARTIAL);
+    expect((float) $invoice->balance_due)->toBe(300.0);
+    expect((float) $invoice->amount_paid)->toBe(200.0);
+});
+
+test('payment amount cannot exceed balance due', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->sent()->create([
+        'total'       => 100.00,
+        'balance_due' => 100.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 999.00,
+            'method'  => 'cash',
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertSessionHasErrors('amount');
+});
+
+test('payment requires a valid method', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->sent()->create([
+        'total'       => 100.00,
+        'balance_due' => 100.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 50.00,
+            'method'  => 'stripe', // not allowed for manual recording
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertSessionHasErrors('method');
+});
+
+test('cannot record payment on a paid invoice', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->paid()->create();
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 10.00,
+            'method'  => 'cash',
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertStatus(422);
+});
+
+test('cannot record payment on a voided invoice', function () {
+    [$user, $org, $customer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($customer)->create([
+        'status'      => \App\Models\Invoice::STATUS_VOID,
+        'balance_due' => 100.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 10.00,
+            'method'  => 'cash',
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertStatus(422);
+});
+
+test('user cannot record payment for another org\'s invoice', function () {
+    [$user] = invoiceSetup();
+    [, , $otherCustomer] = invoiceSetup();
+    $invoice = Invoice::factory()->forCustomer($otherCustomer)->sent()->create([
+        'total'       => 100.00,
+        'balance_due' => 100.00,
+    ]);
+
+    $this->actingAs($user)
+        ->post("/owner/invoices/{$invoice->id}/payments", [
+            'amount'  => 100.00,
+            'method'  => 'cash',
+            'paid_at' => today()->toDateString(),
+        ])
+        ->assertForbidden();
+});

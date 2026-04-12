@@ -9,28 +9,40 @@ A modern field service management platform built for small-to-medium field opera
 **FieldOps Hub** gives your team a shared, real-time workspace to run field operations end to end:
 
 | Area | Capabilities |
-|------|-------------|
+| ---- | ----------- |
 | **Customers & Properties** | Customer profiles with multiple service locations, address history, and attachments |
 | **Job Management** | Create, assign, and track jobs through a full status lifecycle (scheduled → en route → in progress → completed) |
-| **Dispatch & Scheduling** | Assign jobs to technicians, manage job types, and track field activity |
+| **Job Checklists** | Per-job-type checklist templates that auto-copy onto new jobs; technicians check off items in the field |
+| **Estimates** | Multi-tier estimate packages (Good/Better/Best); send via shareable public link; customers accept or decline online |
+| **Dispatch & Live Tracking** | Assign jobs to technicians, view a live map of technician locations with current job overlay and location trail |
 | **Invoicing** | Draft, edit, and send invoices tied to completed jobs; track line items, tax, discounts, and balance due |
-| **Payments** | Record payments by method (cash, check, card, bank transfer, Stripe); automatic balance calculation |
-| **Item Catalog** | Maintain a reusable catalog of services and parts for quick invoice line item entry |
+| **Payments** | Record payments by method (cash, check, card, bank transfer); Stripe-hosted checkout for online card payments |
+| **Reporting** | Owner dashboard with real-time KPIs; jobs-by-type, job profitability, and technician performance reports |
+| **Company Settings** | Company branding (name, logo, contact info), default tax rate, and billing defaults per organization |
+| **Integration Settings** | Per-organization Stripe, Twilio (SMS), SendGrid (email), and Google Maps API key management — keys stored encrypted at rest |
+| **Automated Notifications** | Job confirmation emails/SMS on creation; en-route and completion status notifications via Twilio and SendGrid |
+| **Message Templates** | Reusable message templates for job notifications and customer communications |
+| **Item Catalog** | Maintain a reusable catalog of services and parts for quick line item entry |
 | **Roles & Permissions** | Five built-in roles scoped per organization with granular permission control |
 | **Two-Factor Auth** | Optional TOTP 2FA for all user accounts via Laravel Fortify |
+| **Technician PWA** | Mobile-optimized progressive web app with offline support and background sync for field technicians |
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+| ----- | ---------- |
 | Backend | PHP 8.4 · Laravel 12 |
 | Frontend | Vue 3 · TypeScript · Inertia.js |
 | Styling | Tailwind CSS v4 · Reka UI (headless primitives) |
 | Auth | Laravel Fortify (registration, password reset, 2FA) |
 | Permissions | spatie/laravel-permission v7 |
 | Route types | Laravel Wayfinder (auto-generated TypeScript bindings) |
+| Payments | Stripe (hosted checkout + webhooks) |
+| SMS | Twilio |
+| Email | SendGrid |
+| Maps | Google Maps API |
 | Testing | Pest v4 |
 | Dev tooling | Vite 7 · Laravel Pint · Prettier · ESLint |
 
@@ -38,22 +50,31 @@ A modern field service management platform built for small-to-medium field opera
 
 ## Data Model
 
-```
+```text
 Organization
+├── OrganizationSettings (branding, tax rate, encrypted integration keys)
 ├── Users (with roles)
 ├── Customers
 │   └── Properties (service locations)
 ├── Job Types
+│   └── JobTypeChecklistItems (checklist templates)
 ├── Jobs (field_jobs)
 │   ├── Job Line Items
+│   ├── Job Checklist Items (auto-copied from type template on creation)
+│   ├── Job Messages (email/SMS log)
 │   ├── Invoice (1:1)
+│   └── Attachments (polymorphic)
+├── Estimates
+│   ├── EstimatePackages (tiered: Good/Better/Best)
+│   ├── Estimate Line Items
 │   └── Attachments (polymorphic)
 ├── Items (catalog)
 ├── Invoices
 │   ├── Invoice Line Items
 │   ├── Payments
 │   └── Attachments (polymorphic)
-└── Attachments (polymorphic)
+├── DriverLocations (technician GPS trail)
+└── MessageTemplates
 ```
 
 Every resource is scoped to an **Organization**, enabling clean multi-tenant data isolation.
@@ -63,7 +84,7 @@ Every resource is scoped to an **Organization**, enabling clean multi-tenant dat
 ## Roles
 
 | Role | Description |
-|------|-------------|
+| ---- | ----------- |
 | `owner` | Full access — typically the business owner / org creator |
 | `admin` | Full access — can manage users and settings |
 | `dispatcher` | Manage customers, properties, jobs, invoices, and payments |
@@ -120,7 +141,7 @@ composer run test                          # Clear config cache then run all tes
 ./vendor/bin/pest --filter "test name"     # Run a single test by name
 ```
 
-The test suite uses an in-memory SQLite database — no setup required.
+The test suite uses an in-memory SQLite database — no setup required. The `composer run test` script passes `-d memory_limit=512M` automatically as the suite has grown large.
 
 ### Code style
 
@@ -142,11 +163,16 @@ npm run build:ssr              # SSR build (client + server bundle)
 
 ## Project Structure
 
-```
+```text
 app/
 ├── Http/
 │   ├── Controllers/
-│   │   ├── Auth/              # Breeze-style auth controllers
+│   │   ├── Owner/             # Owner web app controllers
+│   │   │   ├── ReportingController.php   # Dashboard KPIs + all reports
+│   │   │   ├── SettingsController.php    # Company + integration settings
+│   │   │   └── ...
+│   │   ├── Technician/        # Technician PWA controllers
+│   │   ├── Auth/              # Fortify-style auth controllers
 │   │   └── Settings/          # Profile, password, 2FA settings
 │   ├── Middleware/            # HandleInertiaRequests, HandleAppearance
 │   └── Requests/              # Form request validation
@@ -156,11 +182,17 @@ app/
 database/
 ├── migrations/                # Chronological schema history
 ├── seeders/                   # DemoSeeder, RolesAndPermissionsSeeder
-└── factories/                 # UserFactory (with withTwoFactor state)
+└── factories/                 # Model factories for testing
 
 resources/js/
-├── pages/                     # Inertia page components (Vue SFCs)
-├── layouts/                   # AppLayout (authenticated), AuthLayout
+├── pages/
+│   ├── Owner/                 # Owner web app pages
+│   │   ├── Dashboard.vue      # KPI dashboard
+│   │   ├── Reports/           # JobsByType, JobProfitability, TechnicianPerformance
+│   │   ├── Settings/          # Company.vue, Integrations.vue
+│   │   └── ...
+│   └── Technician/            # Technician PWA pages
+├── layouts/                   # OwnerLayout, TechnicianLayout, AuthLayout
 ├── components/
 │   ├── *.vue                  # App-level components (sidebar, nav)
 │   └── ui/                    # Headless UI primitives (each has index.ts)
@@ -168,7 +200,8 @@ resources/js/
 └── types/index.d.ts           # AppPageProps, Auth, User, NavItem, BreadcrumbItem
 
 routes/
-├── web.php                    # Public and dashboard routes
+├── web.php                    # Owner + public + technician routes
+├── api.php                    # Technician JSON API (location, jobs)
 ├── auth.php                   # Auth routes (login, register, reset, verify)
 └── settings.php               # Settings routes (profile, password, appearance, 2FA)
 ```
@@ -194,10 +227,36 @@ DB_CONNECTION=sqlite           # or mysql / pgsql for production
 
 MAIL_MAILER=log                # Change for real email delivery
 
-# Optional: Stripe for card payments
+# Stripe — required for online card payments
 STRIPE_KEY=
 STRIPE_SECRET=
+STRIPE_WEBHOOK_SECRET=
+
+# Twilio — required for SMS notifications
+TWILIO_SID=
+TWILIO_TOKEN=
+TWILIO_FROM=
+
+# SendGrid — required for transactional email
+SENDGRID_API_KEY=
+
+# Google Maps — required for dispatch map
+GOOGLE_MAPS_API_KEY=
 ```
+
+Integration keys can also be managed per-organization through the **Settings → Integrations** UI, where they are stored encrypted in the database.
+
+---
+
+## Security Notes
+
+- All owner routes require authentication (`auth` + `verified` middleware)
+- All queries are scoped to `organization_id` — no cross-tenant data leakage
+- Integration API keys are stored using Laravel's `encrypted` cast (AES-256-CBC)
+- Keys are masked in the settings UI (last 4 chars visible); submitting a masked value does not overwrite the stored key
+- Logo uploads are validated for file type (`image` rule) and size (2 MB limit)
+- Stripe webhook endpoint verifies the request signature before processing
+- CSRF protection is enabled on all routes except the Stripe webhook
 
 ---
 

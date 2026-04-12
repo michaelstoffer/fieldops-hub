@@ -15,6 +15,10 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    // Disk used for job attachments (photos, documents uploaded by technicians).
+    // Set ATTACHMENT_DISK=s3 in production to route uploads to object storage.
+    'attachment_disk' => env('ATTACHMENT_DISK', 'public'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks

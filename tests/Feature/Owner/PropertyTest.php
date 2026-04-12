@@ -4,11 +4,14 @@ use App\Models\Customer;
 use App\Models\Organization;
 use App\Models\Property;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
 function userWithOrgAndCustomer(): array
 {
-    $org = Organization::factory()->create();
-    $user = User::factory()->create(['organization_id' => $org->id]);
+    (new RolesAndPermissionsSeeder)->run();
+    $org      = Organization::factory()->create();
+    $user     = User::factory()->create(['organization_id' => $org->id]);
+    $user->assignRole('owner');
     $customer = Customer::factory()->create(['organization_id' => $org->id]);
 
     return [$user, $customer];

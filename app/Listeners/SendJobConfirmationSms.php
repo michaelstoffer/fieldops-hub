@@ -3,31 +3,32 @@
 namespace App\Listeners;
 
 use App\Events\JobCreated;
-use App\Services\SmsService;
+use App\Services\MessageDispatcher;
+use App\Services\TemplateRenderer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendJobConfirmationSms implements ShouldQueue
 {
-    public function __construct(private readonly SmsService $sms) {}
+    public function __construct(
+        private readonly MessageDispatcher $dispatcher,
+        private readonly TemplateRenderer $renderer,
+    ) {}
 
     public function handle(JobCreated $event): void
     {
         $job = $event->job;
         $job->loadMissing('customer');
 
-        $phone = $job->customer->mobile ?? $job->customer->phone;
-
+        $phone = $job->customer?->mobile ?? $job->customer?->phone;
         if (blank($phone)) {
             return;
         }
 
-        $scheduled = $job->scheduled_at
-            ? $job->scheduled_at->format('D, M j \a\t g:i A')
-            : 'TBD';
+        $rendered = $this->renderer->render($job->organization_id, 'job_scheduled', 'sms', $job);
+        if (! $rendered) {
+            return;
+        }
 
-        $this->sms->send(
-            $phone,
-            "Your appointment \"{$job->title}\" is confirmed for {$scheduled}. Reply STOP to opt out.",
-        );
+        $this->dispatcher->sendSms($job, 'job_scheduled', $phone, $rendered['body']);
     }
 }

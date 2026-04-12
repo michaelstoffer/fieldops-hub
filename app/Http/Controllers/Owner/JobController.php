@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Events\JobCreated;
+use App\Events\JobStatusChanged;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreJobRequest;
 use App\Http\Requests\Owner\UpdateJobRequest;
@@ -24,7 +25,12 @@ class JobController extends Controller
         $orgId = $request->user()->organization_id;
 
         $jobs = Job::where('organization_id', $orgId)
-            ->with(['customer', 'property', 'jobType', 'assignedTechnician'])
+            ->with([
+                'customer:id,first_name,last_name,email',
+                'property:id,address_line1,city,state',
+                'jobType:id,name,color',
+                'assignedTechnician:id,name',
+            ])
             ->when($request->status, fn ($q, $s) => $q->where('status', $s))
             ->when($request->search, function ($q, $search) {
                 $q->where(function ($q) use ($search) {
@@ -50,7 +56,7 @@ class JobController extends Controller
     {
         abort_unless($job->organization_id === $request->user()->organization_id, 403);
 
-        $job->load(['customer', 'property', 'jobType', 'assignedTechnician']);
+        $job->load(['customer', 'property', 'jobType', 'assignedTechnician', 'invoice', 'messages']);
 
         return inertia('Owner/Jobs/Show', [
             'job'      => $job,
@@ -151,7 +157,10 @@ class JobController extends Controller
             default                 => [],
         };
 
+        $oldStatus = $job->status;
         $job->update(['status' => $request->status, ...$timestamps]);
+
+        JobStatusChanged::dispatch($job->fresh(), $oldStatus, $request->status);
 
         return redirect()->back()->with('success', 'Status updated.');
     }

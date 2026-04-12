@@ -13,23 +13,29 @@
 <body>
     <h1>Job Confirmed</h1>
 
-    <p>Hi {{ $job->customer->first_name }},</p>
+    @if (!empty($rendered_body))
+        <div class="card">
+            <p style="white-space: pre-wrap; margin: 0;">{{ $rendered_body }}</p>
+        </div>
+    @else
+        <p>Hi {{ $job->customer->first_name }},</p>
 
-    <p>Your service appointment has been confirmed. Here are the details:</p>
+        <p>Your service appointment has been confirmed. Here are the details:</p>
 
-    <div class="card">
-        <strong>{{ $job->title }}</strong>
+        <div class="card">
+            <strong>{{ $job->title }}</strong>
 
-        @if ($job->scheduled_at)
-            <p><strong>Scheduled:</strong> {{ $job->scheduled_at->format('l, F j, Y \a\t g:i A') }}</p>
-        @endif
+            @if ($job->scheduled_at)
+                <p><strong>Scheduled:</strong> {{ $job->scheduled_at->format('l, F j, Y \a\t g:i A') }}</p>
+            @endif
 
-        @if ($job->description)
-            <p>{{ $job->description }}</p>
-        @endif
-    </div>
+            @if ($job->description)
+                <p>{{ $job->description }}</p>
+            @endif
+        </div>
 
-    <p>If you have any questions, please don't hesitate to contact us.</p>
+        <p>If you have any questions, please don't hesitate to contact us.</p>
+    @endif
 
     <div class="footer">
         Thanks,<br>

@@ -46,6 +46,8 @@ jobs:
 
       - name: Build assets
         run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
 
       - name: Run tests
         run: php -d memory_limit=512M vendor/bin/pest --no-coverage
@@ -93,6 +95,7 @@ jobs:
         if: env.DEPLOY_HOST != ''
         run: npm run build
         env:
+          NODE_OPTIONS: --max-old-space-size=4096
           NODE_ENV: production
           VITE_APP_ENV: production
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}

@@ -17,22 +17,18 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\PublicEstimateController;
 use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->hasRole('technician')) {
+            return redirect()->route('technician.dashboard');
+        }
+        return redirect()->route('owner.dashboard');
+    }
+    return redirect()->route('login');
 });
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Setup wizard — restricted to owner/admin only
 Route::middleware(['auth', 'verified', 'role:owner|admin'])

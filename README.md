@@ -1,5 +1,14 @@
 # FieldOps Hub
 
+[![Tests](https://github.com/michaelstoffer/fieldops-hub/actions/workflows/tests.yml/badge.svg)](https://github.com/michaelstoffer/fieldops-hub/actions/workflows/tests.yml)
+[![Deploy](https://github.com/michaelstoffer/fieldops-hub/actions/workflows/deploy.yml/badge.svg)](https://github.com/michaelstoffer/fieldops-hub/actions/workflows/deploy.yml)
+[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)](https://php.net)
+[![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
+[![Vue](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 A modern field service management platform built for small-to-medium field operations businesses — HVAC, plumbing, electrical, landscaping, and more. Manage customers, schedule jobs, dispatch technicians, and handle billing from a single, fast web application.
 
 ---

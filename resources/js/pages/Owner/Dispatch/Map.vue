@@ -30,6 +30,7 @@ interface Technician {
 defineProps<{ technicians: { id: number; name: string }[] }>();
 
 const POLL_INTERVAL = 15_000; // 15 seconds
+const hasMapsKey = !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const mapRef = ref<HTMLElement | null>(null);
 const focused = ref<Technician | null>(null);
@@ -269,7 +270,7 @@ onUnmounted(() => {
             <div class="relative flex-1 overflow-hidden rounded-xl shadow ring-1 ring-slate-200">
                 <div ref="mapRef" class="h-full w-full bg-slate-100">
                     <div
-                        v-if="!import.meta.env.VITE_GOOGLE_MAPS_API_KEY"
+                        v-if="!hasMapsKey"
                         class="flex h-full items-center justify-center text-slate-400"
                     >
                         <p class="text-sm">Set <code class="rounded bg-slate-200 px-1">GOOGLE_MAPS_API_KEY</code> to enable the map.</p>

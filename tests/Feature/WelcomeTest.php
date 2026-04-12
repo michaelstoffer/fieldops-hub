@@ -1,29 +1,24 @@
 <?php
 
 use App\Models\User;
-use Inertia\Testing\AssertableInertia as Assert;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
-test('welcome page can be rendered', function () {
-    $this->get('/')->assertOk();
+test('root redirects guests to login', function () {
+    $this->get('/')->assertRedirect(route('login'));
 });
 
-test('welcome page renders Welcome component', function () {
-    $this->get('/')
-        ->assertInertia(fn (Assert $page) => $page->component('Welcome'));
-});
-
-test('welcome page exposes canRegister prop when registration is enabled', function () {
-    $this->get('/')
-        ->assertInertia(fn (Assert $page) => $page
-            ->component('Welcome')
-            ->has('canRegister')
-        );
-});
-
-test('authenticated users can still visit welcome page', function () {
+test('root redirects authenticated owner to owner dashboard', function () {
+    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->create();
+    $user->assignRole('owner');
 
-    $this->actingAs($user)
-        ->get('/')
-        ->assertOk();
+    $this->actingAs($user)->get('/')->assertRedirect(route('owner.dashboard'));
+});
+
+test('root redirects authenticated technician to technician dashboard', function () {
+    (new RolesAndPermissionsSeeder)->run();
+    $user = User::factory()->create();
+    $user->assignRole('technician');
+
+    $this->actingAs($user)->get('/')->assertRedirect(route('technician.dashboard'));
 });

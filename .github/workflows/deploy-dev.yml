@@ -43,7 +43,15 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
           NODE_ENV: production
 
-      - name: Sync built assets to server
+      - name: Trigger Forge deploy webhook
+        if: env.DEPLOY_WEBHOOK != ''
+        run: curl --fail --silent -X POST "${{ secrets.DEV_DEPLOY_WEBHOOK }}"
+
+      - name: Wait for Forge deploy to complete
+        if: env.DEPLOY_WEBHOOK != ''
+        run: sleep 30
+
+      - name: Sync built assets into live release
         if: env.DEPLOY_WEBHOOK != ''
         run: |
           mkdir -p ~/.ssh
@@ -53,7 +61,3 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
             public/build/ \
             ${{ secrets.DEV_DEPLOY_USER }}@${{ secrets.DEV_DEPLOY_HOST }}:${{ secrets.DEV_DEPLOY_PATH }}/public/build/
-
-      - name: Trigger Forge deploy webhook
-        if: env.DEPLOY_WEBHOOK != ''
-        run: curl --fail --silent -X POST "${{ secrets.DEV_DEPLOY_WEBHOOK }}"

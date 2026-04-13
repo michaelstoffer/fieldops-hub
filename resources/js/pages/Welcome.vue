@@ -4,7 +4,7 @@ import { login, register } from '@/routes';
 import { computed } from 'vue';
 
 function registerUrl(plan?: string): string {
-    return plan ? `${register()}?plan=${plan}` : register();
+    return plan ? `${register().url}?plan=${plan}` : register().url;
 }
 
 const props = defineProps<{
@@ -182,11 +182,11 @@ function getPrice(tier: typeof tiers[0]) {
 
                     <!-- Auth links -->
                     <div class="flex items-center gap-3">
-                        <Link :href="login()" class="text-sm text-slate-400 hover:text-white transition-colors font-medium">
+                        <Link :href="login().url" class="text-sm text-slate-400 hover:text-white transition-colors font-medium">
                             Sign in
                         </Link>
                         <Link
-                            :href="register()"
+                            :href="registerUrl()"
                             class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors shadow-sm"
                         >
                             Start free trial
@@ -228,7 +228,7 @@ function getPrice(tier: typeof tiers[0]) {
 
                 <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link
-                        :href="register()"
+                        :href="registerUrl()"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-8 py-3.5 text-base font-semibold text-white transition-colors shadow-lg shadow-blue-600/25"
                     >
                         Start your free 14-day trial
@@ -422,7 +422,7 @@ function getPrice(tier: typeof tiers[0]) {
                             </div>
                         </div>
                         <Link
-                            :href="register()"
+                            :href="registerUrl()"
                             class="shrink-0 inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-white transition-colors shadow-lg shadow-amber-500/25"
                         >
                             Claim my spot
@@ -579,7 +579,7 @@ function getPrice(tier: typeof tiers[0]) {
                 <!-- Founding member CTA variant -->
                 <div v-if="foundingOffer" class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link
-                        :href="register()"
+                        :href="registerUrl()"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-base font-bold text-white transition-colors shadow-lg shadow-amber-500/25"
                     >
                         Claim your Founding Member spot
@@ -588,7 +588,7 @@ function getPrice(tier: typeof tiers[0]) {
                         </svg>
                     </Link>
                     <Link
-                        :href="register()"
+                        :href="registerUrl()"
                         class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/10 hover:border-white/20 px-8 py-3.5 text-base font-medium text-slate-300 hover:text-white transition-colors"
                     >
                         Start regular free trial
@@ -596,7 +596,7 @@ function getPrice(tier: typeof tiers[0]) {
                 </div>
                 <div v-else class="mt-10">
                     <Link
-                        :href="register()"
+                        :href="registerUrl()"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-10 py-4 text-base font-semibold text-white transition-colors shadow-lg shadow-blue-600/25"
                     >
                         Start your free 14-day trial
@@ -628,7 +628,7 @@ function getPrice(tier: typeof tiers[0]) {
                         <a href="#features" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Features</a>
                         <a href="#pricing" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Pricing</a>
                         <a href="#faq" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">FAQ</a>
-                        <Link :href="login()" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Sign in</Link>
+                        <Link :href="login().url" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Sign in</Link>
                     </nav>
 
                     <p class="text-sm text-slate-600">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>

@@ -45,14 +45,14 @@ jobs:
 
       - name: Sync built assets to server
         if: env.DEPLOY_WEBHOOK != ''
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DEV_DEPLOY_HOST }}
-          username: ${{ secrets.DEV_DEPLOY_USER }}
-          key: ${{ secrets.DEV_FORGE_SSH_KEY }}
-          source: "public/build/"
-          target: ${{ secrets.DEV_DEPLOY_PATH }}/public/build
-          strip_components: 2
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEV_FORGE_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            public/build/ \
+            ${{ secrets.DEV_DEPLOY_USER }}@${{ secrets.DEV_DEPLOY_HOST }}:${{ secrets.DEV_DEPLOY_PATH }}/public/build/
 
       - name: Trigger Forge deploy webhook
         if: env.DEPLOY_WEBHOOK != ''

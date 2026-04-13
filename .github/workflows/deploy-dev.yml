@@ -1,0 +1,59 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches:
+      - development
+
+permissions:
+  contents: read
+
+env:
+  DEPLOY_WEBHOOK: ${{ secrets.DEV_DEPLOY_WEBHOOK }}
+
+jobs:
+  deploy:
+    name: Build & Deploy (Dev)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Skip if not configured
+        if: env.DEPLOY_WEBHOOK == ''
+        run: |
+          echo "DEV_DEPLOY_WEBHOOK is not set — skipping deployment."
+          exit 0
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: env.DEPLOY_WEBHOOK != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install Node deps
+        if: env.DEPLOY_WEBHOOK != ''
+        run: npm ci
+
+      - name: Build assets
+        if: env.DEPLOY_WEBHOOK != ''
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+          NODE_ENV: production
+
+      - name: Sync built assets to server
+        if: env.DEPLOY_WEBHOOK != ''
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEV_DEPLOY_HOST }}
+          username: ${{ secrets.DEV_DEPLOY_USER }}
+          key: ${{ secrets.DEV_FORGE_SSH_KEY }}
+          source: "public/build/"
+          target: ${{ secrets.DEV_DEPLOY_PATH }}/public/build
+          strip_components: 2
+
+      - name: Trigger Forge deploy webhook
+        if: env.DEPLOY_WEBHOOK != ''
+        run: curl --fail --silent -X POST "${{ secrets.DEV_DEPLOY_WEBHOOK }}"

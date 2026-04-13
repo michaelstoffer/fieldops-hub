@@ -46,6 +46,24 @@ class UserFactory extends Factory
     }
 
     /**
+     * Create a user attached to an org with the owner role.
+     */
+    public function owner(\App\Models\Organization $org): static
+    {
+        return $this->state(['organization_id' => $org->id])
+            ->afterCreating(fn (\App\Models\User $u) => $u->assignRole('owner'));
+    }
+
+    /**
+     * Create a user attached to an org with the technician role.
+     */
+    public function technician(\App\Models\Organization $org): static
+    {
+        return $this->state(['organization_id' => $org->id])
+            ->afterCreating(fn (\App\Models\User $u) => $u->assignRole('technician'));
+    }
+
+    /**
      * Indicate that the model does not have two-factor authentication configured.
      */
     public function withoutTwoFactor(): static

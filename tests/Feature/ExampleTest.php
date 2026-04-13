@@ -1,5 +1,5 @@
 <?php
 
 it('returns a successful response', function () {
-    $this->get('/')->assertRedirect();
+    $this->get('/')->assertOk();
 });

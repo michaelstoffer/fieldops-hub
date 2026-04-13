@@ -3,6 +3,10 @@ import { Head, Link } from '@inertiajs/vue3';
 import { login, register } from '@/routes';
 import { computed } from 'vue';
 
+function registerUrl(plan?: string): string {
+    return plan ? `${register()}?plan=${plan}` : register();
+}
+
 const props = defineProps<{
     foundingOffer: {
         discount_percent: number;
@@ -484,7 +488,7 @@ function getPrice(tier: typeof tiers[0]) {
 
                         <!-- CTA -->
                         <Link
-                            :href="register()"
+                            :href="registerUrl(tier.name.toLowerCase())"
                             class="block w-full text-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors mb-8"
                             :class="tier.highlight
                                 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm'

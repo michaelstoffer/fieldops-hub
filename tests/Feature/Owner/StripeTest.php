@@ -147,7 +147,7 @@ test('webhook checkout.session.completed creates payment record', function () {
     ]);
 
     // Call the handler method directly to test business logic without Stripe signature
-    $controller = new \App\Http\Controllers\StripeWebhookController();
+    $controller = app(\App\Http\Controllers\StripeWebhookController::class);
 
     $session = new \stdClass();
     $session->id             = 'cs_test_direct';
@@ -190,7 +190,7 @@ test('webhook partial payment sets status to partial', function () {
         'amount_paid' => 0.00,
     ]);
 
-    $controller = new \App\Http\Controllers\StripeWebhookController();
+    $controller = app(\App\Http\Controllers\StripeWebhookController::class);
     $ref        = new \ReflectionClass($controller);
     $method     = $ref->getMethod('handleCheckoutCompleted');
     $method->setAccessible(true);
@@ -216,7 +216,7 @@ test('webhook partial payment sets status to partial', function () {
 });
 
 test('webhook with missing invoice_id is ignored gracefully', function () {
-    $controller = new \App\Http\Controllers\StripeWebhookController();
+    $controller = app(\App\Http\Controllers\StripeWebhookController::class);
     $ref        = new \ReflectionClass($controller);
     $method     = $ref->getMethod('handleCheckoutCompleted');
     $method->setAccessible(true);

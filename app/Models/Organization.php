@@ -15,6 +15,13 @@ class Organization extends Model
         'name',
         'slug',
         'timezone',
+        'plan',
+        'trial_ends_at',
+        'stripe_customer_id',
+    ];
+
+    protected $casts = [
+        'trial_ends_at' => 'datetime',
     ];
 
     public function users(): HasMany
@@ -50,5 +57,18 @@ class Organization extends Model
     public function settings(): HasOne
     {
         return $this->hasOne(OrganizationSetting::class);
+    }
+
+    public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function activeSubscription(): ?Subscription
+    {
+        return $this->subscriptions()
+            ->whereIn('status', [Subscription::STATUS_TRIALING, Subscription::STATUS_ACTIVE, Subscription::STATUS_PAST_DUE])
+            ->latest()
+            ->first();
     }
 }

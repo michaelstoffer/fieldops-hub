@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\User;
+use App\Services\PlanService;
+use App\Services\SubscriptionService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,16 +24,17 @@ class RegisteredUserController extends Controller
         return Inertia::render('auth/Register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, SubscriptionService $subscriptionService): RedirectResponse
     {
         $request->validate([
-            'company_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'plan'         => ['required', 'string', 'in:starter,growth,pro'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'name'         => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password'     => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Create the organization first
+        // Create the organization
         $slug = Str::slug($request->company_name);
         $baseSlug = $slug;
         $counter = 2;
@@ -40,20 +43,23 @@ class RegisteredUserController extends Controller
         }
 
         $organization = Organization::create([
-            'name' => $request->company_name,
-            'slug' => $slug,
+            'name'     => $request->company_name,
+            'slug'     => $slug,
+            'plan'     => $request->plan,
         ]);
 
-        // Create the user and attach to the org
+        // Create the owner user
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name'            => $request->name,
+            'email'           => $request->email,
+            'password'        => Hash::make($request->password),
             'organization_id' => $organization->id,
         ]);
 
-        // Assign the owner role
         $user->assignRole('owner');
+
+        // Start the 14-day trial at the chosen plan
+        $subscriptionService->createTrial($organization, $request->plan);
 
         event(new Registered($user));
 

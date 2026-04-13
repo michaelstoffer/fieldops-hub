@@ -1,5 +1,9 @@
 <?php
 
+use Database\Seeders\RolesAndPermissionsSeeder;
+
+beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
+
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
@@ -7,13 +11,25 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
-    $response = $this->post('/register', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+    $this->post('/register', [
+        'plan'                  => 'growth',
+        'company_name'          => 'Test Company',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'Password1!',
+        'password_confirmation' => 'Password1!',
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+});
+
+test('registration redirects to owner dashboard', function () {
+    $this->post('/register', [
+        'plan'                  => 'growth',
+        'company_name'          => 'Test Company',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'Password1!',
+        'password_confirmation' => 'Password1!',
+    ])->assertRedirect(route('owner.dashboard'));
 });

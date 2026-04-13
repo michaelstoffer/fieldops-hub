@@ -12,6 +12,8 @@ use App\Http\Controllers\Owner\ReportingController;
 use App\Http\Controllers\Owner\SetupController;
 use App\Http\Controllers\Owner\SettingsController;
 use App\Http\Controllers\Owner\StripeController;
+use App\Http\Controllers\Owner\SubscriptionController;
+use App\Http\Controllers\Owner\TeamController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\StripeWebhookController;
@@ -41,7 +43,18 @@ Route::get('/dashboard', function () {
     return redirect()->route('owner.dashboard');
 })->middleware('auth')->name('dashboard');
 
-// Setup wizard — restricted to owner/admin only
+// ── Subscription routes — outside subscription middleware so expired users can reach them ──
+Route::middleware(['auth', 'role:owner|admin'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+        Route::get('/subscription', [SubscriptionController::class, 'index'])->name('subscription.index');
+        Route::post('/subscription/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+        Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+        Route::get('/subscription/expired', [SubscriptionController::class, 'expired'])->name('subscription.expired');
+    });
+
+// ── Setup wizard — no subscription check (org has no data yet) ──────────────
 Route::middleware(['auth', 'verified', 'role:owner|admin'])
     ->prefix('owner')
     ->name('owner.')
@@ -54,7 +67,18 @@ Route::middleware(['auth', 'verified', 'role:owner|admin'])
         Route::post('/setup/complete', [SetupController::class, 'complete'])->name('setup.complete');
     });
 
-Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper'])
+// ── Team management — owner/admin only, subscription-gated ───────────────────
+Route::middleware(['auth', 'verified', 'role:owner|admin', 'subscription'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () {
+        Route::get('/team', [TeamController::class, 'index'])->name('team.index');
+        Route::post('/team', [TeamController::class, 'store'])->name('team.store');
+        Route::patch('/team/{user}', [TeamController::class, 'update'])->name('team.update');
+        Route::delete('/team/{user}', [TeamController::class, 'destroy'])->name('team.destroy');
+    });
+
+Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper', 'subscription'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {

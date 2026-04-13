@@ -35,8 +35,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: ['stripe/webhook', 'health', 'health/ready']);
 
         $middleware->alias([
-            'role'       => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role'                  => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission'            => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'subscription'          => \App\Http\Middleware\CheckSubscription::class,
+            'technician.limit'      => \App\Http\Middleware\CheckTechnicianLimit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

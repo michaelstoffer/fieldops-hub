@@ -13,13 +13,15 @@ use App\Http\Controllers\Owner\SetupController;
 use App\Http\Controllers\Owner\SettingsController;
 use App\Http\Controllers\Owner\StripeController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\PublicEstimateController;
 use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
 use Illuminate\Support\Facades\Route;
 
-$rootRedirect = function () {
+// Root: guests see the marketing page; authenticated users go to their dashboard
+Route::get('/', function () {
     if (auth()->check()) {
         $user = auth()->user();
         if ($user->hasRole('technician')) {
@@ -27,13 +29,17 @@ $rootRedirect = function () {
         }
         return redirect()->route('owner.dashboard');
     }
-    return redirect()->route('login');
-};
-
-Route::get('/', $rootRedirect);
+    return app(MarketingController::class)->index();
+})->name('home');
 
 // Named 'dashboard' route — used by Fortify post-login redirect and internal links
-Route::get('/dashboard', $rootRedirect)->middleware('auth')->name('dashboard');
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+    if ($user->hasRole('technician')) {
+        return redirect()->route('technician.dashboard');
+    }
+    return redirect()->route('owner.dashboard');
+})->middleware('auth')->name('dashboard');
 
 // Setup wizard — restricted to owner/admin only
 Route::middleware(['auth', 'verified', 'role:owner|admin'])

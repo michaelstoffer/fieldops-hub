@@ -60,4 +60,4 @@ jobs:
           rsync -az --delete \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
             public/build/ \
-            ${{ secrets.DEV_DEPLOY_USER }}@${{ secrets.DEV_DEPLOY_HOST }}:${{ secrets.DEV_DEPLOY_PATH }}/build/
+            ${{ secrets.DEV_DEPLOY_USER }}@${{ secrets.DEV_DEPLOY_HOST }}:${{ secrets.DEV_DEPLOY_PATH }}/current/public/build/

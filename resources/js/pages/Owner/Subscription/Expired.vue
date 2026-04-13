@@ -10,7 +10,7 @@ const props = defineProps<{
         monthly: number;
         annual: number;
         tech_limit: number | null;
-    }>();
+    }>;
 }>();
 
 const billingAnnual = ref(false);

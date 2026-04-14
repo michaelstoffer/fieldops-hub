@@ -5,17 +5,20 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\PlanService;
+use App\Services\SubscriptionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class TeamController extends Controller
 {
-    public function __construct(private readonly PlanService $planService) {}
+    public function __construct(
+        private readonly PlanService $planService,
+        private readonly SubscriptionService $subscriptionService,
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -64,14 +67,16 @@ class TeamController extends Controller
         }
 
         $user = User::create([
-            'name'            => $request->name,
-            'email'           => $request->email,
-            'password'        => Hash::make($request->password),
-            'organization_id' => $org->id,
-            'email_verified_at' => now(), // owner-created users are pre-verified
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'password'          => Hash::make($request->password),
+            'organization_id'   => $org->id,
+            'email_verified_at' => now(),
         ]);
 
         $user->assignRole($request->role);
+
+        $this->subscriptionService->flushOrgCache($org->id);
 
         return back()->with('success', "{$user->name} has been added to your team.");
     }
@@ -80,7 +85,6 @@ class TeamController extends Controller
     {
         $org = $request->user()->organization;
 
-        // Ensure user belongs to this org
         abort_if($user->organization_id !== $org->id, 403);
 
         $request->validate([
@@ -98,6 +102,8 @@ class TeamController extends Controller
 
         $user->syncRoles([$request->role]);
 
+        $this->subscriptionService->flushOrgCache($org->id);
+
         return back()->with('success', "{$user->name}'s role has been updated.");
     }
 
@@ -109,6 +115,8 @@ class TeamController extends Controller
         abort_if($user->id === $request->user()->id, 403, 'You cannot remove yourself.');
 
         $user->delete();
+
+        $this->subscriptionService->flushOrgCache($org->id);
 
         return back()->with('success', "{$user->name} has been removed from your team.");
     }

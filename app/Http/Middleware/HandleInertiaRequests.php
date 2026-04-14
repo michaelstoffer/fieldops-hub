@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Services\PlanService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -22,27 +23,51 @@ class HandleInertiaRequests extends Middleware
         $planData = null;
 
         if ($user && $user->organization_id) {
-            $org = $user->organization;
-            $activeSub = $org->activeSubscription();
+            $org         = $user->organization;
+            $orgId       = $org->id;
             $planService = app(PlanService::class);
+
+            // Cache subscription for 5 minutes — invalidated on checkout/webhook
+            $activeSub = Cache::remember(
+                "org.{$orgId}.active_subscription",
+                300,
+                fn () => $org->activeSubscription()
+            );
+
+            // Cache active plan (depends on subscription state) for 5 minutes
+            $activePlan = Cache::remember(
+                "org.{$orgId}.active_plan",
+                300,
+                fn () => $planService->activePlan($org)
+            );
+
+            // Cache technician count for 5 minutes — invalidated on team changes
+            $techCount = Cache::remember(
+                "org.{$orgId}.tech_count",
+                300,
+                fn () => $planService->technicianCount($org)
+            );
+
+            $techLimit    = PlanService::TECHNICIAN_LIMITS[$activePlan] ?? null;
+            $atTechLimit  = $techLimit !== null && $techCount >= $techLimit;
 
             if ($activeSub) {
                 $subscription = [
-                    'status'          => $activeSub->status,
-                    'plan'            => $org->plan,
-                    'active_plan'     => $planService->activePlan($org),
-                    'is_trialing'     => $activeSub->isTrialing(),
-                    'days_remaining'  => $activeSub->trialDaysRemaining(),
-                    'trial_ends_at'   => $activeSub->trial_ends_at?->toIso8601String(),
+                    'status'         => $activeSub->status,
+                    'plan'           => $org->plan,
+                    'active_plan'    => $activePlan,
+                    'is_trialing'    => $activeSub->isTrialing(),
+                    'days_remaining' => $activeSub->trialDaysRemaining(),
+                    'trial_ends_at'  => $activeSub->trial_ends_at?->toIso8601String(),
                 ];
             }
 
             $planData = [
                 'current'       => $org->plan,
-                'active'        => $planService->activePlan($org),
-                'tech_limit'    => $planService->technicianLimit($org),
-                'tech_count'    => $planService->technicianCount($org),
-                'at_tech_limit' => $planService->atTechnicianLimit($org),
+                'active'        => $activePlan,
+                'tech_limit'    => $techLimit,
+                'tech_count'    => $techCount,
+                'at_tech_limit' => $atTechLimit,
             ];
         }
 

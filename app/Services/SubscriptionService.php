@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Organization;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Cache;
 use Stripe\StripeClient;
 
 class SubscriptionService
@@ -31,13 +32,17 @@ class SubscriptionService
             'trial_ends_at'  => $trialEndsAt,
         ]);
 
-        return Subscription::create([
+        $sub = Subscription::create([
             'organization_id' => $org->id,
             'plan'            => $plan,
             'status'          => Subscription::STATUS_TRIALING,
             'billing_interval'=> 'monthly',
             'trial_ends_at'   => $trialEndsAt,
         ]);
+
+        $this->flushOrgCache($org->id);
+
+        return $sub;
     }
 
     /**
@@ -143,6 +148,8 @@ class SubscriptionService
             'current_period_start'   => \Carbon\Carbon::createFromTimestamp($periodStart),
             'current_period_end'     => \Carbon\Carbon::createFromTimestamp($periodEnd),
         ]);
+
+        $this->flushOrgCache($org->id);
     }
 
     /**
@@ -160,6 +167,8 @@ class SubscriptionService
             'current_period_start' => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_start),
             'current_period_end'   => \Carbon\Carbon::createFromTimestamp($stripeSubscription->current_period_end),
         ]);
+
+        $this->flushOrgCache($sub->organization_id);
     }
 
     /**
@@ -167,10 +176,27 @@ class SubscriptionService
      */
     public function cancelFromStripe(object $stripeSubscription): void
     {
-        Subscription::where('stripe_subscription_id', $stripeSubscription->id)
-            ->update([
-                'status'      => Subscription::STATUS_CANCELED,
-                'canceled_at' => now(),
-            ]);
+        $sub = Subscription::where('stripe_subscription_id', $stripeSubscription->id)->first();
+        if (! $sub) {
+            return;
+        }
+
+        $sub->update([
+            'status'      => Subscription::STATUS_CANCELED,
+            'canceled_at' => now(),
+        ]);
+
+        $this->flushOrgCache($sub->organization_id);
+    }
+
+    /**
+     * Flush all org-level Inertia shared-prop caches.
+     * Call whenever subscription or team membership changes.
+     */
+    public function flushOrgCache(int $orgId): void
+    {
+        Cache::forget("org.{$orgId}.active_subscription");
+        Cache::forget("org.{$orgId}.active_plan");
+        Cache::forget("org.{$orgId}.tech_count");
     }
 }

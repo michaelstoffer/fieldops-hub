@@ -27,7 +27,6 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             injectRegister: 'auto',
-            // Use injectManifest so we can write a custom SW with BackgroundSync
             strategies: 'injectManifest',
             srcDir: 'resources/js',
             filename: 'sw.ts',
@@ -57,4 +56,37 @@ export default defineConfig({
             },
         }),
     ],
+
+    build: {
+        // Raise the warning threshold — chunks over 1MB get flagged
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    // FullCalendar — only used on /owner/calendar, ~150KB gzipped
+                    if (id.includes('@fullcalendar')) {
+                        return 'fullcalendar';
+                    }
+                    // Sentry — error monitoring, not needed on initial paint
+                    if (id.includes('@sentry')) {
+                        return 'sentry';
+                    }
+                    // Vue ecosystem — stable, long-cache TTL
+                    if (id.includes('node_modules/vue') ||
+                        id.includes('node_modules/@vue') ||
+                        id.includes('node_modules/@inertiajs')) {
+                        return 'vue-vendor';
+                    }
+                    // UI primitives — reka-ui, lucide, clsx, cva
+                    if (id.includes('node_modules/reka-ui') ||
+                        id.includes('node_modules/lucide-vue-next') ||
+                        id.includes('node_modules/class-variance-authority') ||
+                        id.includes('node_modules/clsx') ||
+                        id.includes('node_modules/tailwind-merge')) {
+                        return 'ui-vendor';
+                    }
+                },
+            },
+        },
+    },
 });

@@ -65,6 +65,12 @@ class SubscriptionController extends Controller
         ]);
 
         $org  = $request->user()->organization;
+
+        if ($org->slug === 'demo-fieldops') {
+            return redirect()->route('owner.subscription.index')
+                ->with('flash', ['type' => 'info', 'message' => 'Stripe checkout is disabled in the demo environment.']);
+        }
+
         $user = $request->user();
 
         $checkoutUrl = $this->subscriptionService->createCheckoutSession(

@@ -12,6 +12,7 @@ use App\Models\Organization;
 use App\Models\OrganizationSetting;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,22 @@ class DemoSeeder extends Seeder
             [
                 'name'     => 'Demo Field Ops',
                 'timezone' => 'America/New_York',
+            ]
+        );
+
+        // Keep the demo org's trial perpetually active
+        $org->update([
+            'plan'          => 'growth',
+            'trial_ends_at' => now()->addYears(10),
+        ]);
+
+        Subscription::firstOrCreate(
+            ['organization_id' => $org->id],
+            [
+                'plan'             => 'growth',
+                'status'           => Subscription::STATUS_TRIALING,
+                'billing_interval' => 'monthly',
+                'trial_ends_at'    => now()->addYears(10),
             ]
         );
 

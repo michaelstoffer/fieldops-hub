@@ -190,7 +190,7 @@ function loadGoogleMaps() {
     }
 
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=__gmapsInit`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=__gmapsInit&loading=async`;
     script.async = true;
     (window as any).__gmapsInit = () => { initMap(); };
     document.head.appendChild(script);

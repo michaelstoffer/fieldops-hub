@@ -86,6 +86,8 @@ async function fetchTrail(techId: number): Promise<{ lat: number; lng: number }[
 function updateMarkers() {
     if (!map) return;
 
+    const isFirstLoad = markers.size === 0;
+
     techs.value.forEach((tech) => {
         if (!tech.location) {
             markers.get(tech.id)?.setMap(null);
@@ -112,6 +114,18 @@ function updateMarkers() {
             markers.set(tech.id, m);
         }
     });
+
+    // On first load, fit the viewport to all visible markers
+    if (isFirstLoad && markers.size > 0) {
+        const bounds = new google.maps.LatLngBounds();
+        markers.forEach((m) => { bounds.extend(m.getPosition()!); });
+        if (markers.size === 1) {
+            map.setCenter(bounds.getCenter());
+            map.setZoom(14);
+        } else {
+            map.fitBounds(bounds, 80);
+        }
+    }
 
     // Update trails if enabled
     if (showTrails.value) {

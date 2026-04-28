@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
+use App\Models\DriverLocation;
 use App\Models\Invoice;
 use App\Models\InvoiceLineItem;
 use App\Models\Job;
@@ -423,6 +424,37 @@ class DemoSeeder extends Seeder
                     $updateData['paid_at'] = $issuedAt->copy()->addDays(rand(3, 14));
                 }
                 $invoice->update($updateData);
+            }
+        }
+
+        // ── Demo technician locations (Springfield, IL area) ─────────────────
+        // Skip if locations already seeded
+        if (DriverLocation::whereIn('user_id', [$tech1->id, $tech2->id])->exists()) {
+            return;
+        }
+
+        $techLocations = [
+            $tech1->id => [
+                'lat' => 39.7817, 'lng' => -89.6501, // near downtown Springfield
+                'heading' => 45.0,
+            ],
+            $tech2->id => [
+                'lat' => 39.7650, 'lng' => -89.6800, // west Springfield
+                'heading' => 180.0,
+            ],
+        ];
+
+        foreach ($techLocations as $userId => $pos) {
+            // Seed a short trail (6 points, 5 min apart) ending at current position
+            for ($i = 5; $i >= 0; $i--) {
+                DriverLocation::create([
+                    'user_id'     => $userId,
+                    'latitude'    => $pos['lat'] + ($i * 0.0008 * ($userId % 2 === 0 ? -1 : 1)),
+                    'longitude'   => $pos['lng'] + ($i * 0.0006 * ($userId % 2 === 0 ? 1 : -1)),
+                    'heading'     => $pos['heading'],
+                    'speed'       => rand(20, 45),
+                    'recorded_at' => now()->subMinutes($i * 5),
+                ]);
             }
         }
     }

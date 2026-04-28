@@ -83,6 +83,10 @@ class DemoSeeder extends Seeder
                     'email_verified_at' => now(),
                 ]
             );
+            // Ensure organization_id is set even on pre-existing users
+            if (! $user->organization_id) {
+                $user->update(['organization_id' => $org->id]);
+            }
             $user->syncRoles([$data['role']]);
             $usersByEmail[$data['email']] = $user;
         }
@@ -181,6 +185,28 @@ class DemoSeeder extends Seeder
         $prop = fn (Customer $c) => $properties[$c->id][0];
 
         [$smith, $doe, $bob, $garcia, $tom, $susan] = $customers;
+
+        // ── Demo technician locations (Springfield, IL area) ─────────────────
+        if (! DriverLocation::whereIn('user_id', [$tech1->id, $tech2->id])->exists()) {
+            $techLocations = [
+                $tech1->id => ['lat' => 39.7817, 'lng' => -89.6501, 'heading' => 45.0],
+                $tech2->id => ['lat' => 39.7650, 'lng' => -89.6800, 'heading' => 180.0],
+            ];
+
+            foreach ($techLocations as $userId => $pos) {
+                for ($i = 5; $i >= 0; $i--) {
+                    $even = $userId % 2 === 0;
+                    DriverLocation::create([
+                        'user_id'     => $userId,
+                        'latitude'    => $pos['lat'] + ($i * 0.0008 * ($even ? -1 : 1)),
+                        'longitude'   => $pos['lng'] + ($i * 0.0006 * ($even ? 1 : -1)),
+                        'heading'     => $pos['heading'],
+                        'speed'       => rand(20, 45),
+                        'recorded_at' => now()->subMinutes($i * 5),
+                    ]);
+                }
+            }
+        }
 
         // ── Jobs ─────────────────────────────────────────────────────────────────
         // Skip seeding if jobs already exist (idempotency)
@@ -427,35 +453,5 @@ class DemoSeeder extends Seeder
             }
         }
 
-        // ── Demo technician locations (Springfield, IL area) ─────────────────
-        // Skip if locations already seeded
-        if (DriverLocation::whereIn('user_id', [$tech1->id, $tech2->id])->exists()) {
-            return;
-        }
-
-        $techLocations = [
-            $tech1->id => [
-                'lat' => 39.7817, 'lng' => -89.6501, // near downtown Springfield
-                'heading' => 45.0,
-            ],
-            $tech2->id => [
-                'lat' => 39.7650, 'lng' => -89.6800, // west Springfield
-                'heading' => 180.0,
-            ],
-        ];
-
-        foreach ($techLocations as $userId => $pos) {
-            // Seed a short trail (6 points, 5 min apart) ending at current position
-            for ($i = 5; $i >= 0; $i--) {
-                DriverLocation::create([
-                    'user_id'     => $userId,
-                    'latitude'    => $pos['lat'] + ($i * 0.0008 * ($userId % 2 === 0 ? -1 : 1)),
-                    'longitude'   => $pos['lng'] + ($i * 0.0006 * ($userId % 2 === 0 ? 1 : -1)),
-                    'heading'     => $pos['heading'],
-                    'speed'       => rand(20, 45),
-                    'recorded_at' => now()->subMinutes($i * 5),
-                ]);
-            }
-        }
     }
 }

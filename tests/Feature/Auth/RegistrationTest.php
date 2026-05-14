@@ -13,6 +13,7 @@ test('registration screen can be rendered', function () {
 test('new users can register', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Test Company',
         'name'                  => 'Test User',
         'email'                 => 'test@example.com',
@@ -26,6 +27,7 @@ test('new users can register', function () {
 test('registration redirects to owner dashboard', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Test Company',
         'name'                  => 'Test User',
         'email'                 => 'test@example.com',

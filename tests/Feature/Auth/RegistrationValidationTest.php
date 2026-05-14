@@ -7,6 +7,7 @@ beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 $validData = fn (array $overrides = []) => array_merge([
     'plan'                  => 'growth',
+    'billing_interval'      => 'monthly',
     'company_name'          => 'Test Company',
     'name'                  => 'Test User',
     'email'                 => 'test@example.com',

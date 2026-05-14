@@ -12,6 +12,7 @@ beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 test('registration requires a plan', function () {
     $this->post('/register', [
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -23,6 +24,7 @@ test('registration requires a plan', function () {
 test('registration rejects an invalid plan', function () {
     $this->post('/register', [
         'plan'                  => 'enterprise',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -34,6 +36,7 @@ test('registration rejects an invalid plan', function () {
 test('registration requires company_name', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => '',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -47,6 +50,7 @@ test('registration requires company_name', function () {
 test('registration with growth plan creates organization and trial subscription', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -73,6 +77,7 @@ test('registration with growth plan creates organization and trial subscription'
 test('registration with starter plan stores starter on org', function () {
     $this->post('/register', [
         'plan'                  => 'starter',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Small Crew LLC',
         'name'                  => 'Bob Jones',
         'email'                 => 'bob@smallcrew.com',
@@ -87,6 +92,7 @@ test('registration with starter plan stores starter on org', function () {
 test('registration with pro plan stores pro on org', function () {
     $this->post('/register', [
         'plan'                  => 'pro',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Big Ops Inc',
         'name'                  => 'Alice Green',
         'email'                 => 'alice@bigops.com',
@@ -101,6 +107,7 @@ test('registration with pro plan stores pro on org', function () {
 test('registration assigns owner role to registering user', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -115,6 +122,7 @@ test('registration assigns owner role to registering user', function () {
 test('trial period is exactly 14 days', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -134,6 +142,7 @@ test('registration slug is unique even when company names collide', function () 
 
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',
@@ -149,6 +158,7 @@ test('registration slug is unique even when company names collide', function () 
 test('registration redirects authenticated user to owner dashboard', function () {
     $this->post('/register', [
         'plan'                  => 'growth',
+        'billing_interval'      => 'monthly',
         'company_name'          => 'Acme HVAC',
         'name'                  => 'Jane Smith',
         'email'                 => 'jane@acme.com',

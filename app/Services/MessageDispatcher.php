@@ -14,7 +14,7 @@ class MessageDispatcher
     public function sendEmail(Job $job, string $event, string $to, string $subject, string $view, array $data = []): void
     {
         try {
-            Mail::send($view, array_merge($data, ['job' => $job]), function ($m) use ($to, $subject) {
+            Mail::queue($view, array_merge($data, ['job' => $job]), function ($m) use ($to, $subject) {
                 $m->to($to)->subject($subject);
             });
 

@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.14-alpha] - 2026-05-14
+
+### Added
+
+- Billing interval toggle (monthly/annual) on the registration plan selection step, with live price switching
+- Annual pricing displayed on plan cards for founding member invites, with regular price struck through
+- Atomic founding member coupon redemption using a database transaction and row-level lock to prevent overselling
+
+### Changed
+
+- Founding member invite now lands on plan selection (step 1) so users can see locked-in prices before continuing
+- Registration validates and stores `billing_interval` (monthly or annual) on the trial subscription record
+
+### Fixed
+
+- Founding member `?founding=1` link now shows the callout and pricing on page load rather than requiring navigation to step 2
+
+### Performance
+
+- Self-hosted Figtree font (eliminated render-blocking external CDN request); font files preloaded in `<head>`
+- Vite build target set to `es2020` — smaller output, no legacy polyfills for modern browsers
+- CSS code splitting enabled — each page loads only its own stylesheet
+- HTTP caching (`Cache-Control: immutable, max-age=31536000`) and gzip compression added to `.htaccess` for all static assets
+- Composite index added on `attachments(organization_id, attachable_type, attachable_id)` to avoid full table scans on morphMany queries
+- Email sending switched from synchronous `Mail::send` to queued `Mail::queue` in `MessageDispatcher`
+
+### Tests
+
+- Removed 20 redundant, duplicate, and boilerplate test cases
+- Centralised `RolesAndPermissionsSeeder` into `TestCase::$seeder` — eliminated ~30 repeated seeder calls across test files; suite runs ~37% faster
+- Removed unused `tw-animate-css` npm dependency
+
 ## [0.8.13-alpha] - 2026-05-14
 
 ### Added
@@ -113,7 +145,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Demo seeder with sample organisation, users, job types, and customers
 - GitHub Actions CI: test suite (PHP 8.4 + Node 22) and linter (Pint + Prettier + ESLint)
 
-[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.13-alpha...HEAD
+[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.14-alpha...HEAD
+[0.8.14-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.13-alpha...v0.8.14-alpha
 [0.8.13-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.12-alpha...v0.8.13-alpha
 [0.8.12-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.11-alpha...v0.8.12-alpha
 [0.8.11-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.10-alpha...v0.8.11-alpha

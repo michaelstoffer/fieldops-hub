@@ -22,7 +22,7 @@ Only the latest release on the `production` branch receives security patches. We
 Report vulnerabilities privately using one of the following methods:
 
 - **GitHub Private Advisory** — [Submit via GitHub Security Advisories](../../security/advisories/new) *(preferred)*
-- **Email** — Send details to the repository owner through GitHub's contact information
+- **Email** — <mstoffer@michaelstoffer.com>
 
 ### What to include in your report
 

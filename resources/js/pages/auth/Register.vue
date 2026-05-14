@@ -7,16 +7,16 @@ const PLANS = [
     {
         key: 'starter',
         name: 'Starter',
-        price: 79,
-        foundingPrice: 63,
+        monthlyPrice: 79,
+        annualPrice: 63,
         seats: 'Up to 3 technicians',
         description: 'Small crew getting organized.',
     },
     {
         key: 'growth',
         name: 'Growth',
-        price: 149,
-        foundingPrice: 119,
+        monthlyPrice: 149,
+        annualPrice: 119,
         seats: 'Up to 10 technicians',
         description: 'For growing field operations.',
         popular: true,
@@ -24,8 +24,8 @@ const PLANS = [
     {
         key: 'pro',
         name: 'Pro',
-        price: 249,
-        foundingPrice: 199,
+        monthlyPrice: 249,
+        annualPrice: 199,
         seats: 'Unlimited technicians',
         description: 'Established, unlimited scale.',
     },
@@ -41,9 +41,15 @@ const isFoundingInvite = new URLSearchParams(window.location.search).get('foundi
 const step = ref<1 | 2>(validPlans.includes(queryPlan) ? 2 : 1);
 const selectedPlan = ref<string>(validPlans.includes(queryPlan) ? queryPlan : 'growth');
 
-const selectedPlanLabel = computed(() =>
-    PLANS.find(p => p.key === selectedPlan.value)?.name ?? 'Growth'
-);
+const billingInterval = ref<'monthly' | 'annual'>('monthly');
+
+const selectedPlanData = computed(() => PLANS.find(p => p.key === selectedPlan.value)!);
+const selectedPlanLabel = computed(() => selectedPlanData.value?.name ?? 'Growth');
+
+function planPrice(p: typeof PLANS[0]) {
+    if (isFoundingInvite) return p.annualPrice;
+    return billingInterval.value === 'annual' ? p.annualPrice : p.monthlyPrice;
+}
 
 function choosePlan(key: string) {
     selectedPlan.value = key;
@@ -55,6 +61,7 @@ function goToDetails() {
 
 const form = useForm({
     plan: selectedPlan,
+    billing_interval: billingInterval,
     founding: isFoundingInvite,
     company_name: '',
     name: '',
@@ -65,6 +72,7 @@ const form = useForm({
 
 const submit = () => {
     form.plan = selectedPlan.value;
+    form.billing_interval = billingInterval.value;
     form.post(register.url(), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -141,6 +149,38 @@ const submit = () => {
                     </p>
                 </div>
 
+                <!-- Billing interval toggle (hidden for founding members — locked to annual) -->
+                <div v-if="!isFoundingInvite" class="mb-6 flex items-center justify-center gap-3">
+                    <button
+                        type="button"
+                        @click="billingInterval = 'monthly'"
+                        class="text-sm font-medium transition-colors"
+                        :class="billingInterval === 'monthly' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                    >Monthly</button>
+                    <button
+                        type="button"
+                        @click="billingInterval = billingInterval === 'monthly' ? 'annual' : 'monthly'"
+                        class="relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        :class="billingInterval === 'annual' ? 'bg-blue-600' : 'bg-slate-200'"
+                        role="switch"
+                        :aria-checked="billingInterval === 'annual'"
+                    >
+                        <span
+                            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform"
+                            :class="billingInterval === 'annual' ? 'translate-x-5' : 'translate-x-0'"
+                        />
+                    </button>
+                    <button
+                        type="button"
+                        @click="billingInterval = 'annual'"
+                        class="text-sm font-medium transition-colors"
+                        :class="billingInterval === 'annual' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                    >
+                        Annual
+                        <span class="ml-1.5 inline-flex items-center rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">Save 20%</span>
+                    </button>
+                </div>
+
                 <!-- Founding member banner -->
                 <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3">
                     <span class="mt-0.5 h-4 w-4 shrink-0 text-amber-500">
@@ -183,15 +223,9 @@ const submit = () => {
                         </div>
 
                         <div class="shrink-0 text-right">
-                            <template v-if="isFoundingInvite">
-                                <span class="font-bold text-slate-900">${{ p.foundingPrice }}</span>
-                                <span class="text-xs text-slate-400">/mo</span>
-                                <div class="text-xs text-slate-400 line-through">${{ p.price }}/mo</div>
-                            </template>
-                            <template v-else>
-                                <span class="font-bold text-slate-900">${{ p.price }}</span>
-                                <span class="text-xs text-slate-400">/mo</span>
-                            </template>
+                            <span class="font-bold text-slate-900">${{ planPrice(p) }}</span>
+                            <span class="text-xs text-slate-400">/mo</span>
+                            <div v-if="isFoundingInvite || billingInterval === 'annual'" class="text-xs text-slate-400 line-through">${{ p.monthlyPrice }}/mo</div>
                         </div>
                     </button>
                 </div>
@@ -226,7 +260,7 @@ const submit = () => {
                             Back
                         </button>
                         <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                            {{ selectedPlanLabel }} plan — 14-day free trial
+                            {{ selectedPlanLabel }} · {{ billingInterval === 'annual' ? 'Annual' : 'Monthly' }} — 14-day free trial
                         </span>
                     </div>
 

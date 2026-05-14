@@ -22,7 +22,7 @@ class SubscriptionService
      * Create a local trial subscription record at registration.
      * No Stripe call yet — card not required for trial.
      */
-    public function createTrial(Organization $org, string $plan): Subscription
+    public function createTrial(Organization $org, string $plan, string $interval = 'monthly'): Subscription
     {
         $trialEndsAt = now()->addDays(PlanService::TRIAL_DAYS);
 
@@ -36,7 +36,7 @@ class SubscriptionService
             'organization_id' => $org->id,
             'plan'            => $plan,
             'status'          => Subscription::STATUS_TRIALING,
-            'billing_interval'=> 'monthly',
+            'billing_interval'=> $interval,
             'trial_ends_at'   => $trialEndsAt,
         ]);
 

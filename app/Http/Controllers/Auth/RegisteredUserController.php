@@ -27,11 +27,12 @@ class RegisteredUserController extends Controller
     public function store(Request $request, SubscriptionService $subscriptionService): RedirectResponse
     {
         $request->validate([
-            'plan'         => ['required', 'string', 'in:starter,growth,pro'],
-            'company_name' => ['required', 'string', 'max:255'],
-            'name'         => ['required', 'string', 'max:255'],
-            'email'        => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password'     => ['required', 'confirmed', Rules\Password::defaults()],
+            'plan'             => ['required', 'string', 'in:starter,growth,pro'],
+            'billing_interval' => ['required', 'string', 'in:monthly,annual'],
+            'company_name'     => ['required', 'string', 'max:255'],
+            'name'             => ['required', 'string', 'max:255'],
+            'email'            => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password'         => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         // Create the organization
@@ -69,8 +70,8 @@ class RegisteredUserController extends Controller
 
         $user->assignRole('owner');
 
-        // Start the 14-day trial at the chosen plan
-        $subscriptionService->createTrial($organization, $request->plan);
+        // Start the 14-day trial at the chosen plan and billing interval
+        $subscriptionService->createTrial($organization, $request->plan, $request->billing_interval);
 
         event(new Registered($user));
 

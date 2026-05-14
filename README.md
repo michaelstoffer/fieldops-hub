@@ -8,6 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/michaelstoffer/fieldops-hub?include_prereleases&label=release)](https://github.com/michaelstoffer/fieldops-hub/releases)
 
 A modern field service management platform built for small-to-medium field operations businesses — HVAC, plumbing, electrical, landscaping, and more. Manage customers, schedule jobs, dispatch technicians, and handle billing from a single, fast web application.
 
@@ -266,6 +267,12 @@ Integration keys can also be managed per-organization through the **Settings →
 - Logo uploads are validated for file type (`image` rule) and size (2 MB limit)
 - Stripe webhook endpoint verifies the request signature before processing
 - CSRF protection is enabled on all routes except the Stripe webhook
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a full history of notable changes.
 
 ---
 

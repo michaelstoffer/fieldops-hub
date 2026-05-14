@@ -1,7 +1,27 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { login, register } from '@/routes';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
+
+// Scroll-reveal: add .is-visible when element enters the viewport
+function useScrollReveal() {
+    onMounted(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    });
+}
+
+useScrollReveal();
 
 function registerUrl(plan?: string, founding = false): string {
     const params = new URLSearchParams();
@@ -282,7 +302,7 @@ function getPrice(tier: typeof tiers[0]) {
         <!-- ── Social proof strip ───────────────────────────────────────────── -->
         <div class="bg-slate-800 border-y border-white/5">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
+                <div class="reveal reveal-fade flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
                     <div>
                         <div class="text-2xl font-bold text-white">HVAC</div>
                         <div class="text-xs text-slate-500 mt-0.5">Heating & Cooling</div>
@@ -314,7 +334,7 @@ function getPrice(tier: typeof tiers[0]) {
         <!-- ── Features ─────────────────────────────────────────────────────── -->
         <section id="features" class="py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
+                <div class="reveal reveal-up text-center mb-16">
                     <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-4 py-1.5 mb-4">
                         <span class="text-blue-700 text-sm font-medium">Built for the field</span>
                     </div>
@@ -328,9 +348,10 @@ function getPrice(tier: typeof tiers[0]) {
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div
-                        v-for="feature in features"
+                        v-for="(feature, i) in features"
                         :key="feature.title"
-                        class="group relative rounded-2xl border border-slate-100 bg-slate-50 p-8 hover:border-blue-100 hover:bg-blue-50/30 transition-colors"
+                        class="reveal reveal-up group relative rounded-2xl border border-slate-100 bg-slate-50 p-8 hover:border-blue-100 hover:bg-blue-50/30 transition-colors"
+                        :style="`transition-delay: ${i * 75}ms`"
                     >
                         <div class="h-11 w-11 rounded-xl bg-blue-100 flex items-center justify-center mb-5 group-hover:bg-blue-600 transition-colors">
                             <svg class="h-5 w-5 text-blue-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
@@ -351,7 +372,7 @@ function getPrice(tier: typeof tiers[0]) {
                  style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;">
             </div>
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
+                <div class="reveal reveal-up text-center mb-16">
                     <h2 class="text-3xl sm:text-4xl font-bold text-white">From request to invoice in one flow</h2>
                     <p class="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
                         Every step of the job lifecycle is connected. No copy-paste between systems.
@@ -364,7 +385,7 @@ function getPrice(tier: typeof tiers[0]) {
                         { number: '02', title: 'Schedule the job', body: 'Convert the accepted estimate to a job. Assign it to a technician and it appears on their mobile app instantly.' },
                         { number: '03', title: 'Dispatch & track', body: 'Watch your technicians on a live map. Automated SMS and email keep the customer informed every step.' },
                         { number: '04', title: 'Invoice & collect', body: 'Generate an invoice from the completed job. Customers pay online via Stripe or you record payment your way.' },
-                    ]" :key="i" class="relative">
+                    ]" :key="i" class="reveal reveal-up relative" :style="`transition-delay: ${i * 100}ms`">
                         <!-- Connector line -->
                         <div v-if="i < 3" class="hidden lg:block absolute top-8 left-full w-6 h-px bg-gradient-to-r from-blue-500/40 to-transparent z-10"></div>
 
@@ -381,7 +402,7 @@ function getPrice(tier: typeof tiers[0]) {
         <!-- ── Pricing ──────────────────────────────────────────────────────── -->
         <section id="pricing" class="py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-4">
+                <div class="reveal reveal-up text-center mb-4">
                     <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-4 py-1.5 mb-4">
                         <span class="text-blue-700 text-sm font-medium">Simple, transparent pricing</span>
                     </div>
@@ -414,7 +435,7 @@ function getPrice(tier: typeof tiers[0]) {
                 </div>
 
                 <!-- Founding member banner — removable block -->
-                <div v-if="foundingOffer" class="mb-10 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-400/10 to-orange-400/10 border border-amber-400/30 p-6 sm:p-8">
+                <div v-if="foundingOffer" class="reveal reveal-up mb-10 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-400/10 to-orange-400/10 border border-amber-400/30 p-6 sm:p-8">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
@@ -461,9 +482,10 @@ function getPrice(tier: typeof tiers[0]) {
                 <!-- Pricing cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
                     <div
-                        v-for="tier in tiers"
+                        v-for="(tier, i) in tiers"
                         :key="tier.name"
-                        class="relative rounded-2xl border p-8 flex flex-col"
+                        class="reveal reveal-up relative rounded-2xl border p-8 flex flex-col"
+                        :style="`transition-delay: ${i * 100}ms`"
                         :class="tier.highlight
                             ? 'border-blue-500 bg-slate-900 shadow-xl shadow-blue-500/10 ring-1 ring-blue-500'
                             : 'border-slate-200 bg-white'"
@@ -548,7 +570,7 @@ function getPrice(tier: typeof tiers[0]) {
         <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
         <section id="faq" class="py-24 bg-slate-50">
             <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-14">
+                <div class="reveal reveal-up text-center mb-14">
                     <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">Frequently asked questions</h2>
                     <p class="mt-4 text-lg text-slate-500">Can't find what you're looking for? <a :href="'mailto:hello@fieldopshub.com'" class="text-blue-600 hover:text-blue-700 font-medium">Reach out.</a></p>
                 </div>
@@ -557,7 +579,8 @@ function getPrice(tier: typeof tiers[0]) {
                     <div
                         v-for="(faq, i) in faqs"
                         :key="i"
-                        class="rounded-xl border border-slate-200 bg-white overflow-hidden"
+                        class="reveal reveal-up rounded-xl border border-slate-200 bg-white overflow-hidden"
+                        :style="`transition-delay: ${i * 60}ms`"
                     >
                         <button
                             type="button"
@@ -591,7 +614,7 @@ function getPrice(tier: typeof tiers[0]) {
                  style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;">
             </div>
 
-            <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+            <div class="reveal reveal-up relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
                 <h2 class="text-4xl sm:text-5xl font-bold text-white leading-tight">
                     Ready to stop<br/>
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400">losing jobs to chaos?</span>
@@ -681,3 +704,33 @@ function getPrice(tier: typeof tiers[0]) {
         </Transition>
     </div>
 </template>
+
+<style scoped>
+/* Base state — hidden, shifted down */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+/* Fade-only variant (no upward motion) */
+.reveal.reveal-fade {
+    transform: none;
+    transition: opacity 0.6s ease;
+}
+
+/* Triggered state */
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+</style>

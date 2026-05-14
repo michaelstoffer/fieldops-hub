@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
 import { login, register } from '@/routes';
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 // Scroll-reveal: add .is-visible when element enters the viewport
 function useScrollReveal() {
@@ -181,7 +181,6 @@ const faqs = [
     },
 ];
 
-import { ref } from 'vue';
 const openFaq = ref<number | null>(null);
 const billingAnnual = ref(false);
 

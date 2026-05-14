@@ -1,8 +1,6 @@
 <?php
 
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');

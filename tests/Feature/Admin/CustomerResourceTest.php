@@ -3,11 +3,9 @@
 use App\Models\Customer;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 function ownerUser(): User
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org  = Organization::factory()->create();
     $user = User::factory()->create(['organization_id' => $org->id]);

@@ -6,11 +6,9 @@ use App\Models\Job;
 use App\Models\JobLineItem;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 function lineItemSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org        = Organization::factory()->create();
     $technician = User::factory()->create(['organization_id' => $org->id]);

@@ -17,13 +17,11 @@ use App\Models\JobType;
 use App\Models\Organization;
 use App\Models\Payment;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function e2eSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org        = Organization::factory()->create();
     $owner      = User::factory()->create(['organization_id' => $org->id]);

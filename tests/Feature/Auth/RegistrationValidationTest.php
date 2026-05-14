@@ -1,9 +1,7 @@
 <?php
 
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 $validData = fn (array $overrides = []) => array_merge([
     'plan'                  => 'growth',

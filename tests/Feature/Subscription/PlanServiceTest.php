@@ -4,11 +4,7 @@ use App\Models\Organization;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\PlanService;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(function () {
-    (new RolesAndPermissionsSeeder)->run();
-});
 
 // ── Constants & labels ────────────────────────────────────────────────────────
 

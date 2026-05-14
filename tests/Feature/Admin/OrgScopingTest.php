@@ -7,16 +7,12 @@ use App\Models\JobType;
 use App\Models\Organization;
 use App\Models\Property;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 /**
  * Verifies that every admin resource's edit page returns 404 when the record
  * belongs to a different organization — confirming the org-scoping in
  * getEloquentQuery() is enforced at the HTTP level.
  */
-beforeEach(function () {
-    (new RolesAndPermissionsSeeder)->run();
-});
 
 function scopedOwner(): array
 {

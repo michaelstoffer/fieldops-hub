@@ -5,11 +5,9 @@ use App\Models\JobType;
 use App\Models\Organization;
 use App\Models\OrganizationSetting;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 function setupUser(string $role = 'owner'): array
 {
-    (new RolesAndPermissionsSeeder)->run();
     $org  = Organization::factory()->create();
     $user = User::factory()->create(['organization_id' => $org->id]);
     $user->assignRole($role);
@@ -20,20 +18,17 @@ function setupUser(string $role = 'owner'): array
 // ── isComplete() logic ────────────────────────────────────────────────────────
 
 test('isComplete returns false when company name is missing', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $org = Organization::factory()->create();
     expect(SetupController::isComplete($org->id))->toBeFalse();
 });
 
 test('isComplete returns false when no job types exist', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $org = Organization::factory()->create();
     OrganizationSetting::factory()->create(['organization_id' => $org->id, 'company_name' => 'Acme']);
     expect(SetupController::isComplete($org->id))->toBeFalse();
 });
 
 test('isComplete returns false when no technicians exist', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $org = Organization::factory()->create();
     OrganizationSetting::factory()->create(['organization_id' => $org->id, 'company_name' => 'Acme']);
     JobType::factory()->create(['organization_id' => $org->id]);
@@ -41,7 +36,6 @@ test('isComplete returns false when no technicians exist', function () {
 });
 
 test('isComplete returns true when all steps are done', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $org  = Organization::factory()->create();
     $tech = User::factory()->create(['organization_id' => $org->id]);
     $tech->assignRole('technician');

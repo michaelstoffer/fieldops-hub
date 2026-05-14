@@ -4,9 +4,7 @@ use App\Models\Organization;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Services\SubscriptionService;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 /**
  * Helper: owner + active trialing subscription.

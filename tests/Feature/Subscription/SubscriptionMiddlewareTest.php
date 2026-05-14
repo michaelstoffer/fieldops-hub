@@ -3,9 +3,7 @@
 use App\Models\Organization;
 use App\Models\Subscription;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 // ── Access allowed during active trial ────────────────────────────────────────
 

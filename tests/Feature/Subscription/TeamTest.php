@@ -3,9 +3,7 @@
 use App\Models\Organization;
 use App\Models\Subscription;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
-beforeEach(fn () => (new RolesAndPermissionsSeeder)->run());
 
 /**
  * Helper: create an owner + active trialing subscription for an org.

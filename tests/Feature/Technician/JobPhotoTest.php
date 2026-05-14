@@ -5,7 +5,6 @@ use App\Models\Customer;
 use App\Models\Job;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +15,6 @@ function attachmentDisk(): string
 
 function photoSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org        = Organization::factory()->create();
     $technician = User::factory()->create(['organization_id' => $org->id]);

@@ -7,11 +7,9 @@ use App\Models\JobLineItem;
 use App\Models\JobType;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 function reportingSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
     $org      = Organization::factory()->create();
     $user     = User::factory()->create(['organization_id' => $org->id]);
     $user->assignRole('owner');
@@ -22,7 +20,6 @@ function reportingSetup(): array
 
 function seedRoles(): void
 {
-    (new RolesAndPermissionsSeeder)->run();
 }
 
 // ── Authentication ─────────────────────────────────────────────────────────────

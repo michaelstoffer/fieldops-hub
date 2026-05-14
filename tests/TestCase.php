@@ -7,6 +7,9 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    // Run after RefreshDatabase re-seeds — roles must exist before any assignRole() call.
+    protected $seeder = \Database\Seeders\RolesAndPermissionsSeeder::class;
+
     protected function setUp(): void
     {
         parent::setUp();

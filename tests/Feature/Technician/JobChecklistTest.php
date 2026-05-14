@@ -7,11 +7,9 @@ use App\Models\JobType;
 use App\Models\JobTypeChecklistItem;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 function checklistSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org        = Organization::factory()->create();
     $technician = User::factory()->create(['organization_id' => $org->id]);

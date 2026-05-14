@@ -4,12 +4,10 @@ use App\Models\Customer;
 use App\Models\Job;
 use App\Models\Organization;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 // Helper: create a user with a given role in their own org
 function techUser(string $role): array
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org  = Organization::factory()->create();
     $user = User::factory()->create(['organization_id' => $org->id]);
@@ -50,7 +48,6 @@ test('bookkeeper role cannot access technician dashboard', function () {
 });
 
 test('user with no role cannot access technician dashboard', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->create();
     $this->actingAs($user)->get('/technician/dashboard')->assertForbidden();
 });

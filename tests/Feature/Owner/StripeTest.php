@@ -5,13 +5,11 @@ use App\Models\Invoice;
 use App\Models\Organization;
 use App\Models\Payment;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 use Stripe\Checkout\Session as CheckoutSession;
 use Stripe\StripeClient;
 
 function stripeSetup(): array
 {
-    (new RolesAndPermissionsSeeder)->run();
     $org      = Organization::factory()->create();
     $user     = User::factory()->create(['organization_id' => $org->id]);
     $user->assignRole('owner');

@@ -7,12 +7,10 @@ use App\Models\JobType;
 use App\Models\Organization;
 use App\Models\Property;
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 // Helper: create an org-scoped user and assign a role
 function adminTestUser(string $role): User
 {
-    (new RolesAndPermissionsSeeder)->run();
 
     $org  = Organization::factory()->create();
     $user = User::factory()->create(['organization_id' => $org->id]);
@@ -56,7 +54,6 @@ test('bookkeeper cannot access the admin panel', function () {
 });
 
 test('authenticated user with no role cannot access the admin panel', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->create();
 
     $this->actingAs($user)->get('/admin')->assertForbidden();

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use Database\Seeders\RolesAndPermissionsSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
 
 test('guests are redirected from profile settings', function () {
@@ -38,7 +37,6 @@ test('appearance page can be rendered', function () {
 });
 
 test('inertia shared props include auth user for authenticated requests', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->create();
     $user->assignRole('owner');
 
@@ -52,7 +50,6 @@ test('inertia shared props include auth user for authenticated requests', functi
 });
 
 test('inertia shared props do not expose password', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->create();
     $user->assignRole('owner');
 
@@ -64,7 +61,6 @@ test('inertia shared props do not expose password', function () {
 });
 
 test('inertia shared props do not expose two factor secret', function () {
-    (new RolesAndPermissionsSeeder)->run();
     $user = User::factory()->withTwoFactor()->create();
     $user->assignRole('owner');
 

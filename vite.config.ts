@@ -58,7 +58,8 @@ export default defineConfig({
     ],
 
     build: {
-        // Raise the warning threshold — chunks over 1MB get flagged
+        target: 'es2020',
+        cssCodeSplit: true,
         chunkSizeWarningLimit: 1000,
         rollupOptions: {
             output: {

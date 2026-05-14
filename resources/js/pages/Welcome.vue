@@ -11,6 +11,22 @@ function registerUrl(plan?: string, founding = false): string {
     return qs ? `${register().url}?${qs}` : register().url;
 }
 
+const showBackToTop = ref(false);
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', () => {
+        showBackToTop.value = window.scrollY > 400;
+    }, { passive: true });
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scrollToSection(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
 const props = defineProps<{
     foundingOffer: {
         remaining: number;
@@ -168,20 +184,20 @@ function getPrice(tier: typeof tiers[0]) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <!-- Logo -->
-                    <div class="flex items-center gap-2.5">
+                    <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
                         <div class="h-8 w-8 rounded-lg bg-blue-500 flex items-center justify-center shadow-md shadow-blue-500/30">
                             <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
                         <span class="text-white font-semibold tracking-tight">FieldOps Hub</span>
-                    </div>
+                    </button>
 
                     <!-- Nav links -->
                     <nav class="hidden md:flex items-center gap-6">
-                        <a href="#features" class="text-sm text-slate-400 hover:text-white transition-colors">Features</a>
-                        <a href="#pricing" class="text-sm text-slate-400 hover:text-white transition-colors">Pricing</a>
-                        <a href="#faq" class="text-sm text-slate-400 hover:text-white transition-colors">FAQ</a>
+                        <button type="button" @click="scrollToSection('features')" class="text-sm text-slate-400 hover:text-white transition-colors">Features</button>
+                        <button type="button" @click="scrollToSection('pricing')" class="text-sm text-slate-400 hover:text-white transition-colors">Pricing</button>
+                        <button type="button" @click="scrollToSection('faq')" class="text-sm text-slate-400 hover:text-white transition-colors">FAQ</button>
                     </nav>
 
                     <!-- Auth links -->
@@ -240,12 +256,13 @@ function getPrice(tier: typeof tiers[0]) {
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                         </svg>
                     </Link>
-                    <a
-                        href="#pricing"
+                    <button
+                        type="button"
+                        @click="scrollToSection('pricing')"
                         class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/10 hover:border-white/20 px-8 py-3.5 text-base font-medium text-slate-300 hover:text-white transition-colors"
                     >
                         See pricing
-                    </a>
+                    </button>
                 </div>
 
                 <p class="mt-4 text-sm text-slate-500">No credit card required. Cancel any time.</p>
@@ -622,19 +639,19 @@ function getPrice(tier: typeof tiers[0]) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
                     <!-- Logo -->
-                    <div class="flex items-center gap-2.5">
+                    <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
                         <div class="h-7 w-7 rounded-lg bg-blue-500 flex items-center justify-center">
                             <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
                         </div>
                         <span class="text-white font-semibold text-sm tracking-tight">FieldOps Hub</span>
-                    </div>
+                    </button>
 
                     <nav class="flex items-center gap-6">
-                        <a href="#features" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Features</a>
-                        <a href="#pricing" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Pricing</a>
-                        <a href="#faq" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">FAQ</a>
+                        <button type="button" @click="scrollToSection('features')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Features</button>
+                        <button type="button" @click="scrollToSection('pricing')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Pricing</button>
+                        <button type="button" @click="scrollToSection('faq')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">FAQ</button>
                         <Link :href="login().url" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Sign in</Link>
                     </nav>
 
@@ -642,5 +659,25 @@ function getPrice(tier: typeof tiers[0]) {
                 </div>
             </div>
         </footer>
+
+        <!-- ── Back to top ──────────────────────────────────────────────────── -->
+        <Transition
+            enter-active-class="transition-opacity duration-200"
+            leave-active-class="transition-opacity duration-200"
+            enter-from-class="opacity-0"
+            leave-to-class="opacity-0"
+        >
+            <button
+                v-if="showBackToTop"
+                type="button"
+                @click="scrollToTop"
+                class="fixed bottom-6 right-6 z-50 h-10 w-10 rounded-full bg-slate-700 hover:bg-slate-600 text-white shadow-lg flex items-center justify-center transition-colors"
+                aria-label="Back to top"
+            >
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+                </svg>
+            </button>
+        </Transition>
     </div>
 </template>

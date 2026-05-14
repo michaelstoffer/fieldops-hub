@@ -18,10 +18,12 @@ class Organization extends Model
         'plan',
         'trial_ends_at',
         'stripe_customer_id',
+        'founding_member',
     ];
 
     protected $casts = [
-        'trial_ends_at' => 'datetime',
+        'trial_ends_at'   => 'datetime',
+        'founding_member' => 'boolean',
     ];
 
     public function users(): HasMany

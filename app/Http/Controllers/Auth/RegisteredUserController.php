@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\FoundingMemberCoupon;
 use App\Models\Organization;
 use App\Models\User;
-use App\Services\PlanService;
 use App\Services\SubscriptionService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -42,10 +42,21 @@ class RegisteredUserController extends Controller
             $slug = $baseSlug.'-'.$counter++;
         }
 
+        // Honour founding member invite if the coupon still has slots
+        $isFoundingMember = false;
+        if ($request->boolean('founding')) {
+            $coupon = FoundingMemberCoupon::where('active', true)->first();
+            if ($coupon && $coupon->isAvailable()) {
+                $isFoundingMember = true;
+                $coupon->incrementUses();
+            }
+        }
+
         $organization = Organization::create([
-            'name'     => $request->company_name,
-            'slug'     => $slug,
-            'plan'     => $request->plan,
+            'name'            => $request->company_name,
+            'slug'            => $slug,
+            'plan'            => $request->plan,
+            'founding_member' => $isFoundingMember,
         ]);
 
         // Create the owner user

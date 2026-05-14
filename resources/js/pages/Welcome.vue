@@ -3,15 +3,19 @@ import { Head, Link } from '@inertiajs/vue3';
 import { login, register } from '@/routes';
 import { computed } from 'vue';
 
-function registerUrl(plan?: string): string {
-    return plan ? `${register().url}?plan=${plan}` : register().url;
+function registerUrl(plan?: string, founding = false): string {
+    const params = new URLSearchParams();
+    if (plan) params.set('plan', plan);
+    if (founding) params.set('founding', '1');
+    const qs = params.toString();
+    return qs ? `${register().url}?${qs}` : register().url;
 }
 
 const props = defineProps<{
     foundingOffer: {
-        discount_percent: number;
         remaining: number;
         max_uses: number;
+        prices: { starter: number; growth: number; pro: number };
     } | null;
 }>();
 
@@ -211,7 +215,7 @@ function getPrice(tier: typeof tiers[0]) {
                 <div v-if="foundingOffer" class="inline-flex items-center gap-2 rounded-full bg-amber-400/10 border border-amber-400/30 px-4 py-1.5 mb-8">
                     <span class="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                     <span class="text-amber-300 text-sm font-medium">
-                        Founding Member spots open — {{ foundingOffer.remaining }} of {{ foundingOffer.max_uses }} remaining
+                        Founding Member price lock — {{ foundingOffer.remaining }} of {{ foundingOffer.max_uses }} spots remaining
                     </span>
                 </div>
 
@@ -398,15 +402,18 @@ function getPrice(tier: typeof tiers[0]) {
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="inline-flex items-center rounded-full bg-amber-400/20 border border-amber-400/40 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
-                                    Founding Member Offer
+                                    Founding Member Pricing
                                 </span>
                                 <span class="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                             </div>
                             <h3 class="text-lg font-bold text-slate-900">
-                                {{ foundingOffer.discount_percent }}% off for life — in exchange for your feedback.
+                                Lock in the annual rate, billed monthly — forever.
                             </h3>
                             <p class="mt-1 text-sm text-slate-600">
-                                We're looking for our first {{ foundingOffer.max_uses }} customers to shape the product. Lock in a permanent {{ foundingOffer.discount_percent }}% discount. No code needed — discount applied automatically at signup.
+                                Starter ${{ foundingOffer.prices.starter }}&nbsp;&bull;
+                                Growth ${{ foundingOffer.prices.growth }}&nbsp;&bull;
+                                Pro ${{ foundingOffer.prices.pro }}&nbsp;— per month, no annual commitment, price locked for life.
+                                Only {{ foundingOffer.max_uses }} spots. No code needed — applied automatically at checkout.
                             </p>
                             <!-- Progress bar -->
                             <div class="mt-3 flex items-center gap-3">
@@ -422,7 +429,7 @@ function getPrice(tier: typeof tiers[0]) {
                             </div>
                         </div>
                         <Link
-                            :href="registerUrl()"
+                            :href="registerUrl(undefined, true)"
                             class="shrink-0 inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-white transition-colors shadow-lg shadow-amber-500/25"
                         >
                             Claim my spot
@@ -579,7 +586,7 @@ function getPrice(tier: typeof tiers[0]) {
                 <!-- Founding member CTA variant -->
                 <div v-if="foundingOffer" class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                     <Link
-                        :href="registerUrl()"
+                        :href="registerUrl(undefined, true)"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-base font-bold text-white transition-colors shadow-lg shadow-amber-500/25"
                     >
                         Claim your Founding Member spot

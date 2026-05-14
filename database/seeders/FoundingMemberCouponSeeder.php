@@ -10,10 +10,10 @@ class FoundingMemberCouponSeeder extends Seeder
     public function run(): void
     {
         FoundingMemberCoupon::firstOrCreate(
-            ['code' => 'FOUNDING40'],
+            ['code' => 'FOUNDING'],
             [
-                'description' => 'Founding Member — 40% off for life',
-                'discount_percent' => 40,
+                'description' => 'Founding Member — price locked at annual rate, billed monthly forever',
+                'discount_percent' => 20,
                 'max_uses' => 10,
                 'uses' => 0,
                 'active' => true,

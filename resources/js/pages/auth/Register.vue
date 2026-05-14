@@ -28,9 +28,10 @@ const PLANS = [
     },
 ];
 
-// Read ?plan= from URL query string
+// Read ?plan= and ?founding= from URL query string
 const validPlans = ['starter', 'growth', 'pro'];
 const queryPlan = new URLSearchParams(window.location.search).get('plan') ?? '';
+const isFoundingInvite = new URLSearchParams(window.location.search).get('founding') === '1';
 
 // Step 1 = plan selection, Step 2 = account details
 // Skip to step 2 if a valid plan was pre-selected from the pricing page
@@ -51,6 +52,7 @@ function goToDetails() {
 
 const form = useForm({
     plan: selectedPlan,
+    founding: isFoundingInvite,
     company_name: '',
     name: '',
     email: '',
@@ -203,6 +205,19 @@ const submit = () => {
                         <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
                             {{ selectedPlanLabel }} plan — 14-day free trial
                         </span>
+                    </div>
+
+                    <!-- Founding member invite callout -->
+                    <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3">
+                        <span class="mt-0.5 h-4 w-4 shrink-0 text-amber-500">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <p class="text-sm font-semibold text-amber-800">Founding Member invite</p>
+                            <p class="text-xs text-amber-700 mt-0.5">Your price locks in at the annual rate, billed monthly — forever. No annual commitment required.</p>
+                        </div>
                     </div>
 
                     <h2 class="text-2xl font-bold text-slate-900">Create your account</h2>

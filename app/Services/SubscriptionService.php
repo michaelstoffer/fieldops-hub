@@ -87,18 +87,25 @@ class SubscriptionService
         $customerId = $this->ensureStripeCustomer($org, $ownerEmail, $ownerName);
 
         $params = [
-            'customer'             => $customerId,
-            'mode'                 => 'subscription',
-            'line_items'           => [['price' => $priceId, 'quantity' => 1]],
-            'success_url'          => $successUrl,
-            'cancel_url'           => $cancelUrl,
-            'allow_promotion_codes'=> true,
-            'metadata'             => [
+            'customer'  => $customerId,
+            'mode'      => 'subscription',
+            'line_items'=> [['price' => $priceId, 'quantity' => 1]],
+            'success_url' => $successUrl,
+            'cancel_url'  => $cancelUrl,
+            'metadata'    => [
                 'organization_id' => $org->id,
                 'plan'            => $plan,
                 'interval'        => $interval,
             ],
         ];
+
+        // Founding members get a permanent 20%-off coupon applied silently at checkout
+        $foundingCouponId = env('STRIPE_COUPON_FOUNDING');
+        if ($org->founding_member && $foundingCouponId) {
+            $params['discounts'] = [['coupon' => $foundingCouponId]];
+        } else {
+            $params['allow_promotion_codes'] = true;
+        }
 
         // If still in trial, carry trial days over to Stripe
         $subscription = $org->activeSubscription();

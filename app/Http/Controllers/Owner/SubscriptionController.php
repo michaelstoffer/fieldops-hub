@@ -35,9 +35,10 @@ class SubscriptionController extends Controller
                 'days_remaining'    => $subscription->trialDaysRemaining(),
                 'is_trialing'       => $subscription->isTrialing(),
             ] : null,
-            'current_plan'   => $org->plan,
-            'active_plan'    => $this->planService->activePlan($org),
-            'plans'          => $this->planData(),
+            'current_plan'    => $org->plan,
+            'active_plan'     => $this->planService->activePlan($org),
+            'plans'           => $this->planData(),
+            'founding_member' => (bool) $org->founding_member,
         ]);
     }
 

@@ -34,8 +34,8 @@ const queryPlan = new URLSearchParams(window.location.search).get('plan') ?? '';
 const isFoundingInvite = new URLSearchParams(window.location.search).get('founding') === '1';
 
 // Step 1 = plan selection, Step 2 = account details
-// Skip to step 2 if a valid plan was pre-selected from the pricing page
-const step = ref<1 | 2>(validPlans.includes(queryPlan) ? 2 : 1);
+// Skip to step 2 if a valid plan was pre-selected from the pricing page, or if this is a founding invite
+const step = ref<1 | 2>(validPlans.includes(queryPlan) || isFoundingInvite ? 2 : 1);
 const selectedPlan = ref<string>(validPlans.includes(queryPlan) ? queryPlan : 'growth');
 
 const selectedPlanLabel = computed(() =>

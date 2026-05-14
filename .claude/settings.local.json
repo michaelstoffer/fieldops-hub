@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\" -File -Depth 0)",
+      "Bash(Select-Object Name)",
+      "Bash(Sort-Object Name)"
+    ]
+  }
+}

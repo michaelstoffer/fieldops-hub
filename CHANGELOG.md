@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.8.12-alpha]
+## [0.8.13-alpha] - 2026-05-14
+
+### Added
+
+- Scroll-reveal animations on the marketing page: sections and cards fade up into view as the user scrolls, using IntersectionObserver with staggered delays on feature cards, how-it-works steps, pricing cards, and FAQ items
+- Smooth scrolling for marketing page navigation links (Features, Pricing, FAQ)
+- Back-to-top button fixed to the bottom-right corner of the marketing page, visible after scrolling down
+- Logo click scrolls to top of the marketing page
+- `FUNDING.yml` with GitHub Sponsors, Buy Me a Coffee, and Ko-fi links
+- Laravel Boost and MCP server configuration for AI-assisted local development
+
+### Fixed
+
+- `public/hot` presence causing the production build to load Vite dev server URLs instead of the compiled manifest
+
+## [0.8.12-alpha] - 2026-05-14
 
 ### Added
 
@@ -98,7 +113,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Demo seeder with sample organisation, users, job types, and customers
 - GitHub Actions CI: test suite (PHP 8.4 + Node 22) and linter (Pint + Prettier + ESLint)
 
-[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.11-alpha...HEAD
+[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.13-alpha...HEAD
+[0.8.13-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.12-alpha...v0.8.13-alpha
+[0.8.12-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.11-alpha...v0.8.12-alpha
 [0.8.11-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.10-alpha...v0.8.11-alpha
 [0.8.10-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.9-alpha...v0.8.10-alpha
 [0.8.9-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.1.0...v0.8.9-alpha

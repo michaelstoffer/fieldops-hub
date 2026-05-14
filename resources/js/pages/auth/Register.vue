@@ -8,6 +8,7 @@ const PLANS = [
         key: 'starter',
         name: 'Starter',
         price: 79,
+        foundingPrice: 63,
         seats: 'Up to 3 technicians',
         description: 'Small crew getting organized.',
     },
@@ -15,6 +16,7 @@ const PLANS = [
         key: 'growth',
         name: 'Growth',
         price: 149,
+        foundingPrice: 119,
         seats: 'Up to 10 technicians',
         description: 'For growing field operations.',
         popular: true,
@@ -23,6 +25,7 @@ const PLANS = [
         key: 'pro',
         name: 'Pro',
         price: 249,
+        foundingPrice: 199,
         seats: 'Unlimited technicians',
         description: 'Established, unlimited scale.',
     },
@@ -34,8 +37,8 @@ const queryPlan = new URLSearchParams(window.location.search).get('plan') ?? '';
 const isFoundingInvite = new URLSearchParams(window.location.search).get('founding') === '1';
 
 // Step 1 = plan selection, Step 2 = account details
-// Skip to step 2 if a valid plan was pre-selected from the pricing page, or if this is a founding invite
-const step = ref<1 | 2>(validPlans.includes(queryPlan) || isFoundingInvite ? 2 : 1);
+// Skip to step 2 if a valid plan was pre-selected from the pricing page
+const step = ref<1 | 2>(validPlans.includes(queryPlan) ? 2 : 1);
 const selectedPlan = ref<string>(validPlans.includes(queryPlan) ? queryPlan : 'growth');
 
 const selectedPlanLabel = computed(() =>
@@ -138,6 +141,19 @@ const submit = () => {
                     </p>
                 </div>
 
+                <!-- Founding member banner -->
+                <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3">
+                    <span class="mt-0.5 h-4 w-4 shrink-0 text-amber-500">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                        </svg>
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold text-amber-800">Founding Member invite</p>
+                        <p class="text-xs text-amber-700 mt-0.5">Your price locks in at the founding rate — forever. No annual commitment required. Prices shown below.</p>
+                    </div>
+                </div>
+
                 <div class="space-y-3">
                     <button
                         v-for="p in PLANS"
@@ -167,8 +183,15 @@ const submit = () => {
                         </div>
 
                         <div class="shrink-0 text-right">
-                            <span class="font-bold text-slate-900">${{ p.price }}</span>
-                            <span class="text-xs text-slate-400">/mo</span>
+                            <template v-if="isFoundingInvite">
+                                <span class="font-bold text-slate-900">${{ p.foundingPrice }}</span>
+                                <span class="text-xs text-slate-400">/mo</span>
+                                <div class="text-xs text-slate-400 line-through">${{ p.price }}/mo</div>
+                            </template>
+                            <template v-else>
+                                <span class="font-bold text-slate-900">${{ p.price }}</span>
+                                <span class="text-xs text-slate-400">/mo</span>
+                            </template>
                         </div>
                     </button>
                 </div>

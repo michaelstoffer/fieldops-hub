@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.12-alpha]
+
+### Added
+
+- `CONTRIBUTING.md` with local setup, branch naming, coding standards, and PR guidelines
+- `CHANGELOG.md` in Keep a Changelog format
+- `CODE_OF_CONDUCT.md` based on Contributor Covenant 2.1
+- `SECURITY.md` with supported versions, reporting instructions, scope, and disclosure policy
+- Pull request template with type of change checkboxes and pre-submit checklist
+- Issue templates for bug reports and feature requests, replacing the generic GitHub defaults
+- `ISSUE_TEMPLATE/config.yml` disabling blank issues and linking to GitHub Discussions
+- Release badge added to README; Changelog section linked from README
+
+### Changed
+
+- Security vulnerability contact email updated to <mstoffer@michaelstoffer.com>
+
 ## [0.8.11-alpha] - 2026-05-14
 
 ### Added

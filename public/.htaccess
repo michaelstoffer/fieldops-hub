@@ -1,3 +1,15 @@
+# Cache hashed Vite assets for 1 year — filenames change on content change
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|woff2|png|svg|ico|webp|avif)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
+# Compress text-based assets
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes

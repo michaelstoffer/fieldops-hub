@@ -4,7 +4,12 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\" -File -Depth 0)",
       "Bash(Select-Object Name)",
       "Bash(Sort-Object Name)",
-      "Bash(Test-Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\\\\public\\\\hot\")"
+      "Bash(Test-Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\\\\public\\\\hot\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\\\\tests\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\mstof\\\\Herd\\\\fieldops-hub\" -Force)",
+      "Bash(Select-Object Name, Mode)"
     ]
   }
 }

@@ -1,38 +1,40 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+about: Something isn't working as expected
+title: '[Bug] '
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
+## Describe the bug
+
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
+## Steps to reproduce
+
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+2. Click '...'
+3. See error
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected behaviour
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+What you expected to happen.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Actual behaviour
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+What actually happened. Include any error messages, stack traces, or console output.
 
-**Additional context**
-Add any other context about the problem here.
+## Environment
+
+- PHP version:
+- Browser and version:
+- OS:
+- Self-hosted or cloud-hosted:
+
+## Relevant logs or screenshots
+
+Paste any relevant log output here (wrap in code blocks). Attach screenshots if helpful.
+
+## Additional context
+
+Any other context that might help diagnose the issue.

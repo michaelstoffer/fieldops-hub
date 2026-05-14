@@ -44,14 +44,20 @@ class RegisteredUserController extends Controller
             $slug = $baseSlug.'-'.$counter++;
         }
 
-        // Honour founding member invite if the coupon still has slots
+        // Honour founding member invite if the coupon still has slots (atomic to prevent overselling)
         $isFoundingMember = false;
         if ($request->boolean('founding')) {
-            $coupon = FoundingMemberCoupon::where('active', true)->first();
-            if ($coupon && $coupon->isAvailable()) {
-                $isFoundingMember = true;
-                $coupon->incrementUses();
-            }
+            DB::transaction(function () use (&$isFoundingMember) {
+                $coupon = FoundingMemberCoupon::where('code', 'FOUNDING')
+                    ->where('active', true)
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($coupon && $coupon->isAvailable()) {
+                    $coupon->incrementUses();
+                    $isFoundingMember = true;
+                }
+            });
         }
 
         $organization = Organization::create([

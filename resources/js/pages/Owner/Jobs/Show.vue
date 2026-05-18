@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 interface Invoice {
     id: number;
@@ -92,6 +93,21 @@ function cancelJob() {
         router.delete(`/owner/jobs/${props.job.id}`);
     }
 }
+
+const NEXT_STEP: Record<string, { status: string; label: string }> = {
+    scheduled:   { status: 'en_route',    label: 'Mark En Route' },
+    en_route:    { status: 'in_progress', label: 'Mark In Progress' },
+    in_progress: { status: 'completed',   label: 'Mark Completed' },
+    on_hold:     { status: 'scheduled',   label: 'Resume Job' },
+};
+
+const nextStep = computed(() => NEXT_STEP[props.job.status] ?? null);
+
+function advanceStatus() {
+    if (!nextStep.value) return;
+    statusForm.status = nextStep.value.status;
+    statusForm.patch(`/owner/jobs/${props.job.id}/status`);
+}
 </script>
 
 <template>
@@ -117,6 +133,15 @@ function cancelJob() {
                 </span>
             </div>
             <div class="flex gap-2">
+                <button
+                    v-if="nextStep"
+                    type="button"
+                    class="inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                    :disabled="statusForm.processing"
+                    @click="advanceStatus"
+                >
+                    {{ nextStep.label }}
+                </button>
                 <Link
                     :href="`/owner/jobs/${job.id}/edit`"
                     class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"

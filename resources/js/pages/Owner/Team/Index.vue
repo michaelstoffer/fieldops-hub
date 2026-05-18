@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Team', href: '/owner/team' },
-];
+import OwnerLayout from '@/layouts/OwnerLayout.vue';
 
 const props = defineProps<{
     team_members: Array<{
@@ -68,7 +63,7 @@ const ROLE_COLORS: Record<string, string> = {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <OwnerLayout title="Team Members">
         <Head title="Team Members" />
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
@@ -228,5 +223,5 @@ const ROLE_COLORS: Record<string, string> = {
                 </table>
             </div>
         </div>
-    </AppLayout>
+    </OwnerLayout>
 </template>

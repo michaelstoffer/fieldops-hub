@@ -19,7 +19,7 @@ function deactivate(id: number) {
 }
 
 function activate(id: number) {
-    router.patch(`/owner/job-types/${id}`, { is_active: true } as any, { preserveScroll: true });
+    router.patch(`/owner/job-types/${id}/activate`, {}, { preserveScroll: true });
 }
 </script>
 
@@ -38,8 +38,11 @@ function activate(id: number) {
         </div>
 
         <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-            <div v-if="jobTypes.length === 0" class="px-6 py-12 text-center text-sm text-slate-400">
-                No job types yet. Add one to get started.
+            <div v-if="jobTypes.length === 0" class="px-6 py-16 text-center">
+                <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L9.568 3z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" /></svg>
+                <p class="mt-3 text-sm font-semibold text-slate-700">No job types yet</p>
+                <p class="mt-1 text-sm text-slate-400">Add a job type to categorize your work.</p>
+                <Link href="/owner/job-types/create" class="mt-4 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">+ Add Job Type</Link>
             </div>
 
             <ul v-else class="divide-y divide-slate-100">

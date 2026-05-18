@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface LineItem {
     id: number;
@@ -61,9 +61,12 @@ const TIER_LABELS: Record<string, string> = { good: 'Good', better: 'Better', be
 
 const sendForm = useForm({});
 const convertForm = useForm({});
+const showSendModal = ref(false);
 
-function sendEstimate() {
-    sendForm.post(`/owner/estimates/${props.estimate.id}/send`);
+function confirmSend() {
+    sendForm.post(`/owner/estimates/${props.estimate.id}/send`, {
+        onSuccess: () => { showSendModal.value = false; },
+    });
 }
 
 function convertToJob() {
@@ -130,9 +133,8 @@ function formatCurrency(val: string | number): string {
                 <button
                     v-if="estimate.status === 'draft'"
                     type="button"
-                    class="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
-                    :disabled="sendForm.processing"
-                    @click="sendEstimate"
+                    class="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700"
+                    @click="showSendModal = true"
                 >
                     Send to Customer
                 </button>
@@ -266,6 +268,44 @@ function formatCurrency(val: string | number): string {
         <!-- Footer -->
         <div v-if="estimate.footer" class="mt-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
             <p class="whitespace-pre-wrap text-sm text-slate-500">{{ estimate.footer }}</p>
+        </div>
+
+        <!-- Send confirmation modal -->
+        <div v-if="showSendModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+            <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+                <h3 class="text-base font-semibold text-slate-800">Send Estimate to Customer?</h3>
+                <p class="mt-1 text-sm text-slate-500">This will send the estimate link to the customer by email.</p>
+                <dl class="mt-4 space-y-2 rounded-lg bg-slate-50 px-4 py-3 text-sm">
+                    <div class="flex gap-2">
+                        <dt class="w-16 shrink-0 font-medium text-slate-500">To:</dt>
+                        <dd class="text-slate-800">
+                            {{ estimate.customer ? `${estimate.customer.first_name} ${estimate.customer.last_name}` : '—' }}
+                            <span v-if="estimate.customer?.email" class="text-slate-500">({{ estimate.customer.email }})</span>
+                        </dd>
+                    </div>
+                    <div class="flex gap-2">
+                        <dt class="w-16 shrink-0 font-medium text-slate-500">Link:</dt>
+                        <dd class="truncate text-blue-600">{{ publicUrl }}</dd>
+                    </div>
+                </dl>
+                <div class="mt-5 flex justify-end gap-2">
+                    <button
+                        type="button"
+                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        @click="showSendModal = false"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                        :disabled="sendForm.processing"
+                        @click="confirmSend"
+                    >
+                        {{ sendForm.processing ? 'Sending…' : 'Confirm Send' }}
+                    </button>
+                </div>
+            </div>
         </div>
     </OwnerLayout>
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 
 interface JobSummary {
     id: number;
@@ -27,7 +27,16 @@ interface Technician {
     upcoming_jobs: JobSummary[];
 }
 
-defineProps<{ technicians: { id: number; name: string }[] }>();
+interface UnassignedJob {
+    id: number;
+    title: string;
+    scheduled_at: string | null;
+}
+
+const props = defineProps<{
+    technicians: { id: number; name: string }[];
+    unassignedJobs: UnassignedJob[];
+}>();
 
 const POLL_INTERVAL = 15_000; // 15 seconds
 const hasMapsKey = !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -36,6 +45,30 @@ const mapRef = ref<HTMLElement | null>(null);
 const focused = ref<Technician | null>(null);
 const showTrails = ref(false);
 const techs = ref<Technician[]>([]);
+const showAssignDropdown = ref(false);
+const assigning = ref(false);
+
+const unassignedJobs = computed(() => props.unassignedJobs);
+
+async function assignJob(jobId: number) {
+    if (!focused.value) return;
+    assigning.value = true;
+    try {
+        await fetch(`/owner/jobs/${jobId}/reassign`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+            },
+            body: JSON.stringify({ assigned_to: focused.value.id }),
+        });
+        showAssignDropdown.value = false;
+        await fetchLocations();
+    } finally {
+        assigning.value = false;
+    }
+}
 
 // Google Maps objects
 let map: google.maps.Map | null = null;
@@ -323,7 +356,7 @@ onUnmounted(() => {
                             <button
                                 type="button"
                                 class="text-slate-400 hover:text-slate-600"
-                                @click="focused = null"
+                                @click="focused = null; showAssignDropdown = false"
                             >
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
@@ -374,6 +407,42 @@ onUnmounted(() => {
 
                         <div v-if="!focused.current_job && focused.upcoming_jobs.length === 0" class="px-4 py-6 text-center">
                             <p class="text-sm text-slate-400">No active or upcoming jobs today.</p>
+                        </div>
+
+                        <!-- Assign job -->
+                        <div class="border-t border-slate-100 px-4 py-3">
+                            <button
+                                v-if="!showAssignDropdown"
+                                type="button"
+                                class="w-full rounded-lg border border-slate-200 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                                @click="showAssignDropdown = true"
+                            >
+                                + Assign Job
+                            </button>
+                            <div v-else>
+                                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Assign Unassigned Job</p>
+                                <div v-if="unassignedJobs.length === 0" class="text-xs text-slate-400">No unassigned upcoming jobs.</div>
+                                <div v-else class="space-y-1">
+                                    <button
+                                        v-for="job in unassignedJobs"
+                                        :key="job.id"
+                                        type="button"
+                                        class="w-full rounded-lg bg-slate-50 px-3 py-2 text-left text-xs hover:bg-slate-100 disabled:opacity-50"
+                                        :disabled="assigning"
+                                        @click="assignJob(job.id)"
+                                    >
+                                        <p class="font-medium text-slate-800">{{ job.title }}</p>
+                                        <p class="text-slate-400">{{ formatTime(job.scheduled_at) }}</p>
+                                    </button>
+                                </div>
+                                <button
+                                    type="button"
+                                    class="mt-2 text-xs text-slate-400 hover:text-slate-600"
+                                    @click="showAssignDropdown = false"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </transition>

@@ -42,7 +42,6 @@ function navClass(href: string): string {
                 <Link href="/owner/calendar" :class="navClass('/owner/calendar')">Calendar</Link>
                 <Link href="/owner/estimates" :class="navClass('/owner/estimates')">Estimates</Link>
                 <Link href="/owner/invoices" :class="navClass('/owner/invoices')">Invoices</Link>
-                <Link href="/owner/billing" :class="navClass('/owner/billing')">Billing</Link>
                 <Link href="/owner/dispatch" :class="navClass('/owner/dispatch')">Dispatch</Link>
 
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Reports</div>
@@ -51,9 +50,11 @@ function navClass(href: string): string {
                 <Link href="/owner/reports/technician-performance" :class="navClass('/owner/reports/technician-performance')">Technician Performance</Link>
 
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Settings</div>
-                <Link href="/owner/team" :class="navClass('/owner/team')">Team</Link>
                 <Link href="/owner/settings/company" :class="navClass('/owner/settings/company')">Company</Link>
                 <Link href="/owner/settings/integrations" :class="navClass('/owner/settings/integrations')">Integrations</Link>
+                <Link href="/owner/team" :class="navClass('/owner/team')">Team</Link>
+
+                <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Configuration</div>
                 <Link href="/owner/job-types" :class="navClass('/owner/job-types')">Job Types</Link>
                 <Link href="/owner/items" :class="navClass('/owner/items')">Catalog Items</Link>
             </nav>

@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified', 'role:owner|admin', 'subscription'])
         Route::post('/team', [TeamController::class, 'store'])->name('team.store');
         Route::patch('/team/{user}', [TeamController::class, 'update'])->name('team.update');
         Route::delete('/team/{user}', [TeamController::class, 'destroy'])->name('team.destroy');
+        Route::post('/team/{user}/password-reset', [TeamController::class, 'sendPasswordReset'])->name('team.password-reset');
     });
 
 Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper', 'subscription'])
@@ -124,9 +125,11 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         // Company & integration settings
         Route::get('/settings/company', [SettingsController::class, 'company'])->name('settings.company');
         Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company.update');
+        Route::delete('/settings/company/logo', [SettingsController::class, 'removeLogo'])->name('settings.company.logo.destroy');
         Route::get('/settings/integrations', [SettingsController::class, 'integrations'])->name('settings.integrations');
         Route::post('/settings/integrations', [SettingsController::class, 'updateIntegrations'])->name('settings.integrations.update');
         Route::post('/job-types/quick-create', [JobTypeController::class, 'quickCreate'])->name('job-types.quick-create');
+        Route::patch('/job-types/{jobType}/activate', [JobTypeController::class, 'activate'])->name('owner.job-types.activate');
         Route::resource('job-types', JobTypeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
         Route::resource('items', ItemController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);

@@ -9,6 +9,7 @@ use App\Services\SubscriptionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -105,6 +106,16 @@ class TeamController extends Controller
         $this->subscriptionService->flushOrgCache($org->id);
 
         return back()->with('success', "{$user->name}'s role has been updated.");
+    }
+
+    public function sendPasswordReset(Request $request, User $user): RedirectResponse
+    {
+        abort_if($user->organization_id !== $request->user()->organization_id, 403);
+        abort_if($user->id === $request->user()->id, 403, 'Use account settings to reset your own password.');
+
+        Password::sendResetLink(['email' => $user->email]);
+
+        return back()->with('success', "Password reset email sent to {$user->name}.");
     }
 
     public function destroy(Request $request, User $user): RedirectResponse

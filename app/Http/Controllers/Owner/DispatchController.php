@@ -22,8 +22,16 @@ class DispatchController extends Controller
             ->where('organization_id', $orgId)
             ->get(['id', 'name']);
 
+        $unassignedJobs = Job::where('organization_id', $orgId)
+            ->whereNull('assigned_to')
+            ->where('status', Job::STATUS_SCHEDULED)
+            ->where('scheduled_at', '>=', now())
+            ->orderBy('scheduled_at')
+            ->get(['id', 'title', 'scheduled_at']);
+
         return inertia('Owner/Dispatch/Map', [
-            'technicians' => $technicians,
+            'technicians'    => $technicians,
+            'unassignedJobs' => $unassignedJobs,
         ]);
     }
 

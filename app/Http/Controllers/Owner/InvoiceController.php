@@ -22,6 +22,18 @@ class InvoiceController extends Controller
     {
         $orgId = $request->user()->organization_id;
 
+        $stats = Invoice::where('organization_id', $orgId)
+            ->selectRaw("
+                COUNT(*) as total_count,
+                COALESCE(SUM(CASE WHEN status NOT IN ('void','draft') THEN total ELSE 0 END), 0) as total_invoiced,
+                COALESCE(SUM(CASE WHEN status IN ('sent','partial','overdue') THEN balance_due ELSE 0 END), 0) as outstanding_balance,
+                COALESCE(SUM(CASE WHEN status = 'overdue' THEN balance_due ELSE 0 END), 0) as overdue_balance,
+                COALESCE(SUM(CASE WHEN status = 'paid' AND paid_at >= ? THEN total ELSE 0 END), 0) as paid_this_month,
+                COUNT(CASE WHEN status IN ('sent','partial','overdue') THEN 1 END) as open_count,
+                COUNT(CASE WHEN status = 'overdue' THEN 1 END) as overdue_count
+            ", [now()->startOfMonth()])
+            ->first();
+
         $invoices = Invoice::where('organization_id', $orgId)
             ->with(['customer', 'job'])
             ->when($request->status, fn ($q, $s) => $q->where('status', $s))
@@ -39,6 +51,7 @@ class InvoiceController extends Controller
             ->withQueryString();
 
         return inertia('Owner/Invoices/Index', [
+            'stats'    => $stats,
             'invoices' => $invoices,
             'filters'  => $request->only(['search', 'status']),
             'statuses' => Invoice::statuses(),

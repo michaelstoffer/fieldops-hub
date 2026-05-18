@@ -45,6 +45,12 @@ function removeMember(userId: number, name: string) {
     }
 }
 
+function sendPasswordReset(userId: number, name: string) {
+    if (confirm(`Send a password reset email to ${name}?`)) {
+        router.post(route('owner.team.password-reset', userId), {}, { preserveScroll: true });
+    }
+}
+
 const ROLE_LABELS: Record<string, string> = {
     owner: 'Owner',
     admin: 'Admin',
@@ -201,6 +207,17 @@ const ROLE_COLORS: Record<string, string> = {
                                     >
                                         <option v-for="r in roles" :key="r" :value="r">{{ ROLE_LABELS[r] ?? r }}</option>
                                     </select>
+                                    <button
+                                        v-if="member.roles[0] !== 'owner'"
+                                        type="button"
+                                        @click="sendPasswordReset(member.id, member.name)"
+                                        class="rounded-lg p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                                        title="Send password reset email"
+                                    >
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </button>
                                     <button
                                         type="button"
                                         @click="removeMember(member.id, member.name)"

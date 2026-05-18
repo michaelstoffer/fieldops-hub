@@ -15,7 +15,7 @@ const props = defineProps<{
     customers: Customer[];
     jobTypes: JobType[];
     technicians: Technician[];
-    preselect: { customer_id?: string | number; property_id?: string | number };
+    preselect: { customer_id?: string | number; property_id?: string | number; scheduled_at?: string };
 }>();
 
 const customers = ref<Customer[]>([...props.customers]);
@@ -28,7 +28,7 @@ const form = useForm({
     assigned_to:  null as number | null,
     title:        '',
     description:  '',
-    scheduled_at: '',
+    scheduled_at: props.preselect.scheduled_at ? props.preselect.scheduled_at.slice(0, 16) : '',
     office_notes: '',
 });
 

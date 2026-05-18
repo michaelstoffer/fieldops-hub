@@ -93,6 +93,15 @@ class JobTypeController extends Controller
         ], 201);
     }
 
+    public function activate(Request $request, JobType $jobType): RedirectResponse
+    {
+        abort_unless($jobType->organization_id === $request->user()->organization_id, 403);
+
+        $jobType->update(['is_active' => true]);
+
+        return redirect()->back()->with('success', 'Job type activated.');
+    }
+
     public function destroy(Request $request, JobType $jobType): RedirectResponse
     {
         abort_unless($jobType->organization_id === $request->user()->organization_id, 403);

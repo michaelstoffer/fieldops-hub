@@ -78,6 +78,18 @@ class SettingsController extends Controller
         return back()->with('success', 'Company settings saved.');
     }
 
+    public function removeLogo(Request $request): RedirectResponse
+    {
+        $settings = $this->getOrCreateSettings($request->user()->organization_id);
+
+        if ($settings->logo_path) {
+            Storage::disk('public')->delete($settings->logo_path);
+            $settings->update(['logo_path' => null]);
+        }
+
+        return back()->with('success', 'Logo removed.');
+    }
+
     // ─── Integration Settings ─────────────────────────────────────────────────
 
     public function integrations(Request $request): Response|ResponseFactory

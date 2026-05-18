@@ -81,7 +81,7 @@ class JobController extends Controller
                 ->orderBy('name')
                 ->get(['id', 'name']),
             'statuses'   => Job::statuses(),
-            'preselect'  => $request->only(['customer_id', 'property_id']),
+            'preselect'  => $request->only(['customer_id', 'property_id', 'scheduled_at']),
         ]);
     }
 

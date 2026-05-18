@@ -69,9 +69,11 @@ const voidForm = useForm({});
 const deleteForm = useForm({});
 const checkoutForm = useForm({});
 
-const showPaymentForm = ref(false);
+const showPaymentForm = ref(
+    Number(props.invoice.balance_due) > 0 && !['paid', 'void'].includes(props.invoice.status)
+);
 const paymentForm = useForm({
-    amount:    '',
+    amount:    Number(props.invoice.balance_due) > 0 ? props.invoice.balance_due : '',
     method:    'cash',
     reference: '',
     notes:     '',

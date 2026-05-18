@@ -3,6 +3,16 @@ import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 
+interface Stats {
+    total_count: number;
+    total_invoiced: string;
+    outstanding_balance: string;
+    overdue_balance: string;
+    paid_this_month: string;
+    open_count: number;
+    overdue_count: number;
+}
+
 interface Invoice {
     id: number;
     invoice_number: string | null;
@@ -24,6 +34,7 @@ interface Paginator {
 }
 
 const props = defineProps<{
+    stats: Stats;
     invoices: Paginator;
     filters: { search?: string; status?: string };
     statuses: Record<string, string>;
@@ -62,6 +73,14 @@ function formatDate(dt: string | null): string {
 function formatCurrency(val: string | number): string {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(val));
 }
+
+const QUICK_FILTERS: Record<string, string> = {
+    '': 'All', sent: 'Sent', partial: 'Partial', overdue: 'Overdue', paid: 'Paid', draft: 'Draft',
+};
+
+function setStatus(val: string) {
+    status.value = val;
+}
 </script>
 
 <template>
@@ -78,21 +97,51 @@ function formatCurrency(val: string | number): string {
             </Link>
         </div>
 
-        <!-- Filters -->
-        <div class="mb-4 flex flex-wrap gap-3">
+        <!-- Summary tiles -->
+        <section class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            <div class="rounded-xl bg-white p-4 shadow ring-1 ring-slate-200">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Outstanding</p>
+                <p class="mt-2 text-2xl font-semibold text-blue-600">{{ formatCurrency(stats.outstanding_balance) }}</p>
+                <p class="mt-0.5 text-xs text-slate-400">{{ stats.open_count }} open invoice{{ stats.open_count !== 1 ? 's' : '' }}</p>
+            </div>
+            <div class="rounded-xl bg-white p-4 shadow ring-1 ring-slate-200">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Overdue</p>
+                <p class="mt-2 text-2xl font-semibold" :class="Number(stats.overdue_balance) > 0 ? 'text-red-600' : 'text-slate-400'">{{ formatCurrency(stats.overdue_balance) }}</p>
+                <p class="mt-0.5 text-xs text-slate-400">{{ stats.overdue_count }} overdue invoice{{ stats.overdue_count !== 1 ? 's' : '' }}</p>
+            </div>
+            <div class="rounded-xl bg-white p-4 shadow ring-1 ring-slate-200">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Paid This Month</p>
+                <p class="mt-2 text-2xl font-semibold text-green-600">{{ formatCurrency(stats.paid_this_month) }}</p>
+            </div>
+            <div class="rounded-xl bg-white p-4 shadow ring-1 ring-slate-200">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Total Invoiced</p>
+                <p class="mt-2 text-2xl font-semibold text-slate-800">{{ formatCurrency(stats.total_invoiced) }}</p>
+            </div>
+            <div class="rounded-xl bg-white p-4 shadow ring-1 ring-slate-200">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-500">All Invoices</p>
+                <p class="mt-2 text-2xl font-semibold text-slate-800">{{ stats.total_count }}</p>
+                <p class="mt-0.5 text-xs text-slate-400">lifetime</p>
+            </div>
+        </section>
+
+        <!-- Quick filters + search -->
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+            <button
+                v-for="(label, key) in QUICK_FILTERS"
+                :key="key"
+                type="button"
+                class="rounded-full px-3 py-1 text-xs font-medium transition"
+                :class="status === key ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50'"
+                @click="setStatus(key)"
+            >
+                {{ label }}
+            </button>
             <input
                 v-model="search"
                 type="search"
                 placeholder="Search by number or customer…"
-                class="w-64 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
+                class="ml-auto w-56 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
             />
-            <select
-                v-model="status"
-                class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
-            >
-                <option value="">All statuses</option>
-                <option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option>
-            </select>
         </div>
 
         <!-- Table -->
@@ -146,7 +195,12 @@ function formatCurrency(val: string | number): string {
                         <td class="px-4 py-3 text-right text-slate-400 text-xs">View →</td>
                     </tr>
                     <tr v-if="invoices.data.length === 0">
-                        <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-400">No invoices found.</td>
+                        <td colspan="8" class="px-4 py-16 text-center">
+                            <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14.25l6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0c1.1.128 1.907 1.077 1.907 2.185z" /></svg>
+                            <p class="mt-3 text-sm font-semibold text-slate-700">No invoices yet</p>
+                            <p class="mt-1 text-sm text-slate-400">Create your first invoice to get started.</p>
+                            <Link href="/owner/invoices/create" class="mt-4 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">+ New Invoice</Link>
+                        </td>
                     </tr>
                 </tbody>
             </table>

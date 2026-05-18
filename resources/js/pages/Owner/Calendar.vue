@@ -35,6 +35,9 @@ const calendarOptions = ref({
             },
         },
     ],
+    dateClick: (info: { dateStr: string }) => {
+        router.visit(`/owner/jobs/create?scheduled_at=${encodeURIComponent(info.dateStr)}`);
+    },
     eventClick: (info: { event: { url: string }; jsEvent: Event }) => {
         info.jsEvent.preventDefault();
         if (info.event.url) {

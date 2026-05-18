@@ -45,6 +45,14 @@ function onLogoChange(e: Event) {
     }
 }
 
+function removeLogo() {
+    if (confirm('Remove the company logo?')) {
+        router.delete('/owner/settings/company/logo', {
+            onSuccess: () => { logoPreview.value = null; },
+        });
+    }
+}
+
 function submit() {
     saving.value = true;
     const data = new FormData();
@@ -77,16 +85,28 @@ function submit() {
                 <div class="bg-white rounded-xl shadow p-6">
                     <h3 class="text-sm font-semibold text-slate-700 mb-4">Branding</h3>
                     <div class="flex items-center gap-4">
-                        <img v-if="logoPreview" :src="logoPreview"
-                            alt="Company logo" class="w-20 h-20 object-contain rounded border border-slate-200" />
-                        <div v-else class="w-20 h-20 rounded border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 text-xs">
-                            No logo
+                        <div class="relative">
+                            <img v-if="logoPreview" :src="logoPreview"
+                                alt="Company logo" class="w-20 h-20 object-contain rounded border border-slate-200" />
+                            <div v-else class="w-20 h-20 rounded border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 text-xs">
+                                No logo
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs text-slate-500 mb-1">Upload Logo</label>
-                            <input type="file" accept="image/*" @change="onLogoChange"
-                                class="text-sm text-slate-600" />
-                            <p class="text-xs text-slate-400 mt-1">PNG, JPG, SVG up to 2MB</p>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="block text-xs text-slate-500 mb-1">Upload Logo</label>
+                                <input type="file" accept="image/*" @change="onLogoChange"
+                                    class="text-sm text-slate-600" />
+                                <p class="text-xs text-slate-400 mt-1">PNG, JPG, SVG up to 2MB</p>
+                            </div>
+                            <button
+                                v-if="logoPreview && !logoFile"
+                                type="button"
+                                class="text-xs text-red-500 hover:text-red-700"
+                                @click="removeLogo"
+                            >
+                                Remove logo
+                            </button>
                         </div>
                     </div>
                 </div>

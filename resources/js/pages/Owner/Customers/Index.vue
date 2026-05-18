@@ -98,8 +98,11 @@ watch(search, (value) => {
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     <tr v-if="customers.data.length === 0">
-                        <td colspan="4" class="px-5 py-10 text-center text-sm text-slate-400">
-                            No customers found.
+                        <td colspan="4" class="px-5 py-16 text-center">
+                            <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                            <p class="mt-3 text-sm font-semibold text-slate-700">No customers yet</p>
+                            <p class="mt-1 text-sm text-slate-400">Add your first customer to get started.</p>
+                            <Link href="/owner/customers/create" class="mt-4 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">+ Add Customer</Link>
                         </td>
                     </tr>
                     <tr

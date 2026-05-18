@@ -112,7 +112,12 @@ function formatDate(dt: string | null): string {
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     <tr v-if="jobs.data.length === 0">
-                        <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-400">No jobs found.</td>
+                        <td colspan="5" class="px-5 py-16 text-center">
+                            <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.073a2.25 2.25 0 01-2.25 2.25h-12a2.25 2.25 0 01-2.25-2.25V6a2.25 2.25 0 012.25-2.25h4.5" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75h4.5v4.5M12 12l9-9" /></svg>
+                            <p class="mt-3 text-sm font-semibold text-slate-700">No jobs yet</p>
+                            <p class="mt-1 text-sm text-slate-400">Create your first job to get started.</p>
+                            <Link href="/owner/jobs/create" class="mt-4 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">+ New Job</Link>
+                        </td>
                     </tr>
                     <tr
                         v-for="job in jobs.data"

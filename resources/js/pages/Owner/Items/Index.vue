@@ -21,6 +21,10 @@ function deactivate(id: number) {
     }
 }
 
+function activate(id: number) {
+    router.patch(`/owner/items/${id}`, { is_active: true } as any, { preserveScroll: true });
+}
+
 function formatPrice(price: string): string {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Number(price));
 }
@@ -96,6 +100,14 @@ function formatPrice(price: string): string {
                                     @click="deactivate(item.id)"
                                 >
                                     Deactivate
+                                </button>
+                                <button
+                                    v-else
+                                    type="button"
+                                    class="text-xs font-medium text-green-600 hover:text-green-800"
+                                    @click="activate(item.id)"
+                                >
+                                    Activate
                                 </button>
                             </div>
                         </td>

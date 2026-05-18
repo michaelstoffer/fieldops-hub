@@ -17,6 +17,10 @@ function deactivate(id: number) {
         router.delete(`/owner/job-types/${id}`);
     }
 }
+
+function activate(id: number) {
+    router.patch(`/owner/job-types/${id}`, { is_active: true } as any, { preserveScroll: true });
+}
 </script>
 
 <template>
@@ -69,6 +73,14 @@ function deactivate(id: number) {
                             @click="deactivate(jt.id)"
                         >
                             Deactivate
+                        </button>
+                        <button
+                            v-else
+                            type="button"
+                            class="text-xs font-medium text-green-600 hover:text-green-800"
+                            @click="activate(jt.id)"
+                        >
+                            Activate
                         </button>
                     </div>
                 </li>

@@ -33,6 +33,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     (e: 'customer-added', customer: Customer): void;
+    (e: 'property-added', property: Customer['properties'][number]): void;
+    (e: 'job-type-added', jobType: JobType): void;
 }>();
 
 const selectedCustomerProperties = computed(() => {
@@ -44,11 +46,11 @@ function onCustomerChange() {
     props.form.property_id = null;
 }
 
-// ── Quick-create dialog ────────────────────────────────────────────────────
+// ── Quick-create customer dialog ───────────────────────────────────────────
 
-const showDialog = ref(false);
-const saving = ref(false);
-const dialogError = ref('');
+const showCustomerDialog = ref(false);
+const savingCustomer = ref(false);
+const customerDialogError = ref('');
 
 const newCustomer = ref({
     first_name: '',
@@ -59,33 +61,127 @@ const newCustomer = ref({
     notes: '',
 });
 
-function openDialog() {
+function openCustomerDialog() {
     newCustomer.value = { first_name: '', last_name: '', email: '', phone: '', mobile: '', notes: '' };
-    dialogError.value = '';
-    showDialog.value = true;
+    customerDialogError.value = '';
+    showCustomerDialog.value = true;
 }
 
-function closeDialog() {
-    showDialog.value = false;
+function closeCustomerDialog() {
+    showCustomerDialog.value = false;
 }
 
 async function saveNewCustomer() {
     if (!newCustomer.value.first_name.trim() || !newCustomer.value.last_name.trim()) {
-        dialogError.value = 'First and last name are required.';
+        customerDialogError.value = 'First and last name are required.';
         return;
     }
-    saving.value = true;
-    dialogError.value = '';
+    savingCustomer.value = true;
+    customerDialogError.value = '';
     try {
         const { data } = await axios.post('/owner/customers/quick-create', newCustomer.value);
         emit('customer-added', data);
         props.form.customer_id = data.id;
         props.form.property_id = null;
-        closeDialog();
+        closeCustomerDialog();
     } catch {
-        dialogError.value = 'Could not save customer. Please try again.';
+        customerDialogError.value = 'Could not save customer. Please try again.';
     } finally {
-        saving.value = false;
+        savingCustomer.value = false;
+    }
+}
+
+// ── Quick-create property dialog ───────────────────────────────────────────
+
+const showPropertyDialog = ref(false);
+const savingProperty = ref(false);
+const propertyDialogError = ref('');
+
+const newProperty = ref({
+    name: '',
+    address_line1: '',
+    address_line2: '',
+    city: '',
+    state: '',
+    postal_code: '',
+});
+
+function openPropertyDialog() {
+    newProperty.value = { name: '', address_line1: '', address_line2: '', city: '', state: '', postal_code: '' };
+    propertyDialogError.value = '';
+    showPropertyDialog.value = true;
+}
+
+function closePropertyDialog() {
+    showPropertyDialog.value = false;
+}
+
+// ── Quick-create job type dialog ───────────────────────────────────────────
+
+const showJobTypeDialog = ref(false);
+const savingJobType = ref(false);
+const jobTypeDialogError = ref('');
+
+const PRESET_COLORS = [
+    '#3b82f6', '#10b981', '#f59e0b', '#ef4444',
+    '#8b5cf6', '#ec4899', '#14b8a6', '#f97316',
+];
+
+const newJobType = ref({ name: '', color: '#3b82f6' });
+
+function openJobTypeDialog() {
+    newJobType.value = { name: '', color: '#3b82f6' };
+    jobTypeDialogError.value = '';
+    showJobTypeDialog.value = true;
+}
+
+function closeJobTypeDialog() {
+    showJobTypeDialog.value = false;
+}
+
+async function saveNewJobType() {
+    if (!newJobType.value.name.trim()) {
+        jobTypeDialogError.value = 'Name is required.';
+        return;
+    }
+    savingJobType.value = true;
+    jobTypeDialogError.value = '';
+    try {
+        const { data } = await axios.post('/owner/job-types/quick-create', newJobType.value);
+        emit('job-type-added', data);
+        props.form.job_type_id = data.id;
+        closeJobTypeDialog();
+    } catch {
+        jobTypeDialogError.value = 'Could not save job type. Please try again.';
+    } finally {
+        savingJobType.value = false;
+    }
+}
+
+async function saveNewProperty() {
+    if (!newProperty.value.address_line1.trim() || !newProperty.value.city.trim() || !newProperty.value.state.trim() || !newProperty.value.postal_code.trim()) {
+        propertyDialogError.value = 'Address, city, state, and postal code are required.';
+        return;
+    }
+    savingProperty.value = true;
+    propertyDialogError.value = '';
+    try {
+        const { data } = await axios.post(
+            `/owner/customers/${props.form.customer_id}/properties/quick-create`,
+            newProperty.value,
+        );
+        emit('property-added', data);
+        props.form.property_id = data.id;
+        closePropertyDialog();
+    } catch (err: any) {
+        const errors = err?.response?.data?.errors;
+        if (errors) {
+            propertyDialogError.value = Object.values(errors).flat().join(' ');
+        } else {
+            propertyDialogError.value = 'Could not save property. Please try again.';
+        }
+    } finally {
+        savingProperty.value = false;
     }
 }
 </script>
@@ -113,7 +209,7 @@ async function saveNewCustomer() {
                     <button
                         type="button"
                         class="text-xs font-medium text-blue-600 hover:text-blue-800"
-                        @click="openDialog"
+                        @click="openCustomerDialog"
                     >
                         + New customer
                     </button>
@@ -133,7 +229,17 @@ async function saveNewCustomer() {
                 <p v-if="form.errors.customer_id" class="mt-1 text-xs text-red-600">{{ form.errors.customer_id }}</p>
             </div>
             <div>
-                <label for="property_id" class="block text-sm font-medium text-slate-700">Property</label>
+                <div class="flex items-center justify-between">
+                    <label for="property_id" class="block text-sm font-medium text-slate-700">Property</label>
+                    <button
+                        v-if="form.customer_id"
+                        type="button"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                        @click="openPropertyDialog"
+                    >
+                        + New property
+                    </button>
+                </div>
                 <select
                     id="property_id"
                     v-model="form.property_id"
@@ -151,7 +257,16 @@ async function saveNewCustomer() {
         <!-- Job type + Technician row -->
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-                <label for="job_type_id" class="block text-sm font-medium text-slate-700">Job Type</label>
+                <div class="flex items-center justify-between">
+                    <label for="job_type_id" class="block text-sm font-medium text-slate-700">Job Type</label>
+                    <button
+                        type="button"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                        @click="openJobTypeDialog"
+                    >
+                        + New type
+                    </button>
+                </div>
                 <select
                     id="job_type_id"
                     v-model="form.job_type_id"
@@ -212,17 +327,17 @@ async function saveNewCustomer() {
     <!-- Quick-create customer dialog -->
     <Teleport to="body">
         <div
-            v-if="showDialog"
+            v-if="showCustomerDialog"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-            @click.self="closeDialog"
+            @click.self="closeCustomerDialog"
         >
             <div class="w-full max-w-md rounded-xl bg-white shadow-xl">
                 <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                     <h3 class="text-base font-semibold text-slate-800">New Customer</h3>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeDialog">✕</button>
+                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeCustomerDialog">✕</button>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <p v-if="dialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ dialogError }}</p>
+                    <p v-if="customerDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ customerDialogError }}</p>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
@@ -275,17 +390,181 @@ async function saveNewCustomer() {
                     <button
                         type="button"
                         class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
-                        @click="closeDialog"
+                        @click="closeCustomerDialog"
                     >
                         Cancel
                     </button>
                     <button
                         type="button"
-                        :disabled="saving"
+                        :disabled="savingCustomer"
                         class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
                         @click="saveNewCustomer"
                     >
-                        {{ saving ? 'Saving…' : 'Save Customer' }}
+                        {{ savingCustomer ? 'Saving…' : 'Save Customer' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
+
+    <!-- Quick-create job type dialog -->
+    <Teleport to="body">
+        <div
+            v-if="showJobTypeDialog"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            @click.self="closeJobTypeDialog"
+        >
+            <div class="w-full max-w-sm rounded-xl bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+                    <h3 class="text-base font-semibold text-slate-800">New Job Type</h3>
+                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeJobTypeDialog">✕</button>
+                </div>
+                <div class="space-y-4 px-6 py-5">
+                    <p v-if="jobTypeDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ jobTypeDialogError }}</p>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Name <span class="text-red-500">*</span></label>
+                        <input
+                            v-model="newJobType.name"
+                            type="text"
+                            placeholder="e.g. HVAC Maintenance"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Color</label>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                            <button
+                                v-for="c in PRESET_COLORS"
+                                :key="c"
+                                type="button"
+                                class="h-7 w-7 rounded-full ring-2 ring-offset-2 transition"
+                                :style="{ backgroundColor: c }"
+                                :class="newJobType.color === c ? 'ring-slate-700' : 'ring-transparent hover:ring-slate-300'"
+                                @click="newJobType.color = c"
+                            />
+                            <input
+                                v-model="newJobType.color"
+                                type="color"
+                                class="h-7 w-7 cursor-pointer rounded-full border border-slate-200"
+                                title="Custom color"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                    <button
+                        type="button"
+                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        @click="closeJobTypeDialog"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="savingJobType"
+                        class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                        @click="saveNewJobType"
+                    >
+                        {{ savingJobType ? 'Saving…' : 'Save Job Type' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
+
+    <!-- Quick-create property dialog -->
+    <Teleport to="body">
+        <div
+            v-if="showPropertyDialog"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            @click.self="closePropertyDialog"
+        >
+            <div class="w-full max-w-md rounded-xl bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+                    <h3 class="text-base font-semibold text-slate-800">New Property</h3>
+                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closePropertyDialog">✕</button>
+                </div>
+                <div class="space-y-4 px-6 py-5">
+                    <p v-if="propertyDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ propertyDialogError }}</p>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Property Name <span class="text-slate-400">(optional)</span></label>
+                        <input
+                            v-model="newProperty.name"
+                            type="text"
+                            placeholder="e.g. Main Office, Warehouse"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Address <span class="text-red-500">*</span></label>
+                        <input
+                            v-model="newProperty.address_line1"
+                            type="text"
+                            placeholder="Street address"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Address Line 2</label>
+                        <input
+                            v-model="newProperty.address_line2"
+                            type="text"
+                            placeholder="Apt, suite, unit…"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-medium text-slate-600">City <span class="text-red-500">*</span></label>
+                            <input
+                                v-model="newProperty.city"
+                                type="text"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600">State <span class="text-red-500">*</span></label>
+                            <input
+                                v-model="newProperty.state"
+                                type="text"
+                                maxlength="2"
+                                placeholder="TX"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm uppercase focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Postal Code <span class="text-red-500">*</span></label>
+                        <input
+                            v-model="newProperty.postal_code"
+                            type="text"
+                            placeholder="12345"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                    <button
+                        type="button"
+                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        @click="closePropertyDialog"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="savingProperty"
+                        class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                        @click="saveNewProperty"
+                    >
+                        {{ savingProperty ? 'Saving…' : 'Save Property' }}
                     </button>
                 </div>
             </div>

@@ -53,6 +53,7 @@ function navClass(href: string): string {
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Settings</div>
                 <Link href="/owner/settings/company" :class="navClass('/owner/settings/company')">Company</Link>
                 <Link href="/owner/settings/integrations" :class="navClass('/owner/settings/integrations')">Integrations</Link>
+                <Link href="/owner/job-types" :class="navClass('/owner/job-types')">Job Types</Link>
             </nav>
 
             <div class="border-t border-slate-800 px-4 py-3">

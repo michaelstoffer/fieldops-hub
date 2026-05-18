@@ -7,6 +7,7 @@ use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\EstimateController;
 use App\Http\Controllers\Owner\InvoiceController;
 use App\Http\Controllers\Owner\JobController;
+use App\Http\Controllers\Owner\JobTypeController;
 use App\Http\Controllers\Owner\PropertyController;
 use App\Http\Controllers\Owner\ReportingController;
 use App\Http\Controllers\Owner\SetupController;
@@ -82,6 +83,9 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
+        Route::get('/customers/import', [CustomerController::class, 'importForm'])->name('customers.import');
+        Route::post('/customers/import', [CustomerController::class, 'import'])->name('customers.import.store');
+        Route::post('/customers/quick-create', [CustomerController::class, 'quickCreate'])->name('customers.quick-create');
         Route::resource('customers', CustomerController::class);
 
         // Properties — nested create/store under customer; shallow edit/update/destroy
@@ -120,6 +124,10 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company.update');
         Route::get('/settings/integrations', [SettingsController::class, 'integrations'])->name('settings.integrations');
         Route::post('/settings/integrations', [SettingsController::class, 'updateIntegrations'])->name('settings.integrations.update');
+        Route::resource('job-types', JobTypeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+        Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+        Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
         Route::resource('invoices', InvoiceController::class)->only(['index', 'show', 'destroy']);
         Route::post('/jobs/{job}/invoice', [InvoiceController::class, 'generateFromJob'])->name('jobs.invoice.generate');
         Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');

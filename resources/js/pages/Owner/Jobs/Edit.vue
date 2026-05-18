@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import JobForm from './partials/JobForm.vue';
 
 interface Customer {
@@ -22,6 +23,12 @@ const props = defineProps<{
     jobTypes: JobType[];
     technicians: Technician[];
 }>();
+
+const customers = ref<Customer[]>([...props.customers]);
+
+function onCustomerAdded(customer: Customer) {
+    customers.value.push(customer);
+}
 
 // datetime-local input expects "YYYY-MM-DDTHH:mm"
 function toDatetimeLocal(dt: string | null): string {
@@ -68,6 +75,7 @@ function submit() {
                         :customers="customers"
                         :job-types="jobTypes"
                         :technicians="technicians"
+                        @customer-added="onCustomerAdded"
                     />
 
                     <div class="mt-6 flex items-center gap-3">

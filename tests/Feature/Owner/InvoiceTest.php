@@ -2,6 +2,7 @@
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Item;
 use App\Models\Job;
 use App\Models\JobLineItem;
 use App\Models\Organization;
@@ -380,4 +381,126 @@ test('user cannot record payment for another org\'s invoice', function () {
             'paid_at' => today()->toDateString(),
         ])
         ->assertForbidden();
+});
+
+// ── Create (manual invoice) ────────────────────────────────────────────────────
+
+test('user can view the create invoice form', function () {
+    [$user] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->get('/owner/invoices/create')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('Owner/Invoices/Create'));
+});
+
+test('user can create an invoice with line items', function () {
+    [$user, $org, $customer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id'     => $customer->id,
+            'issued_at'       => '2026-05-01',
+            'due_at'          => '2026-05-31',
+            'tax_rate'        => 0.08,
+            'discount_amount' => 0,
+            'notes'           => null,
+            'line_items'      => [
+                ['name' => 'Labor', 'unit_price' => 100, 'quantity' => 2, 'is_taxable' => true,  'item_id' => null],
+                ['name' => 'Parts', 'unit_price' => 50,  'quantity' => 3, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ])
+        ->assertRedirect();
+
+    $invoice = Invoice::where('customer_id', $customer->id)->latest()->first();
+    expect($invoice)->not->toBeNull();
+    expect($invoice->organization_id)->toBe($org->id);
+    expect($invoice->status)->toBe(Invoice::STATUS_DRAFT);
+    expect($invoice->lineItems)->toHaveCount(2);
+    // subtotal = (100×2)+(50×3) = 350; tax on taxable 200 × 0.08 = 16; total = 366
+    expect((float) $invoice->subtotal)->toBe(350.0);
+    expect((float) $invoice->tax_amount)->toBe(16.0);
+    expect((float) $invoice->total)->toBe(366.0);
+});
+
+test('invoice create assigns sequential invoice number', function () {
+    [$user, $org, $customer] = invoiceSetup();
+
+    Invoice::factory()->forCustomer($customer)->create(['invoice_number' => 'INV-0001']);
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id' => $customer->id,
+            'issued_at'   => '2026-05-01',
+            'due_at'      => '2026-05-31',
+            'tax_rate'    => 0,
+            'line_items'  => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ]);
+
+    expect(
+        Invoice::where('organization_id', $org->id)->where('invoice_number', 'INV-0002')->exists()
+    )->toBeTrue();
+});
+
+test('invoice create requires customer, dates, and at least one line item', function () {
+    [$user] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [])
+        ->assertSessionHasErrors(['customer_id', 'issued_at', 'due_at', 'line_items']);
+});
+
+test('invoice create rejects due date before issued date', function () {
+    [$user, , $customer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id' => $customer->id,
+            'issued_at'   => '2026-06-01',
+            'due_at'      => '2026-05-01',
+            'tax_rate'    => 0,
+            'line_items'  => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ])
+        ->assertSessionHasErrors('due_at');
+});
+
+test('invoice create rejects empty line items array', function () {
+    [$user, , $customer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id' => $customer->id,
+            'issued_at'   => '2026-05-01',
+            'due_at'      => '2026-05-31',
+            'tax_rate'    => 0,
+            'line_items'  => [],
+        ])
+        ->assertSessionHasErrors('line_items');
+});
+
+test('invoice create applies discount to total', function () {
+    [$user, , $customer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id'     => $customer->id,
+            'issued_at'       => '2026-05-01',
+            'due_at'          => '2026-05-31',
+            'tax_rate'        => 0,
+            'discount_amount' => 25,
+            'line_items'      => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ]);
+
+    $invoice = Invoice::where('customer_id', $customer->id)->latest()->first();
+    expect((float) $invoice->total)->toBe(75.0);
+});
+
+test('invoice create page requires authentication', function () {
+    $this->get('/owner/invoices/create')->assertRedirect('/login');
 });

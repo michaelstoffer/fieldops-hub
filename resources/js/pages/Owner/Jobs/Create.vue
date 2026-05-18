@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import JobForm from './partials/JobForm.vue';
 
 interface Customer {
@@ -17,6 +18,8 @@ const props = defineProps<{
     preselect: { customer_id?: string | number; property_id?: string | number };
 }>();
 
+const customers = ref<Customer[]>([...props.customers]);
+
 const form = useForm({
     customer_id:  props.preselect.customer_id ? Number(props.preselect.customer_id) : null as number | null,
     property_id:  props.preselect.property_id ? Number(props.preselect.property_id) : null as number | null,
@@ -27,6 +30,10 @@ const form = useForm({
     scheduled_at: '',
     office_notes: '',
 });
+
+function onCustomerAdded(customer: Customer) {
+    customers.value.push(customer);
+}
 
 function submit() {
     form.post('/owner/jobs');
@@ -54,6 +61,7 @@ function submit() {
                         :customers="customers"
                         :job-types="jobTypes"
                         :technicians="technicians"
+                        @customer-added="onCustomerAdded"
                     />
 
                     <div class="mt-6 flex items-center gap-3">

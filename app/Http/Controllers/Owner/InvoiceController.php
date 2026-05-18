@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Item;
 use App\Models\Job;
 use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
@@ -55,6 +57,76 @@ class InvoiceController extends Controller
             'invoice'  => $invoice,
             'statuses' => Invoice::statuses(),
         ]);
+    }
+
+    // ── Create ────────────────────────────────────────────────────────────────
+
+    public function create(Request $request): Response|ResponseFactory
+    {
+        $orgId = $request->user()->organization_id;
+
+        return inertia('Owner/Invoices/Create', [
+            'customers'    => Customer::where('organization_id', $orgId)
+                ->orderBy('last_name')
+                ->get(['id', 'first_name', 'last_name']),
+            'catalogItems' => Item::where('organization_id', $orgId)
+                ->where('is_active', true)
+                ->orderBy('name')
+                ->get(['id', 'name', 'unit_price', 'unit', 'is_taxable']),
+        ]);
+    }
+
+    // ── Store ──────────────────────────────────────────────────────────────────
+
+    public function store(Request $request): RedirectResponse
+    {
+        $orgId = $request->user()->organization_id;
+
+        $data = $request->validate([
+            'customer_id'     => ['required', 'integer', 'exists:customers,id'],
+            'issued_at'       => ['required', 'date'],
+            'due_at'          => ['required', 'date', 'after_or_equal:issued_at'],
+            'tax_rate'        => ['required', 'numeric', 'min:0', 'max:1'],
+            'discount_amount' => ['nullable', 'numeric', 'min:0'],
+            'notes'           => ['nullable', 'string', 'max:2000'],
+            'line_items'      => ['required', 'array', 'min:1'],
+            'line_items.*.name'       => ['required', 'string', 'max:255'],
+            'line_items.*.description' => ['nullable', 'string', 'max:1000'],
+            'line_items.*.unit_price' => ['required', 'numeric', 'min:0'],
+            'line_items.*.quantity'   => ['required', 'numeric', 'min:0.001'],
+            'line_items.*.is_taxable' => ['boolean'],
+            'line_items.*.item_id'    => ['nullable', 'integer'],
+        ]);
+
+        $invoice = Invoice::create([
+            'organization_id' => $orgId,
+            'customer_id'     => $data['customer_id'],
+            'invoice_number'  => $this->nextInvoiceNumber($orgId),
+            'status'          => Invoice::STATUS_DRAFT,
+            'tax_rate'        => $data['tax_rate'],
+            'discount_amount' => $data['discount_amount'] ?? 0,
+            'amount_paid'     => 0,
+            'issued_at'       => $data['issued_at'],
+            'due_at'          => $data['due_at'],
+            'notes'           => $data['notes'] ?? null,
+        ]);
+
+        foreach ($data['line_items'] as $idx => $li) {
+            $invoice->lineItems()->create([
+                'item_id'     => $li['item_id'] ?? null,
+                'name'        => $li['name'],
+                'description' => $li['description'] ?? null,
+                'unit_price'  => $li['unit_price'],
+                'quantity'    => $li['quantity'],
+                'is_taxable'  => $li['is_taxable'] ?? false,
+                'sort_order'  => $idx,
+            ]);
+        }
+
+        $invoice->recalculate();
+
+        return redirect()->route('owner.invoices.show', $invoice)
+            ->with('success', 'Invoice created.');
     }
 
     // ── Generate from Job ──────────────────────────────────────────────────────

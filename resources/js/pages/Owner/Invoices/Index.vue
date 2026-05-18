@@ -70,6 +70,12 @@ function formatCurrency(val: string | number): string {
 
         <div class="mb-6 flex items-center justify-between">
             <h2 class="text-xl font-semibold text-slate-800">Invoices</h2>
+            <Link
+                href="/owner/invoices/create"
+                class="inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
+                + New Invoice
+            </Link>
         </div>
 
         <!-- Filters -->

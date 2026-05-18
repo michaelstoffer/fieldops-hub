@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import axios from 'axios';
 
 interface Customer {
     id: number;
@@ -30,6 +31,10 @@ const props = defineProps<{
     technicians: Technician[];
 }>();
 
+const emit = defineEmits<{
+    (e: 'customer-added', customer: Customer): void;
+}>();
+
 const selectedCustomerProperties = computed(() => {
     if (!props.form.customer_id) return [];
     return props.customers.find(c => c.id === Number(props.form.customer_id))?.properties ?? [];
@@ -37,6 +42,51 @@ const selectedCustomerProperties = computed(() => {
 
 function onCustomerChange() {
     props.form.property_id = null;
+}
+
+// ── Quick-create dialog ────────────────────────────────────────────────────
+
+const showDialog = ref(false);
+const saving = ref(false);
+const dialogError = ref('');
+
+const newCustomer = ref({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    mobile: '',
+    notes: '',
+});
+
+function openDialog() {
+    newCustomer.value = { first_name: '', last_name: '', email: '', phone: '', mobile: '', notes: '' };
+    dialogError.value = '';
+    showDialog.value = true;
+}
+
+function closeDialog() {
+    showDialog.value = false;
+}
+
+async function saveNewCustomer() {
+    if (!newCustomer.value.first_name.trim() || !newCustomer.value.last_name.trim()) {
+        dialogError.value = 'First and last name are required.';
+        return;
+    }
+    saving.value = true;
+    dialogError.value = '';
+    try {
+        const { data } = await axios.post('/owner/customers/quick-create', newCustomer.value);
+        emit('customer-added', data);
+        props.form.customer_id = data.id;
+        props.form.property_id = null;
+        closeDialog();
+    } catch {
+        dialogError.value = 'Could not save customer. Please try again.';
+    } finally {
+        saving.value = false;
+    }
 }
 </script>
 
@@ -58,7 +108,16 @@ function onCustomerChange() {
         <!-- Customer + Property row -->
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-                <label for="customer_id" class="block text-sm font-medium text-slate-700">Customer <span class="text-red-500">*</span></label>
+                <div class="flex items-center justify-between">
+                    <label for="customer_id" class="block text-sm font-medium text-slate-700">Customer <span class="text-red-500">*</span></label>
+                    <button
+                        type="button"
+                        class="text-xs font-medium text-blue-600 hover:text-blue-800"
+                        @click="openDialog"
+                    >
+                        + New customer
+                    </button>
+                </div>
                 <select
                     id="customer_id"
                     v-model="form.customer_id"
@@ -149,4 +208,87 @@ function onCustomerChange() {
             />
         </div>
     </div>
+
+    <!-- Quick-create customer dialog -->
+    <Teleport to="body">
+        <div
+            v-if="showDialog"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            @click.self="closeDialog"
+        >
+            <div class="w-full max-w-md rounded-xl bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+                    <h3 class="text-base font-semibold text-slate-800">New Customer</h3>
+                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeDialog">✕</button>
+                </div>
+                <div class="space-y-4 px-6 py-5">
+                    <p v-if="dialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ dialogError }}</p>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600">First Name <span class="text-red-500">*</span></label>
+                            <input
+                                v-model="newCustomer.first_name"
+                                type="text"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600">Last Name <span class="text-red-500">*</span></label>
+                            <input
+                                v-model="newCustomer.last_name"
+                                type="text"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600">Email</label>
+                        <input
+                            v-model="newCustomer.email"
+                            type="email"
+                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                        />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600">Phone</label>
+                            <input
+                                v-model="newCustomer.phone"
+                                type="tel"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600">Mobile</label>
+                            <input
+                                v-model="newCustomer.mobile"
+                                type="tel"
+                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                    <button
+                        type="button"
+                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        @click="closeDialog"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="saving"
+                        class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                        @click="saveNewCustomer"
+                    >
+                        {{ saving ? 'Saving…' : 'Save Customer' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
 </template>

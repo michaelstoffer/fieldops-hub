@@ -139,3 +139,71 @@ test('customer show page includes properties', function () {
             ->has('customer.properties', 2)
         );
 });
+
+// ── Quick-create (JSON endpoint) ──────────────────────────────────────────────
+
+test('quick-create returns the new property as JSON', function () {
+    [$user, $customer] = userWithOrgAndCustomer();
+
+    $response = $this->actingAs($user)
+        ->postJson("/owner/customers/{$customer->id}/properties/quick-create", [
+            'address_line1' => '123 Main St',
+            'city'          => 'Austin',
+            'state'         => 'TX',
+            'postal_code'   => '78701',
+        ]);
+
+    $response->assertCreated()
+        ->assertJsonStructure(['id', 'address_line1', 'city', 'state']);
+
+    expect(Property::where('address_line1', '123 Main St')->exists())->toBeTrue();
+
+    $property = Property::where('address_line1', '123 Main St')->first();
+    expect($property->customer_id)->toBe($customer->id);
+    expect($property->organization_id)->toBe($user->organization_id);
+});
+
+test('quick-create property is scoped to the given customer', function () {
+    [$user, $customer] = userWithOrgAndCustomer();
+
+    $this->actingAs($user)
+        ->postJson("/owner/customers/{$customer->id}/properties/quick-create", [
+            'address_line1' => '456 Oak Ave',
+            'city'          => 'Dallas',
+            'state'         => 'TX',
+            'postal_code'   => '75201',
+        ]);
+
+    expect(Property::where('address_line1', '456 Oak Ave')->first()->customer_id)
+        ->toBe($customer->id);
+});
+
+test('quick-create property validates required address fields', function () {
+    [$user, $customer] = userWithOrgAndCustomer();
+
+    $this->actingAs($user)
+        ->postJson("/owner/customers/{$customer->id}/properties/quick-create", [])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['address_line1', 'city', 'state', 'postal_code']);
+});
+
+test('quick-create property returns 403 for another org\'s customer', function () {
+    [$user] = userWithOrgAndCustomer();
+    [, $otherCustomer] = userWithOrgAndCustomer();
+
+    $this->actingAs($user)
+        ->postJson("/owner/customers/{$otherCustomer->id}/properties/quick-create", [
+            'address_line1' => '789 Elm St',
+            'city'          => 'Houston',
+            'state'         => 'TX',
+            'postal_code'   => '77001',
+        ])
+        ->assertForbidden();
+});
+
+test('quick-create property requires authentication', function () {
+    $customer = Customer::factory()->create();
+
+    $this->postJson("/owner/customers/{$customer->id}/properties/quick-create", [])
+        ->assertUnauthorized();
+});

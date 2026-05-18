@@ -8,6 +8,7 @@ use App\Http\Requests\Owner\UpdatePropertyRequest;
 use App\Models\Customer;
 use App\Models\Property;
 use App\Services\GeocodingService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -91,6 +92,31 @@ class PropertyController extends Controller
             $data['postal_code'] ?? null,
             $data['country'] ?? 'US',
         ]));
+    }
+
+    public function quickCreate(StorePropertyRequest $request, Customer $customer, GeocodingService $geocoder): JsonResponse
+    {
+        abort_unless($customer->organization_id === $request->user()->organization_id, 403);
+
+        $data = [
+            ...$request->validated(),
+            'organization_id' => $request->user()->organization_id,
+            'country'         => $request->validated('country') ?? 'US',
+        ];
+
+        $coords = $geocoder->geocode($this->fullAddress($data));
+        if ($coords) {
+            [$data['latitude'], $data['longitude']] = $coords;
+        }
+
+        $property = $customer->properties()->create($data);
+
+        return response()->json([
+            'id'            => $property->id,
+            'address_line1' => $property->address_line1,
+            'city'          => $property->city,
+            'state'         => $property->state,
+        ], 201);
     }
 
     public function destroy(Request $request, Property $property): RedirectResponse

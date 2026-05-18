@@ -89,6 +89,7 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         Route::resource('customers', CustomerController::class);
 
         // Properties — nested create/store under customer; shallow edit/update/destroy
+        Route::post('/customers/{customer}/properties/quick-create', [PropertyController::class, 'quickCreate'])->name('customers.properties.quick-create');
         Route::get('/customers/{customer}/properties/create', [PropertyController::class, 'create'])->name('customers.properties.create');
         Route::post('/customers/{customer}/properties', [PropertyController::class, 'store'])->name('customers.properties.store');
         Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');

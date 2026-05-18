@@ -19,6 +19,7 @@ const props = defineProps<{
 }>();
 
 const customers = ref<Customer[]>([...props.customers]);
+const jobTypes  = ref<JobType[]>([...props.jobTypes]);
 
 const form = useForm({
     customer_id:  props.preselect.customer_id ? Number(props.preselect.customer_id) : null as number | null,
@@ -33,6 +34,15 @@ const form = useForm({
 
 function onCustomerAdded(customer: Customer) {
     customers.value.push(customer);
+}
+
+function onPropertyAdded(property: Customer['properties'][number]) {
+    const customer = customers.value.find(c => c.id === form.customer_id);
+    if (customer) customer.properties.push(property);
+}
+
+function onJobTypeAdded(jobType: JobType) {
+    jobTypes.value.push(jobType);
 }
 
 function submit() {
@@ -62,6 +72,8 @@ function submit() {
                         :job-types="jobTypes"
                         :technicians="technicians"
                         @customer-added="onCustomerAdded"
+                        @property-added="onPropertyAdded"
+                        @job-type-added="onJobTypeAdded"
                     />
 
                     <div class="mt-6 flex items-center gap-3">

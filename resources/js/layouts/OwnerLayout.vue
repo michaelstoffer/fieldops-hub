@@ -55,6 +55,7 @@ function navClass(href: string): string {
                 <Link href="/owner/settings/company" :class="navClass('/owner/settings/company')">Company</Link>
                 <Link href="/owner/settings/integrations" :class="navClass('/owner/settings/integrations')">Integrations</Link>
                 <Link href="/owner/job-types" :class="navClass('/owner/job-types')">Job Types</Link>
+                <Link href="/owner/items" :class="navClass('/owner/items')">Catalog Items</Link>
             </nav>
 
             <div class="border-t border-slate-800 px-4 py-3">

@@ -22,6 +22,28 @@ function formatCurrency(val: number): string {
     <OwnerLayout title="Owner Dashboard">
         <Head title="Owner Dashboard" />
 
+        <!-- Quick-create actions -->
+        <div class="mb-6 flex flex-wrap gap-3">
+            <Link
+                href="/owner/jobs/create"
+                class="inline-flex items-center gap-2 rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
+                + New Job
+            </Link>
+            <Link
+                href="/owner/customers/create"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+                + New Customer
+            </Link>
+            <Link
+                href="/owner/invoices/create"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+                + New Invoice
+            </Link>
+        </div>
+
         <!-- KPI cards -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">

@@ -114,14 +114,15 @@ function formatDate(dt: string | null): string {
                     <tr v-if="jobs.data.length === 0">
                         <td colspan="5" class="px-5 py-10 text-center text-sm text-slate-400">No jobs found.</td>
                     </tr>
-                    <tr v-for="job in jobs.data" :key="job.id" class="hover:bg-slate-50">
-                        <td class="px-5 py-3 text-sm font-medium text-slate-800">
-                            <Link :href="`/owner/jobs/${job.id}`" class="hover:underline">{{ job.title }}</Link>
-                        </td>
+                    <tr
+                        v-for="job in jobs.data"
+                        :key="job.id"
+                        class="cursor-pointer hover:bg-slate-50"
+                        @click="router.visit(`/owner/jobs/${job.id}`)"
+                    >
+                        <td class="px-5 py-3 text-sm font-medium text-slate-800">{{ job.title }}</td>
                         <td class="px-5 py-3 text-sm text-slate-600">
-                            <Link v-if="job.customer" :href="`/owner/customers/${job.customer.id}`" class="hover:underline">
-                                {{ job.customer.last_name }}, {{ job.customer.first_name }}
-                            </Link>
+                            <span v-if="job.customer">{{ job.customer.last_name }}, {{ job.customer.first_name }}</span>
                             <span v-else class="text-slate-400">—</span>
                         </td>
                         <td class="px-5 py-3 text-sm text-slate-600">{{ formatDate(job.scheduled_at) }}</td>
@@ -133,9 +134,7 @@ function formatDate(dt: string | null): string {
                                 {{ statuses[job.status] ?? job.status }}
                             </span>
                         </td>
-                        <td class="px-5 py-3 text-right text-sm">
-                            <Link :href="`/owner/jobs/${job.id}`" class="font-medium text-slate-500 hover:text-slate-800">View →</Link>
-                        </td>
+                        <td class="px-5 py-3 text-right text-sm text-slate-400">View →</td>
                     </tr>
                 </tbody>
             </table>

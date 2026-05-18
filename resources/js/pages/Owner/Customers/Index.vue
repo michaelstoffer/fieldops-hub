@@ -105,30 +105,15 @@ watch(search, (value) => {
                     <tr
                         v-for="customer in customers.data"
                         :key="customer.id"
-                        class="hover:bg-slate-50"
+                        class="cursor-pointer hover:bg-slate-50"
+                        @click="router.visit(`/owner/customers/${customer.id}`)"
                     >
                         <td class="px-5 py-3 text-sm font-medium text-slate-800">
-                            <Link
-                                :href="`/owner/customers/${customer.id}`"
-                                class="hover:underline"
-                            >
-                                {{ customer.last_name }}, {{ customer.first_name }}
-                            </Link>
+                            {{ customer.last_name }}, {{ customer.first_name }}
                         </td>
-                        <td class="px-5 py-3 text-sm text-slate-600">
-                            {{ customer.email ?? '—' }}
-                        </td>
-                        <td class="px-5 py-3 text-sm text-slate-600">
-                            {{ customer.phone ?? '—' }}
-                        </td>
-                        <td class="px-5 py-3 text-right text-sm">
-                            <Link
-                                :href="`/owner/customers/${customer.id}`"
-                                class="font-medium text-slate-500 hover:text-slate-800"
-                            >
-                                View →
-                            </Link>
-                        </td>
+                        <td class="px-5 py-3 text-sm text-slate-600">{{ customer.email ?? '—' }}</td>
+                        <td class="px-5 py-3 text-sm text-slate-600">{{ customer.phone ?? '—' }}</td>
+                        <td class="px-5 py-3 text-right text-sm text-slate-400">View →</td>
                     </tr>
                 </tbody>
             </table>

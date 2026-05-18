@@ -111,7 +111,12 @@ function formatCurrency(val: string | number): string {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    <tr v-for="inv in invoices.data" :key="inv.id" class="hover:bg-slate-50">
+                    <tr
+                        v-for="inv in invoices.data"
+                        :key="inv.id"
+                        class="cursor-pointer hover:bg-slate-50"
+                        @click="router.visit(`/owner/invoices/${inv.id}`)"
+                    >
                         <td class="px-4 py-3 font-mono font-medium text-slate-700">
                             {{ inv.invoice_number ?? '—' }}
                         </td>
@@ -119,7 +124,7 @@ function formatCurrency(val: string | number): string {
                             <span v-if="inv.customer">{{ inv.customer.first_name }} {{ inv.customer.last_name }}</span>
                             <span v-else class="text-slate-400">—</span>
                         </td>
-                        <td class="px-4 py-3 text-slate-500">
+                        <td class="px-4 py-3 text-slate-500" @click.stop>
                             <Link v-if="inv.job" :href="`/owner/jobs/${inv.job.id}`" class="hover:underline">
                                 {{ inv.job.title }}
                             </Link>
@@ -138,14 +143,7 @@ function formatCurrency(val: string | number): string {
                             {{ formatCurrency(inv.balance_due) }}
                         </td>
                         <td class="px-4 py-3 text-slate-500">{{ formatDate(inv.due_at) }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <Link
-                                :href="`/owner/invoices/${inv.id}`"
-                                class="text-xs font-medium text-blue-600 hover:underline"
-                            >
-                                View
-                            </Link>
-                        </td>
+                        <td class="px-4 py-3 text-right text-slate-400 text-xs">View →</td>
                     </tr>
                     <tr v-if="invoices.data.length === 0">
                         <td colspan="8" class="px-4 py-8 text-center text-sm text-slate-400">No invoices found.</td>

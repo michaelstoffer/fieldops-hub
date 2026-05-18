@@ -7,6 +7,7 @@ use App\Http\Controllers\Owner\CustomerController;
 use App\Http\Controllers\Owner\EstimateController;
 use App\Http\Controllers\Owner\InvoiceController;
 use App\Http\Controllers\Owner\JobController;
+use App\Http\Controllers\Owner\ItemController;
 use App\Http\Controllers\Owner\JobTypeController;
 use App\Http\Controllers\Owner\PropertyController;
 use App\Http\Controllers\Owner\ReportingController;
@@ -127,6 +128,8 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         Route::post('/settings/integrations', [SettingsController::class, 'updateIntegrations'])->name('settings.integrations.update');
         Route::post('/job-types/quick-create', [JobTypeController::class, 'quickCreate'])->name('job-types.quick-create');
         Route::resource('job-types', JobTypeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+        Route::resource('items', ItemController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
         Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
         Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');

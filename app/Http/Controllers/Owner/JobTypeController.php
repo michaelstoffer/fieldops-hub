@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -70,6 +71,26 @@ class JobTypeController extends Controller
 
         return redirect()->route('owner.job-types.index')
             ->with('success', 'Job type updated.');
+    }
+
+    public function quickCreate(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'name'  => ['required', 'string', 'max:255'],
+            'color' => ['required', 'string', 'max:50'],
+        ]);
+
+        $jobType = JobType::create([
+            ...$data,
+            'organization_id' => $request->user()->organization_id,
+            'is_active'       => true,
+        ]);
+
+        return response()->json([
+            'id'    => $jobType->id,
+            'name'  => $jobType->name,
+            'color' => $jobType->color,
+        ], 201);
     }
 
     public function destroy(Request $request, JobType $jobType): RedirectResponse

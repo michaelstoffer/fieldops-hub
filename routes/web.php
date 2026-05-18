@@ -124,6 +124,7 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         Route::post('/settings/company', [SettingsController::class, 'updateCompany'])->name('settings.company.update');
         Route::get('/settings/integrations', [SettingsController::class, 'integrations'])->name('settings.integrations');
         Route::post('/settings/integrations', [SettingsController::class, 'updateIntegrations'])->name('settings.integrations.update');
+        Route::post('/job-types/quick-create', [JobTypeController::class, 'quickCreate'])->name('job-types.quick-create');
         Route::resource('job-types', JobTypeController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
         Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');

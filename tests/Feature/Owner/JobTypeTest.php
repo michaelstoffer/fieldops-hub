@@ -185,3 +185,50 @@ test('user cannot deactivate another org\'s job type', function () {
 
     expect($type->fresh()->is_active)->toBeTrue();
 });
+
+// ── Quick-create (JSON endpoint) ──────────────────────────────────────────────
+
+test('quick-create returns the new job type as JSON', function () {
+    [$user, $org] = jobTypeUser();
+
+    $response = $this->actingAs($user)
+        ->postJson('/owner/job-types/quick-create', [
+            'name'  => 'Pest Control',
+            'color' => '#ef4444',
+        ]);
+
+    $response->assertCreated()
+        ->assertJsonStructure(['id', 'name', 'color']);
+
+    $type = JobType::where('name', 'Pest Control')->first();
+    expect($type)->not->toBeNull();
+    expect($type->organization_id)->toBe($org->id);
+    expect($type->is_active)->toBeTrue();
+});
+
+test('quick-create job type is scoped to authenticated user\'s organization', function () {
+    [$user] = jobTypeUser();
+
+    $this->actingAs($user)
+        ->postJson('/owner/job-types/quick-create', [
+            'name'  => 'Landscaping',
+            'color' => '#10b981',
+        ]);
+
+    expect(JobType::where('name', 'Landscaping')->first()->organization_id)
+        ->toBe($user->organization_id);
+});
+
+test('quick-create job type requires name and color', function () {
+    [$user] = jobTypeUser();
+
+    $this->actingAs($user)
+        ->postJson('/owner/job-types/quick-create', [])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['name', 'color']);
+});
+
+test('quick-create job type requires authentication', function () {
+    $this->postJson('/owner/job-types/quick-create', ['name' => 'Test', 'color' => '#000'])
+        ->assertUnauthorized();
+});

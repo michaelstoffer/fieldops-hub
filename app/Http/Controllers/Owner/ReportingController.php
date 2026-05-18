@@ -71,11 +71,11 @@ class ReportingController extends Controller
 
         $from = $request->input('from')
             ? Carbon::parse($request->input('from'))->startOfDay()
-            : Carbon::now()->subDays(29)->startOfDay();
+            : Carbon::now()->startOfMonth()->startOfDay();
 
         $to = $request->input('to')
             ? Carbon::parse($request->input('to'))->endOfDay()
-            : Carbon::now()->endOfDay();
+            : Carbon::now()->endOfMonth()->endOfDay();
 
         $rows = Job::where('organization_id', $orgId)
             ->whereBetween('scheduled_at', [$from, $to])
@@ -116,11 +116,11 @@ class ReportingController extends Controller
 
         $from = $request->input('from')
             ? Carbon::parse($request->input('from'))->startOfDay()
-            : Carbon::now()->subDays(29)->startOfDay();
+            : Carbon::now()->startOfMonth()->startOfDay();
 
         $to = $request->input('to')
             ? Carbon::parse($request->input('to'))->endOfDay()
-            : Carbon::now()->endOfDay();
+            : Carbon::now()->endOfMonth()->endOfDay();
 
         $typeId = $request->input('job_type_id');
         $techId = $request->input('technician_id');
@@ -175,11 +175,11 @@ class ReportingController extends Controller
 
         $from = $request->input('from')
             ? Carbon::parse($request->input('from'))->startOfDay()
-            : Carbon::now()->subDays(29)->startOfDay();
+            : Carbon::now()->startOfMonth()->startOfDay();
 
         $to = $request->input('to')
             ? Carbon::parse($request->input('to'))->endOfDay()
-            : Carbon::now()->endOfDay();
+            : Carbon::now()->endOfMonth()->endOfDay();
 
         $technicians = User::where('organization_id', $orgId)
             ->role('technician')

@@ -44,8 +44,14 @@ class CustomerController extends Controller
 
         $customer->load('properties');
 
+        $jobs = $customer->jobs()
+            ->with('jobType:id,name,color')
+            ->orderByDesc('scheduled_at')
+            ->get(['id', 'title', 'status', 'scheduled_at', 'job_type_id']);
+
         return inertia('Owner/Customers/Show', [
             'customer' => $customer,
+            'jobs'     => $jobs,
         ]);
     }
 

@@ -2,6 +2,14 @@
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
+interface Job {
+    id: number;
+    title: string;
+    status: string;
+    scheduled_at: string | null;
+    job_type: { id: number; name: string; color: string } | null;
+}
+
 interface Property {
     id: number;
     name: string | null;
@@ -24,7 +32,30 @@ interface Customer {
     properties: Property[];
 }
 
-const props = defineProps<{ customer: Customer }>();
+const props = defineProps<{ customer: Customer; jobs: Job[] }>();
+
+const STATUS_CLASSES: Record<string, string> = {
+    scheduled:   'bg-blue-100 text-blue-700',
+    en_route:    'bg-purple-100 text-purple-700',
+    in_progress: 'bg-amber-100 text-amber-700',
+    completed:   'bg-green-100 text-green-700',
+    cancelled:   'bg-slate-100 text-slate-500',
+    on_hold:     'bg-orange-100 text-orange-700',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+    scheduled:   'Scheduled',
+    en_route:    'En Route',
+    in_progress: 'In Progress',
+    completed:   'Completed',
+    cancelled:   'Cancelled',
+    on_hold:     'On Hold',
+};
+
+function formatDate(dt: string | null): string {
+    if (!dt) return '—';
+    return new Date(dt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 
 function archiveCustomer() {
     if (confirm(`Archive ${props.customer.first_name} ${props.customer.last_name}? They can be restored later.`)) {
@@ -158,10 +189,50 @@ function removeProperty(property: Property) {
                 <div class="rounded-xl bg-white shadow">
                     <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3">
                         <h3 class="text-sm font-semibold text-slate-700">Jobs</h3>
+                        <Link
+                            :href="`/owner/jobs/create?customer_id=${customer.id}`"
+                            class="text-xs font-medium text-slate-500 hover:text-slate-800"
+                        >
+                            + New Job
+                        </Link>
                     </div>
-                    <div class="px-5 py-8 text-center text-sm text-slate-400">
-                        No jobs yet.
+
+                    <div v-if="jobs.length === 0" class="px-5 py-10 text-center">
+                        <p class="text-sm text-slate-400">No jobs yet.</p>
+                        <Link
+                            :href="`/owner/jobs/create?customer_id=${customer.id}`"
+                            class="mt-3 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                        >
+                            + New Job
+                        </Link>
                     </div>
+
+                    <ul v-else class="divide-y divide-slate-100">
+                        <li
+                            v-for="job in jobs"
+                            :key="job.id"
+                            class="flex cursor-pointer items-center justify-between px-5 py-3 hover:bg-slate-50"
+                            @click="router.visit(`/owner/jobs/${job.id}`)"
+                        >
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        v-if="job.job_type"
+                                        class="h-2 w-2 flex-shrink-0 rounded-full"
+                                        :style="{ backgroundColor: job.job_type.color }"
+                                    />
+                                    <p class="truncate text-sm font-medium text-slate-800">{{ job.title }}</p>
+                                </div>
+                                <p class="mt-0.5 text-xs text-slate-500">{{ formatDate(job.scheduled_at) }}</p>
+                            </div>
+                            <span
+                                class="ml-4 flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-medium"
+                                :class="STATUS_CLASSES[job.status] ?? 'bg-slate-100 text-slate-600'"
+                            >
+                                {{ STATUS_LABELS[job.status] ?? job.status }}
+                            </span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -79,7 +79,10 @@ function deleteEstimate() {
     router.delete(`/owner/estimates/${props.estimate.id}`);
 }
 
-const publicUrl = computed(() => `${window.location.origin}/estimates/${props.estimate.token}`);
+const publicUrl = computed(() => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    return `${origin}/estimates/${props.estimate.token}`;
+});
 
 function copyLink() {
     navigator.clipboard.writeText(publicUrl.value);

@@ -27,7 +27,7 @@ async function postLocation(position: GeolocationPosition): Promise<void> {
 }
 
 export function useLocationSharing() {
-    const enabled = ref(localStorage.getItem(STORAGE_KEY) === 'true');
+    const enabled = ref(typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) === 'true');
     const permissionDenied = ref(false);
     let intervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -90,7 +90,7 @@ export function useLocationSharing() {
     }
 
     // Auto-start if previously enabled
-    if (enabled.value && navigator.geolocation) {
+    if (enabled.value && typeof navigator !== 'undefined' && navigator.geolocation) {
         startSharing();
     }
 

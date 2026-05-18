@@ -33,8 +33,9 @@ const PLANS = [
 
 // Read ?plan= and ?founding= from URL query string
 const validPlans = ['starter', 'growth', 'pro'];
-const queryPlan = new URLSearchParams(window.location.search).get('plan') ?? '';
-const isFoundingInvite = new URLSearchParams(window.location.search).get('founding') === '1';
+const search = typeof window !== 'undefined' ? window.location.search : '';
+const queryPlan = new URLSearchParams(search).get('plan') ?? '';
+const isFoundingInvite = new URLSearchParams(search).get('founding') === '1';
 
 // Step 1 = plan selection, Step 2 = account details
 // Skip to step 2 if a valid plan was pre-selected from the pricing page

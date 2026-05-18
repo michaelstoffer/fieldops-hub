@@ -225,6 +225,8 @@ function initMap() {
 }
 
 function loadGoogleMaps() {
+    if (typeof window === 'undefined') return;
+
     const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     if (!key) {
         // No API key — show placeholder

@@ -17,12 +17,17 @@ use App\Http\Controllers\Owner\StripeController;
 use App\Http\Controllers\Owner\SubscriptionController;
 use App\Http\Controllers\Owner\TeamController;
 use App\Http\Controllers\HealthController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\MarketingController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\PublicEstimateController;
 use App\Http\Controllers\Technician\DashboardController as TechnicianDashboardController;
 use App\Http\Controllers\Technician\JobController as TechnicianJobController;
 use Illuminate\Support\Facades\Route;
+
+// Legal pages — public, no auth required
+Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
 
 // Root: guests see the marketing page; authenticated users go to their dashboard
 Route::get('/', function () {

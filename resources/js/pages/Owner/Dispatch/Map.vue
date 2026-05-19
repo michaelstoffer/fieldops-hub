@@ -59,7 +59,9 @@ async function assignJob(jobId: number) {
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                'X-CSRF-TOKEN': typeof document !== 'undefined'
+                    ? (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? ''
+                    : '',
             },
             body: JSON.stringify({ assigned_to: focused.value.id }),
         });
@@ -256,7 +258,9 @@ onMounted(() => {
 
 onUnmounted(() => {
     if (pollTimer) clearInterval(pollTimer);
-    delete (window as any).__gmapsInit;
+    if (typeof window !== 'undefined') {
+        delete (window as any).__gmapsInit;
+    }
 });
 </script>
 

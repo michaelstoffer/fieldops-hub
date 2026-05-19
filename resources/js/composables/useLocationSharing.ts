@@ -1,4 +1,4 @@
-import { onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 const STORAGE_KEY = 'locationSharingEnabled';
 const INTERVAL_MS = 30_000; // 30 seconds
@@ -89,10 +89,12 @@ export function useLocationSharing() {
         );
     }
 
-    // Auto-start if previously enabled
-    if (enabled.value && typeof navigator !== 'undefined' && navigator.geolocation) {
-        startSharing();
-    }
+    // Auto-start if previously enabled — deferred to onMounted so it never runs on the SSR server
+    onMounted(() => {
+        if (enabled.value && navigator.geolocation) {
+            startSharing();
+        }
+    });
 
     onUnmounted(() => stopSharing());
 

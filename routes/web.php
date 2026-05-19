@@ -144,10 +144,12 @@ Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper',
         Route::post('/invoices/{invoice}/checkout', [StripeController::class, 'createCheckoutSession'])->name('invoices.checkout');
     });
 
-// Public estimate page — no auth required
-Route::get('/estimates/{token}', [PublicEstimateController::class, 'show'])->name('estimates.public');
-Route::post('/estimates/{token}/accept', [PublicEstimateController::class, 'accept'])->name('estimates.accept');
-Route::post('/estimates/{token}/decline', [PublicEstimateController::class, 'decline'])->name('estimates.decline');
+// Public estimate page — no auth required, but throttled to prevent token enumeration
+Route::middleware('throttle:30,1')->group(function () {
+    Route::get('/estimates/{token}', [PublicEstimateController::class, 'show'])->name('estimates.public');
+    Route::post('/estimates/{token}/accept', [PublicEstimateController::class, 'accept'])->name('estimates.accept');
+    Route::post('/estimates/{token}/decline', [PublicEstimateController::class, 'decline'])->name('estimates.decline');
+});
 
 Route::middleware(['auth', 'role:technician'])
     ->prefix('technician')

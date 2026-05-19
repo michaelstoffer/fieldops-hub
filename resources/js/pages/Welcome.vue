@@ -3,6 +3,8 @@ import { Head, Link } from '@inertiajs/vue3';
 import { login, register } from '@/routes';
 import { ref, computed, onMounted } from 'vue';
 
+const mobileNavOpen = ref(false);
+
 // Scroll-reveal: add .is-visible when element enters the viewport
 function useScrollReveal() {
     onMounted(() => {
@@ -194,7 +196,16 @@ function getPrice(tier: typeof tiers[0]) {
 </script>
 
 <template>
-    <Head title="FieldOps Hub — Field Service Management for Growing Teams" />
+    <Head title="FieldOps Hub — Field Service Management for Growing Teams">
+        <meta name="description" content="Dispatch technicians, track jobs in real time, send estimates, and collect payments — all from one modern platform built for field service teams." />
+        <meta property="og:title" content="FieldOps Hub — Field Service Management for Growing Teams" />
+        <meta property="og:description" content="Dispatch technicians, track jobs in real time, send estimates, and collect payments — all from one modern platform built for field service teams." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://fieldopshub.com" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="FieldOps Hub — Field Service Management for Growing Teams" />
+        <meta name="twitter:description" content="Dispatch technicians, track jobs in real time, send estimates, and collect payments — all from one modern platform built for field service teams." />
+    </Head>
 
     <div class="min-h-screen bg-slate-50 text-slate-900 antialiased">
 
@@ -212,27 +223,60 @@ function getPrice(tier: typeof tiers[0]) {
                         <span class="text-white font-semibold tracking-tight">FieldOps Hub</span>
                     </button>
 
-                    <!-- Nav links -->
+                    <!-- Nav links (desktop) -->
                     <nav class="hidden md:flex items-center gap-6">
                         <button type="button" @click="scrollToSection('features')" class="text-sm text-slate-400 hover:text-white transition-colors">Features</button>
                         <button type="button" @click="scrollToSection('pricing')" class="text-sm text-slate-400 hover:text-white transition-colors">Pricing</button>
                         <button type="button" @click="scrollToSection('faq')" class="text-sm text-slate-400 hover:text-white transition-colors">FAQ</button>
                     </nav>
 
-                    <!-- Auth links -->
+                    <!-- Auth links (desktop) + hamburger (mobile) -->
                     <div class="flex items-center gap-3">
-                        <Link :href="login().url" class="text-sm text-slate-400 hover:text-white transition-colors font-medium">
+                        <Link :href="login().url" class="hidden md:inline text-sm text-slate-400 hover:text-white transition-colors font-medium">
                             Sign in
                         </Link>
                         <Link
                             :href="registerUrl()"
-                            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors shadow-sm"
+                            class="hidden md:inline-flex items-center gap-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors shadow-sm"
                         >
                             Start free trial
                         </Link>
+                        <!-- Hamburger -->
+                        <button
+                            type="button"
+                            class="md:hidden flex items-center justify-center h-9 w-9 rounded-md text-slate-400 hover:text-white transition-colors"
+                            :aria-expanded="mobileNavOpen"
+                            aria-label="Toggle navigation"
+                            @click="mobileNavOpen = !mobileNavOpen"
+                        >
+                            <svg v-if="!mobileNavOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg v-else class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile nav drawer -->
+            <Transition
+                enter-active-class="transition-all duration-200 ease-out"
+                leave-active-class="transition-all duration-150 ease-in"
+                enter-from-class="opacity-0 -translate-y-2"
+                leave-to-class="opacity-0 -translate-y-2"
+            >
+                <div v-if="mobileNavOpen" class="md:hidden border-t border-white/5 bg-slate-900 px-4 py-4 space-y-1">
+                    <button type="button" @click="scrollToSection('features'); mobileNavOpen = false" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Features</button>
+                    <button type="button" @click="scrollToSection('pricing'); mobileNavOpen = false" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Pricing</button>
+                    <button type="button" @click="scrollToSection('faq'); mobileNavOpen = false" class="w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">FAQ</button>
+                    <div class="pt-3 border-t border-white/5 flex flex-col gap-2">
+                        <Link :href="login().url" class="px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Sign in</Link>
+                        <Link :href="registerUrl()" class="px-3 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-semibold text-white text-center transition-colors">Start free trial</Link>
+                    </div>
+                </div>
+            </Transition>
         </header>
 
         <!-- ── Hero ─────────────────────────────────────────────────────────── -->
@@ -298,33 +342,33 @@ function getPrice(tier: typeof tiers[0]) {
             </div>
         </section>
 
-        <!-- ── Social proof strip ───────────────────────────────────────────── -->
+        <!-- ── Trust strip ──────────────────────────────────────────────────── -->
         <div class="bg-slate-800 border-y border-white/5">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
                 <div class="reveal reveal-fade flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
                     <div>
-                        <div class="text-2xl font-bold text-white">HVAC</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Heating & Cooling</div>
+                        <div class="text-2xl font-bold text-white">14-day</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Free trial, no card required</div>
                     </div>
                     <div class="hidden sm:block h-8 w-px bg-white/10"></div>
                     <div>
-                        <div class="text-2xl font-bold text-white">Plumbing</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Residential & Commercial</div>
+                        <div class="text-2xl font-bold text-white">2 min</div>
+                        <div class="text-xs text-slate-400 mt-0.5">To set up your organization</div>
                     </div>
                     <div class="hidden sm:block h-8 w-px bg-white/10"></div>
                     <div>
-                        <div class="text-2xl font-bold text-white">Electrical</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Licensed Contractors</div>
+                        <div class="text-2xl font-bold text-white">5 roles</div>
+                        <div class="text-xs text-slate-400 mt-0.5">Owner, admin, dispatcher, tech, bookkeeper</div>
                     </div>
                     <div class="hidden sm:block h-8 w-px bg-white/10"></div>
                     <div>
-                        <div class="text-2xl font-bold text-white">Landscaping</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Maintenance & Install</div>
+                        <div class="text-2xl font-bold text-white">Any trade</div>
+                        <div class="text-xs text-slate-400 mt-0.5">HVAC, plumbing, electrical, landscaping & more</div>
                     </div>
                     <div class="hidden sm:block h-8 w-px bg-white/10"></div>
                     <div>
-                        <div class="text-2xl font-bold text-white">& More</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Any field trade</div>
+                        <div class="text-2xl font-bold text-white">Cancel any time</div>
+                        <div class="text-xs text-slate-400 mt-0.5">No long-term contracts</div>
                     </div>
                 </div>
             </div>
@@ -561,7 +605,7 @@ function getPrice(tier: typeof tiers[0]) {
 
                 <p class="mt-8 text-center text-sm text-slate-400">
                     All plans include a 14-day free trial. No credit card required.
-                    <a href="#faq" class="text-blue-600 hover:text-blue-700 font-medium">Questions? See the FAQ.</a>
+                    <button type="button" @click="scrollToSection('faq')" class="text-blue-600 hover:text-blue-700 font-medium">Questions? See the FAQ.</button>
                 </p>
             </div>
         </section>
@@ -571,7 +615,7 @@ function getPrice(tier: typeof tiers[0]) {
             <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="reveal reveal-up text-center mb-14">
                     <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">Frequently asked questions</h2>
-                    <p class="mt-4 text-lg text-slate-500">Can't find what you're looking for? <a :href="'mailto:hello@fieldopshub.com'" class="text-blue-600 hover:text-blue-700 font-medium">Reach out.</a></p>
+                    <p class="mt-4 text-lg text-slate-500">Can't find what you're looking for? <a href="mailto:hello@fieldops-hub.com" class="text-blue-600 hover:text-blue-700 font-medium">Reach out.</a></p>
                 </div>
 
                 <div class="space-y-3">
@@ -659,25 +703,50 @@ function getPrice(tier: typeof tiers[0]) {
         <!-- ── Footer ────────────────────────────────────────────────────────── -->
         <footer class="bg-slate-950 border-t border-white/5">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                    <!-- Logo -->
-                    <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
-                        <div class="h-7 w-7 rounded-lg bg-blue-500 flex items-center justify-center">
-                            <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
+                    <!-- Logo + tagline -->
+                    <div>
+                        <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
+                            <div class="h-7 w-7 rounded-lg bg-blue-500 flex items-center justify-center">
+                                <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="text-white font-semibold text-sm tracking-tight">FieldOps Hub</span>
+                        </button>
+                        <p class="mt-2 text-xs text-slate-600 max-w-xs">Field service management for growing teams.</p>
+                    </div>
+
+                    <!-- Nav columns -->
+                    <div class="flex flex-wrap gap-x-12 gap-y-6">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Product</p>
+                            <nav class="flex flex-col gap-2">
+                                <button type="button" @click="scrollToSection('features')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors text-left">Features</button>
+                                <button type="button" @click="scrollToSection('pricing')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors text-left">Pricing</button>
+                                <button type="button" @click="scrollToSection('faq')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors text-left">FAQ</button>
+                            </nav>
                         </div>
-                        <span class="text-white font-semibold text-sm tracking-tight">FieldOps Hub</span>
-                    </button>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Account</p>
+                            <nav class="flex flex-col gap-2">
+                                <Link :href="login().url" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Sign in</Link>
+                                <Link :href="registerUrl()" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Start free trial</Link>
+                            </nav>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Legal</p>
+                            <nav class="flex flex-col gap-2">
+                                <a href="/privacy" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</a>
+                                <a href="/terms" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Terms of Service</a>
+                                <a href="mailto:hello@fieldops-hub.com" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Contact</a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
 
-                    <nav class="flex items-center gap-6">
-                        <button type="button" @click="scrollToSection('features')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Features</button>
-                        <button type="button" @click="scrollToSection('pricing')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Pricing</button>
-                        <button type="button" @click="scrollToSection('faq')" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">FAQ</button>
-                        <Link :href="login().url" class="text-sm text-slate-500 hover:text-slate-300 transition-colors">Sign in</Link>
-                    </nav>
-
-                    <p class="text-sm text-slate-600">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
+                <div class="mt-10 pt-6 border-t border-white/5">
+                    <p class="text-xs text-slate-600 text-center sm:text-left">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
                 </div>
             </div>
         </footer>

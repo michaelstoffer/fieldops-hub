@@ -99,9 +99,9 @@ function navClass(href: string): string {
                     href="/logout"
                     method="post"
                     as="button"
-                    class="w-full text-left text-sm text-slate-400 hover:text-white transition-colors"
+                    class="w-full text-left text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2"
                 >
-                    Sign out
+                    <LogOut class="w-4 h-4 opacity-70" />Sign out
                 </Link>
             </div>
         </aside>

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import {
+    LayoutDashboard, Users, Briefcase, CalendarDays, FileText, Receipt,
+    MapPin, BarChart2, TrendingUp, UserCheck, Building2, Plug, UsersRound,
+    Tags, Package, LogOut,
+} from 'lucide-vue-next';
 
 defineProps<{
     title?: string;

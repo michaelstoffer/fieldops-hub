@@ -24,7 +24,7 @@ Examples of unacceptable behaviour:
 
 ## Enforcement
 
-Instances of unacceptable behaviour may be reported by contacting the maintainer at <mstoffer@michaelstoffer.com>. All complaints will be reviewed and investigated promptly and fairly. The maintainer is obligated to maintain confidentiality with regard to the reporter.
+Instances of unacceptable behaviour may be reported by contacting the maintainer at <conduct@fieldops-hub.com>. All complaints will be reviewed and investigated promptly and fairly. The maintainer is obligated to maintain confidentiality with regard to the reporter.
 
 ## Attribution
 

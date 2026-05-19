@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Security vulnerability contact email updated to <mstoffer@michaelstoffer.com>
+- Security vulnerability contact email updated to <security@fieldops-hub.com>
 
 ## [0.8.11-alpha] - 2026-05-14
 

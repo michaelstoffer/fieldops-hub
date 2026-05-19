@@ -41,27 +41,57 @@ function navClass(href: string): string {
             </div>
 
             <nav class="flex-1 px-3 py-4 space-y-0.5 text-sm overflow-y-auto">
-                <Link href="/owner/dashboard" :class="navClass('/owner/dashboard')">Dashboard</Link>
-                <Link href="/owner/customers" :class="navClass('/owner/customers')">Customers</Link>
-                <Link href="/owner/jobs" :class="navClass('/owner/jobs')">Jobs</Link>
-                <Link href="/owner/calendar" :class="navClass('/owner/calendar')">Calendar</Link>
-                <Link href="/owner/estimates" :class="navClass('/owner/estimates')">Estimates</Link>
-                <Link href="/owner/invoices" :class="navClass('/owner/invoices')">Invoices</Link>
-                <Link href="/owner/dispatch" :class="navClass('/owner/dispatch')">Dispatch</Link>
+                <Link href="/owner/dashboard" :class="navClass('/owner/dashboard')">
+                    <LayoutDashboard class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Dashboard
+                </Link>
+                <Link href="/owner/customers" :class="navClass('/owner/customers')">
+                    <Users class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Customers
+                </Link>
+                <Link href="/owner/jobs" :class="navClass('/owner/jobs')">
+                    <Briefcase class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Jobs
+                </Link>
+                <Link href="/owner/calendar" :class="navClass('/owner/calendar')">
+                    <CalendarDays class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Calendar
+                </Link>
+                <Link href="/owner/estimates" :class="navClass('/owner/estimates')">
+                    <FileText class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Estimates
+                </Link>
+                <Link href="/owner/invoices" :class="navClass('/owner/invoices')">
+                    <Receipt class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Invoices
+                </Link>
+                <Link href="/owner/dispatch" :class="navClass('/owner/dispatch')">
+                    <MapPin class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Dispatch
+                </Link>
 
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Reports</div>
-                <Link href="/owner/reports/jobs-by-type" :class="navClass('/owner/reports/jobs-by-type')">Jobs by Type</Link>
-                <Link href="/owner/reports/job-profitability" :class="navClass('/owner/reports/job-profitability')">Job Profitability</Link>
-                <Link href="/owner/reports/technician-performance" :class="navClass('/owner/reports/technician-performance')">Technician Performance</Link>
+                <Link href="/owner/reports/jobs-by-type" :class="navClass('/owner/reports/jobs-by-type')">
+                    <BarChart2 class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Jobs by Type
+                </Link>
+                <Link href="/owner/reports/job-profitability" :class="navClass('/owner/reports/job-profitability')">
+                    <TrendingUp class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Job Profitability
+                </Link>
+                <Link href="/owner/reports/technician-performance" :class="navClass('/owner/reports/technician-performance')">
+                    <UserCheck class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Technician Performance
+                </Link>
 
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Settings</div>
-                <Link href="/owner/settings/company" :class="navClass('/owner/settings/company')">Company</Link>
-                <Link href="/owner/settings/integrations" :class="navClass('/owner/settings/integrations')">Integrations</Link>
-                <Link href="/owner/team" :class="navClass('/owner/team')">Team</Link>
+                <Link href="/owner/settings/company" :class="navClass('/owner/settings/company')">
+                    <Building2 class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Company
+                </Link>
+                <Link href="/owner/settings/integrations" :class="navClass('/owner/settings/integrations')">
+                    <Plug class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Integrations
+                </Link>
+                <Link href="/owner/team" :class="navClass('/owner/team')">
+                    <UsersRound class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Team
+                </Link>
 
                 <div class="pt-4 pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Configuration</div>
-                <Link href="/owner/job-types" :class="navClass('/owner/job-types')">Job Types</Link>
-                <Link href="/owner/items" :class="navClass('/owner/items')">Catalog Items</Link>
+                <Link href="/owner/job-types" :class="navClass('/owner/job-types')">
+                    <Tags class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Job Types
+                </Link>
+                <Link href="/owner/items" :class="navClass('/owner/items')">
+                    <Package class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Catalog Items
+                </Link>
             </nav>
 
             <div class="border-t border-slate-800 px-4 py-3">

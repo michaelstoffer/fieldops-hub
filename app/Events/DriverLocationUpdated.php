@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\DriverLocation;
-use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -15,9 +15,9 @@ class DriverLocationUpdated implements ShouldBroadcast
 
     public function __construct(public readonly DriverLocation $location) {}
 
-    public function broadcastOn(): Channel
+    public function broadcastOn(): PrivateChannel
     {
-        return new Channel('driver-locations');
+        return new PrivateChannel("organizations.{$this->location->user->organization_id}.driver-locations");
     }
 
     public function broadcastAs(): string

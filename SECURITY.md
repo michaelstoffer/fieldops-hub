@@ -88,7 +88,9 @@ For context when evaluating the attack surface, FieldOps Hub includes the follow
 |---------|---------------|
 | Authentication | Laravel Fortify — bcrypt password hashing, configurable 2FA (TOTP) |
 | Authorization | spatie/laravel-permission v7 — per-organization roles and granular permissions |
-| Session management | Server-side sessions with CSRF protection on all state-changing requests |
+| Session management | Server-side database sessions; CSRF protection on all state-changing requests; secure cookie flag in production |
+| Rate limiting | Login: 5/min · Registration: 10/min · Password reset: 5/min · 2FA: 5/min · Public estimates: 30/min |
+| HTTP security headers | `X-Content-Type-Options: nosniff` · `X-Frame-Options: DENY` · `Referrer-Policy: strict-origin-when-cross-origin` · `Permissions-Policy` · `Strict-Transport-Security` (HTTPS only) |
 | Multi-tenancy isolation | All domain models are scoped by `organization_id` at the Eloquent model layer |
 | Input validation | Laravel Form Requests with strict validation rules on all write endpoints |
 | XSS protection | Inertia.js renders data server-side; cookie values are whitelisted before use in views |

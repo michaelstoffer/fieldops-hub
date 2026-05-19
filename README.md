@@ -184,7 +184,7 @@ app/
 │   │   ├── Technician/        # Technician PWA controllers
 │   │   ├── Auth/              # Fortify-style auth controllers
 │   │   └── Settings/          # Profile, password, 2FA settings
-│   ├── Middleware/            # HandleInertiaRequests, HandleAppearance
+│   ├── Middleware/            # HandleInertiaRequests, HandleAppearance, SecurityHeaders
 │   └── Requests/              # Form request validation
 ├── Models/                    # Eloquent models (all org-scoped)
 └── Providers/                 # FortifyServiceProvider
@@ -267,6 +267,10 @@ Integration keys can also be managed per-organization through the **Settings →
 - Logo uploads are validated for file type (`image` rule) and size (2 MB limit)
 - Stripe webhook endpoint verifies the request signature before processing
 - CSRF protection is enabled on all routes except the Stripe webhook
+- HTTP security headers set on every response: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` (HTTPS only)
+- Rate limiting on all auth endpoints: login (5/min), registration (10/min), password reset (5/min), 2FA (5/min)
+- Public estimate endpoints are throttled (30 req/min) to prevent token enumeration
+- Session cookie secure flag should be set via `SESSION_SECURE_COOKIE=true` in production
 
 ---
 

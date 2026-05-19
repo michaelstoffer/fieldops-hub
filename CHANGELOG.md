@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Added `SecurityHeaders` middleware — sets `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` (HTTPS only) on every response
+- Rate limiting added to registration (10/min) and forgot-password (5/min) endpoints
+- Public estimate endpoints throttled at 30 req/min to prevent token enumeration
+- `SESSION_SECURE_COOKIE` now explicitly configured; set to `true` in production via Forge environment
+- `.gitignore` updated to exclude all `.env.*` files, preventing accidental secret commits
+
 ## [0.8.14-alpha] - 2026-05-14
 
 ### Added

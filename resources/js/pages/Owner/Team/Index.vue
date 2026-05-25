@@ -213,7 +213,7 @@ const ROLE_COLORS: Record<string, string> = {
                                     <select
                                         :value="member.roles[0]"
                                         @change="updateRole(member.id, ($event.target as HTMLSelectElement).value)"
-                                        class="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                        class="w-36 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                                     >
                                         <option v-for="r in roles" :key="r" :value="r">{{ ROLE_LABELS[r] ?? r }}</option>
                                     </select>

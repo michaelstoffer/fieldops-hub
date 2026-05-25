@@ -29,6 +29,13 @@ composer run test                        # Clear config cache then run full test
 ```
 Tests use an in-memory SQLite database (configured in `phpunit.xml`).
 
+### Browser tests (Playwright)
+```bash
+npm run test:browser        # Run all Playwright tests (headless, requires Herd site running)
+npm run test:browser:ui     # Open Playwright UI mode for debugging
+```
+Browser tests live in `tests/Browser/` and run against `https://fieldops-hub.test` (Laravel Herd). They cover JS-heavy flows that PHP tests can't reach: logo upload, invoice payments, estimate builder totals, technician status buttons, photo uploads. Run `npx playwright install chromium` once to install the browser.
+
 ### Linting & Formatting
 ```bash
 vendor/bin/pint           # PHP code style (Laravel Pint)

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { update as companyUpdate } from '@/routes/owner/settings/company/index.ts';
+import { destroy as logoDestroy } from '@/routes/owner/settings/company/logo/index.ts';
 import { ref, watch } from 'vue';
 
 interface CompanySettings {
@@ -62,7 +64,7 @@ function onLogoChange(e: Event) {
 
 function removeLogo() {
     if (confirm('Remove the company logo?')) {
-        router.delete(route('owner.settings.company.logo.destroy'), {
+        router.delete(logoDestroy().url, {
             onSuccess: () => { logoPreview.value = null; },
         });
     }
@@ -73,7 +75,7 @@ function submit() {
     Object.entries(form.data()).forEach(([k, v]) => { if (v) data.append(k, v); });
     if (logoFile.value) data.append('logo', logoFile.value);
 
-    form.post(route('owner.settings.company.update'), {
+    form.post(companyUpdate().url, {
         forceFormData: true,
         onSuccess: () => { logoFile.value = null; },
     });

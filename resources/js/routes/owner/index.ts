@@ -1,5 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../wayfinder'
+import subscription from './subscription'
 import setup90f0be from './setup'
+import team from './team'
 import customers from './customers'
 import properties from './properties'
 import jobs from './jobs'
@@ -8,6 +10,9 @@ import estimates from './estimates'
 import dispatchF56169 from './dispatch'
 import reports from './reports'
 import settings from './settings'
+import jobTypes from './job-types'
+import owner from './owner'
+import items from './items'
 import invoices from './invoices'
 /**
 * @see \App\Http\Controllers\Owner\SetupController::setup
@@ -223,8 +228,10 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: dashboard.url(options),
     method: 'head',
 })
-const owner = {
-    setup: Object.assign(setup, setup90f0be),
+const ownerNamespace = {
+    subscription: Object.assign(subscription, subscription),
+setup: Object.assign(setup, setup90f0be),
+team: Object.assign(team, team),
 customers: Object.assign(customers, customers),
 properties: Object.assign(properties, properties),
 jobs: Object.assign(jobs, jobs),
@@ -235,7 +242,10 @@ billing: Object.assign(billing, billing),
 dashboard: Object.assign(dashboard, dashboard),
 reports: Object.assign(reports, reports),
 settings: Object.assign(settings, settings),
+jobTypes: Object.assign(jobTypes, jobTypes),
+owner: Object.assign(owner, owner),
+items: Object.assign(items, items),
 invoices: Object.assign(invoices, invoices),
 }
 
-export default owner
+export default ownerNamespace

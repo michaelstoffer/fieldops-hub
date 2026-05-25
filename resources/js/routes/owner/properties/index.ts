@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::edit
- * @see app/Http/Controllers/Owner/PropertyController.php:48
+ * @see app/Http/Controllers/Owner/PropertyController.php:49
  * @route '/owner/properties/{property}/edit'
  */
 export const edit = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::edit
- * @see app/Http/Controllers/Owner/PropertyController.php:48
+ * @see app/Http/Controllers/Owner/PropertyController.php:49
  * @route '/owner/properties/{property}/edit'
  */
 edit.url = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +49,7 @@ edit.url = (args: { property: number | { id: number } } | [property: number | { 
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::edit
- * @see app/Http/Controllers/Owner/PropertyController.php:48
+ * @see app/Http/Controllers/Owner/PropertyController.php:49
  * @route '/owner/properties/{property}/edit'
  */
 edit.get = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +58,7 @@ edit.get = (args: { property: number | { id: number } } | [property: number | { 
 })
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::edit
- * @see app/Http/Controllers/Owner/PropertyController.php:48
+ * @see app/Http/Controllers/Owner/PropertyController.php:49
  * @route '/owner/properties/{property}/edit'
  */
 edit.head = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +68,7 @@ edit.head = (args: { property: number | { id: number } } | [property: number | {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::update
- * @see app/Http/Controllers/Owner/PropertyController.php:58
+ * @see app/Http/Controllers/Owner/PropertyController.php:59
  * @route '/owner/properties/{property}'
  */
 export const update = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -83,7 +83,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::update
- * @see app/Http/Controllers/Owner/PropertyController.php:58
+ * @see app/Http/Controllers/Owner/PropertyController.php:59
  * @route '/owner/properties/{property}'
  */
 update.url = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -116,7 +116,7 @@ update.url = (args: { property: number | { id: number } } | [property: number | 
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::update
- * @see app/Http/Controllers/Owner/PropertyController.php:58
+ * @see app/Http/Controllers/Owner/PropertyController.php:59
  * @route '/owner/properties/{property}'
  */
 update.patch = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -126,7 +126,7 @@ update.patch = (args: { property: number | { id: number } } | [property: number 
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::destroy
- * @see app/Http/Controllers/Owner/PropertyController.php:96
+ * @see app/Http/Controllers/Owner/PropertyController.php:122
  * @route '/owner/properties/{property}'
  */
 export const destroy = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -141,7 +141,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::destroy
- * @see app/Http/Controllers/Owner/PropertyController.php:96
+ * @see app/Http/Controllers/Owner/PropertyController.php:122
  * @route '/owner/properties/{property}'
  */
 destroy.url = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -174,7 +174,7 @@ destroy.url = (args: { property: number | { id: number } } | [property: number |
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::destroy
- * @see app/Http/Controllers/Owner/PropertyController.php:96
+ * @see app/Http/Controllers/Owner/PropertyController.php:122
  * @route '/owner/properties/{property}'
  */
 destroy.delete = (args: { property: number | { id: number } } | [property: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({

@@ -1,8 +1,86 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
+import importMethod7367d2 from './import'
 import properties from './properties'
 /**
+* @see \App\Http\Controllers\Owner\CustomerController::importMethod
+ * @see app/Http/Controllers/Owner/CustomerController.php:118
+ * @route '/owner/customers/import'
+ */
+export const importMethod = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: importMethod.url(options),
+    method: 'get',
+})
+
+importMethod.definition = {
+    methods: ["get","head"],
+    url: '/owner/customers/import',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::importMethod
+ * @see app/Http/Controllers/Owner/CustomerController.php:118
+ * @route '/owner/customers/import'
+ */
+importMethod.url = (options?: RouteQueryOptions) => {
+    return importMethod.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::importMethod
+ * @see app/Http/Controllers/Owner/CustomerController.php:118
+ * @route '/owner/customers/import'
+ */
+importMethod.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: importMethod.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::importMethod
+ * @see app/Http/Controllers/Owner/CustomerController.php:118
+ * @route '/owner/customers/import'
+ */
+importMethod.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: importMethod.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::quickCreate
+ * @see app/Http/Controllers/Owner/CustomerController.php:103
+ * @route '/owner/customers/quick-create'
+ */
+export const quickCreate = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: quickCreate.url(options),
+    method: 'post',
+})
+
+quickCreate.definition = {
+    methods: ["post"],
+    url: '/owner/customers/quick-create',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::quickCreate
+ * @see app/Http/Controllers/Owner/CustomerController.php:103
+ * @route '/owner/customers/quick-create'
+ */
+quickCreate.url = (options?: RouteQueryOptions) => {
+    return quickCreate.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\CustomerController::quickCreate
+ * @see app/Http/Controllers/Owner/CustomerController.php:103
+ * @route '/owner/customers/quick-create'
+ */
+quickCreate.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: quickCreate.url(options),
+    method: 'post',
+})
+
+/**
 * @see \App\Http\Controllers\Owner\CustomerController::index
- * @see app/Http/Controllers/Owner/CustomerController.php:16
+ * @see app/Http/Controllers/Owner/CustomerController.php:17
  * @route '/owner/customers'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -17,7 +95,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::index
- * @see app/Http/Controllers/Owner/CustomerController.php:16
+ * @see app/Http/Controllers/Owner/CustomerController.php:17
  * @route '/owner/customers'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -26,7 +104,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::index
- * @see app/Http/Controllers/Owner/CustomerController.php:16
+ * @see app/Http/Controllers/Owner/CustomerController.php:17
  * @route '/owner/customers'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +113,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::index
- * @see app/Http/Controllers/Owner/CustomerController.php:16
+ * @see app/Http/Controllers/Owner/CustomerController.php:17
  * @route '/owner/customers'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +123,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::create
- * @see app/Http/Controllers/Owner/CustomerController.php:51
+ * @see app/Http/Controllers/Owner/CustomerController.php:58
  * @route '/owner/customers/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +138,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::create
- * @see app/Http/Controllers/Owner/CustomerController.php:51
+ * @see app/Http/Controllers/Owner/CustomerController.php:58
  * @route '/owner/customers/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -69,7 +147,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::create
- * @see app/Http/Controllers/Owner/CustomerController.php:51
+ * @see app/Http/Controllers/Owner/CustomerController.php:58
  * @route '/owner/customers/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -78,7 +156,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::create
- * @see app/Http/Controllers/Owner/CustomerController.php:51
+ * @see app/Http/Controllers/Owner/CustomerController.php:58
  * @route '/owner/customers/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -88,7 +166,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::store
- * @see app/Http/Controllers/Owner/CustomerController.php:56
+ * @see app/Http/Controllers/Owner/CustomerController.php:63
  * @route '/owner/customers'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -103,7 +181,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::store
- * @see app/Http/Controllers/Owner/CustomerController.php:56
+ * @see app/Http/Controllers/Owner/CustomerController.php:63
  * @route '/owner/customers'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -112,7 +190,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::store
- * @see app/Http/Controllers/Owner/CustomerController.php:56
+ * @see app/Http/Controllers/Owner/CustomerController.php:63
  * @route '/owner/customers'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -122,7 +200,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::show
- * @see app/Http/Controllers/Owner/CustomerController.php:40
+ * @see app/Http/Controllers/Owner/CustomerController.php:41
  * @route '/owner/customers/{customer}'
  */
 export const show = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -137,7 +215,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::show
- * @see app/Http/Controllers/Owner/CustomerController.php:40
+ * @see app/Http/Controllers/Owner/CustomerController.php:41
  * @route '/owner/customers/{customer}'
  */
 show.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -170,7 +248,7 @@ show.url = (args: { customer: number | { id: number } } | [customer: number | { 
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::show
- * @see app/Http/Controllers/Owner/CustomerController.php:40
+ * @see app/Http/Controllers/Owner/CustomerController.php:41
  * @route '/owner/customers/{customer}'
  */
 show.get = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -179,7 +257,7 @@ show.get = (args: { customer: number | { id: number } } | [customer: number | { 
 })
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::show
- * @see app/Http/Controllers/Owner/CustomerController.php:40
+ * @see app/Http/Controllers/Owner/CustomerController.php:41
  * @route '/owner/customers/{customer}'
  */
 show.head = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -189,7 +267,7 @@ show.head = (args: { customer: number | { id: number } } | [customer: number | {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::edit
- * @see app/Http/Controllers/Owner/CustomerController.php:67
+ * @see app/Http/Controllers/Owner/CustomerController.php:74
  * @route '/owner/customers/{customer}/edit'
  */
 export const edit = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -204,7 +282,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::edit
- * @see app/Http/Controllers/Owner/CustomerController.php:67
+ * @see app/Http/Controllers/Owner/CustomerController.php:74
  * @route '/owner/customers/{customer}/edit'
  */
 edit.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -237,7 +315,7 @@ edit.url = (args: { customer: number | { id: number } } | [customer: number | { 
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::edit
- * @see app/Http/Controllers/Owner/CustomerController.php:67
+ * @see app/Http/Controllers/Owner/CustomerController.php:74
  * @route '/owner/customers/{customer}/edit'
  */
 edit.get = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -246,7 +324,7 @@ edit.get = (args: { customer: number | { id: number } } | [customer: number | { 
 })
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::edit
- * @see app/Http/Controllers/Owner/CustomerController.php:67
+ * @see app/Http/Controllers/Owner/CustomerController.php:74
  * @route '/owner/customers/{customer}/edit'
  */
 edit.head = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -256,7 +334,7 @@ edit.head = (args: { customer: number | { id: number } } | [customer: number | {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::update
- * @see app/Http/Controllers/Owner/CustomerController.php:76
+ * @see app/Http/Controllers/Owner/CustomerController.php:83
  * @route '/owner/customers/{customer}'
  */
 export const update = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -271,7 +349,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::update
- * @see app/Http/Controllers/Owner/CustomerController.php:76
+ * @see app/Http/Controllers/Owner/CustomerController.php:83
  * @route '/owner/customers/{customer}'
  */
 update.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -304,7 +382,7 @@ update.url = (args: { customer: number | { id: number } } | [customer: number | 
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::update
- * @see app/Http/Controllers/Owner/CustomerController.php:76
+ * @see app/Http/Controllers/Owner/CustomerController.php:83
  * @route '/owner/customers/{customer}'
  */
 update.put = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -313,7 +391,7 @@ update.put = (args: { customer: number | { id: number } } | [customer: number | 
 })
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::update
- * @see app/Http/Controllers/Owner/CustomerController.php:76
+ * @see app/Http/Controllers/Owner/CustomerController.php:83
  * @route '/owner/customers/{customer}'
  */
 update.patch = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -323,7 +401,7 @@ update.patch = (args: { customer: number | { id: number } } | [customer: number 
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::destroy
- * @see app/Http/Controllers/Owner/CustomerController.php:86
+ * @see app/Http/Controllers/Owner/CustomerController.php:93
  * @route '/owner/customers/{customer}'
  */
 export const destroy = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -338,7 +416,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::destroy
- * @see app/Http/Controllers/Owner/CustomerController.php:86
+ * @see app/Http/Controllers/Owner/CustomerController.php:93
  * @route '/owner/customers/{customer}'
  */
 destroy.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -371,7 +449,7 @@ destroy.url = (args: { customer: number | { id: number } } | [customer: number |
 
 /**
 * @see \App\Http\Controllers\Owner\CustomerController::destroy
- * @see app/Http/Controllers/Owner/CustomerController.php:86
+ * @see app/Http/Controllers/Owner/CustomerController.php:93
  * @route '/owner/customers/{customer}'
  */
 destroy.delete = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -379,7 +457,9 @@ destroy.delete = (args: { customer: number | { id: number } } | [customer: numbe
     method: 'delete',
 })
 const customers = {
-    index: Object.assign(index, index),
+    import: Object.assign(importMethod, importMethod7367d2),
+quickCreate: Object.assign(quickCreate, quickCreate),
+index: Object.assign(index, index),
 create: Object.assign(create, create),
 store: Object.assign(store, store),
 show: Object.assign(show, show),

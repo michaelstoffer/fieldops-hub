@@ -77,8 +77,42 @@ updateCompany.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 })
 
 /**
+* @see \App\Http\Controllers\Owner\SettingsController::removeLogo
+ * @see app/Http/Controllers/Owner/SettingsController.php:81
+ * @route '/owner/settings/company/logo'
+ */
+export const removeLogo = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: removeLogo.url(options),
+    method: 'delete',
+})
+
+removeLogo.definition = {
+    methods: ["delete"],
+    url: '/owner/settings/company/logo',
+} satisfies RouteDefinition<["delete"]>
+
+/**
+* @see \App\Http\Controllers\Owner\SettingsController::removeLogo
+ * @see app/Http/Controllers/Owner/SettingsController.php:81
+ * @route '/owner/settings/company/logo'
+ */
+removeLogo.url = (options?: RouteQueryOptions) => {
+    return removeLogo.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\SettingsController::removeLogo
+ * @see app/Http/Controllers/Owner/SettingsController.php:81
+ * @route '/owner/settings/company/logo'
+ */
+removeLogo.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+    url: removeLogo.url(options),
+    method: 'delete',
+})
+
+/**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 export const integrations = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -93,7 +127,7 @@ integrations.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.url = (options?: RouteQueryOptions) => {
@@ -102,7 +136,7 @@ integrations.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -111,7 +145,7 @@ integrations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -121,7 +155,7 @@ integrations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::updateIntegrations
- * @see app/Http/Controllers/Owner/SettingsController.php:106
+ * @see app/Http/Controllers/Owner/SettingsController.php:118
  * @route '/owner/settings/integrations'
  */
 export const updateIntegrations = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -136,7 +170,7 @@ updateIntegrations.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::updateIntegrations
- * @see app/Http/Controllers/Owner/SettingsController.php:106
+ * @see app/Http/Controllers/Owner/SettingsController.php:118
  * @route '/owner/settings/integrations'
  */
 updateIntegrations.url = (options?: RouteQueryOptions) => {
@@ -145,13 +179,13 @@ updateIntegrations.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::updateIntegrations
- * @see app/Http/Controllers/Owner/SettingsController.php:106
+ * @see app/Http/Controllers/Owner/SettingsController.php:118
  * @route '/owner/settings/integrations'
  */
 updateIntegrations.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: updateIntegrations.url(options),
     method: 'post',
 })
-const SettingsController = { company, updateCompany, integrations, updateIntegrations }
+const SettingsController = { company, updateCompany, removeLogo, integrations, updateIntegrations }
 
 export default SettingsController

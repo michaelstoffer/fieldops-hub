@@ -1,8 +1,85 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../wayfinder'
 import payments from './payments'
 /**
+* @see \App\Http\Controllers\Owner\InvoiceController::create
+ * @see app/Http/Controllers/Owner/InvoiceController.php:77
+ * @route '/owner/invoices/create'
+ */
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/owner/invoices/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::create
+ * @see app/Http/Controllers/Owner/InvoiceController.php:77
+ * @route '/owner/invoices/create'
+ */
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::create
+ * @see app/Http/Controllers/Owner/InvoiceController.php:77
+ * @route '/owner/invoices/create'
+ */
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::create
+ * @see app/Http/Controllers/Owner/InvoiceController.php:77
+ * @route '/owner/invoices/create'
+ */
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::store
+ * @see app/Http/Controllers/Owner/InvoiceController.php:94
+ * @route '/owner/invoices'
+ */
+export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+store.definition = {
+    methods: ["post"],
+    url: '/owner/invoices',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::store
+ * @see app/Http/Controllers/Owner/InvoiceController.php:94
+ * @route '/owner/invoices'
+ */
+store.url = (options?: RouteQueryOptions) => {
+    return store.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\InvoiceController::store
+ * @see app/Http/Controllers/Owner/InvoiceController.php:94
+ * @route '/owner/invoices'
+ */
+store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: store.url(options),
+    method: 'post',
+})
+
+/**
 * @see \App\Http\Controllers\Owner\InvoiceController::index
- * @see app/Http/Controllers/Owner/InvoiceController.php:19
+ * @see app/Http/Controllers/Owner/InvoiceController.php:21
  * @route '/owner/invoices'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -17,7 +94,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::index
- * @see app/Http/Controllers/Owner/InvoiceController.php:19
+ * @see app/Http/Controllers/Owner/InvoiceController.php:21
  * @route '/owner/invoices'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -26,7 +103,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::index
- * @see app/Http/Controllers/Owner/InvoiceController.php:19
+ * @see app/Http/Controllers/Owner/InvoiceController.php:21
  * @route '/owner/invoices'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +112,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::index
- * @see app/Http/Controllers/Owner/InvoiceController.php:19
+ * @see app/Http/Controllers/Owner/InvoiceController.php:21
  * @route '/owner/invoices'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +122,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::show
- * @see app/Http/Controllers/Owner/InvoiceController.php:48
+ * @see app/Http/Controllers/Owner/InvoiceController.php:63
  * @route '/owner/invoices/{invoice}'
  */
 export const show = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -60,7 +137,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::show
- * @see app/Http/Controllers/Owner/InvoiceController.php:48
+ * @see app/Http/Controllers/Owner/InvoiceController.php:63
  * @route '/owner/invoices/{invoice}'
  */
 show.url = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -93,7 +170,7 @@ show.url = (args: { invoice: number | { id: number } } | [invoice: number | { id
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::show
- * @see app/Http/Controllers/Owner/InvoiceController.php:48
+ * @see app/Http/Controllers/Owner/InvoiceController.php:63
  * @route '/owner/invoices/{invoice}'
  */
 show.get = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +179,7 @@ show.get = (args: { invoice: number | { id: number } } | [invoice: number | { id
 })
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::show
- * @see app/Http/Controllers/Owner/InvoiceController.php:48
+ * @see app/Http/Controllers/Owner/InvoiceController.php:63
  * @route '/owner/invoices/{invoice}'
  */
 show.head = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -112,7 +189,7 @@ show.head = (args: { invoice: number | { id: number } } | [invoice: number | { i
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::destroy
- * @see app/Http/Controllers/Owner/InvoiceController.php:181
+ * @see app/Http/Controllers/Owner/InvoiceController.php:266
  * @route '/owner/invoices/{invoice}'
  */
 export const destroy = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -127,7 +204,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::destroy
- * @see app/Http/Controllers/Owner/InvoiceController.php:181
+ * @see app/Http/Controllers/Owner/InvoiceController.php:266
  * @route '/owner/invoices/{invoice}'
  */
 destroy.url = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -160,7 +237,7 @@ destroy.url = (args: { invoice: number | { id: number } } | [invoice: number | {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::destroy
- * @see app/Http/Controllers/Owner/InvoiceController.php:181
+ * @see app/Http/Controllers/Owner/InvoiceController.php:266
  * @route '/owner/invoices/{invoice}'
  */
 destroy.delete = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -170,7 +247,7 @@ destroy.delete = (args: { invoice: number | { id: number } } | [invoice: number 
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::send
- * @see app/Http/Controllers/Owner/InvoiceController.php:103
+ * @see app/Http/Controllers/Owner/InvoiceController.php:188
  * @route '/owner/invoices/{invoice}/send'
  */
 export const send = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -185,7 +262,7 @@ send.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::send
- * @see app/Http/Controllers/Owner/InvoiceController.php:103
+ * @see app/Http/Controllers/Owner/InvoiceController.php:188
  * @route '/owner/invoices/{invoice}/send'
  */
 send.url = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -218,7 +295,7 @@ send.url = (args: { invoice: number | { id: number } } | [invoice: number | { id
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::send
- * @see app/Http/Controllers/Owner/InvoiceController.php:103
+ * @see app/Http/Controllers/Owner/InvoiceController.php:188
  * @route '/owner/invoices/{invoice}/send'
  */
 send.post = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -228,7 +305,7 @@ send.post = (args: { invoice: number | { id: number } } | [invoice: number | { i
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::voidMethod
- * @see app/Http/Controllers/Owner/InvoiceController.php:121
+ * @see app/Http/Controllers/Owner/InvoiceController.php:206
  * @route '/owner/invoices/{invoice}/void'
  */
 export const voidMethod = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -243,7 +320,7 @@ voidMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::voidMethod
- * @see app/Http/Controllers/Owner/InvoiceController.php:121
+ * @see app/Http/Controllers/Owner/InvoiceController.php:206
  * @route '/owner/invoices/{invoice}/void'
  */
 voidMethod.url = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -276,7 +353,7 @@ voidMethod.url = (args: { invoice: number | { id: number } } | [invoice: number 
 
 /**
 * @see \App\Http\Controllers\Owner\InvoiceController::voidMethod
- * @see app/Http/Controllers/Owner/InvoiceController.php:121
+ * @see app/Http/Controllers/Owner/InvoiceController.php:206
  * @route '/owner/invoices/{invoice}/void'
  */
 voidMethod.post = (args: { invoice: number | { id: number } } | [invoice: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -342,7 +419,9 @@ checkout.post = (args: { invoice: number | { id: number } } | [invoice: number |
     method: 'post',
 })
 const invoices = {
-    index: Object.assign(index, index),
+    create: Object.assign(create, create),
+store: Object.assign(store, store),
+index: Object.assign(index, index),
 show: Object.assign(show, show),
 destroy: Object.assign(destroy, destroy),
 send: Object.assign(send, send),

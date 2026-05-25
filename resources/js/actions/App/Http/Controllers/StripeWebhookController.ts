@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handle
- * @see app/Http/Controllers/StripeWebhookController.php:15
+ * @see app/Http/Controllers/StripeWebhookController.php:20
  * @route '/stripe/webhook'
  */
 export const handle = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ handle.definition = {
 
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handle
- * @see app/Http/Controllers/StripeWebhookController.php:15
+ * @see app/Http/Controllers/StripeWebhookController.php:20
  * @route '/stripe/webhook'
  */
 handle.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ handle.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\StripeWebhookController::handle
- * @see app/Http/Controllers/StripeWebhookController.php:15
+ * @see app/Http/Controllers/StripeWebhookController.php:20
  * @route '/stripe/webhook'
  */
 handle.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({

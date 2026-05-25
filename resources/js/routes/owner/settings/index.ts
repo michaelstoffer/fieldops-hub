@@ -46,7 +46,7 @@ company.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 export const integrations = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -61,7 +61,7 @@ integrations.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.url = (options?: RouteQueryOptions) => {
@@ -70,7 +70,7 @@ integrations.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -79,7 +79,7 @@ integrations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::integrations
- * @see app/Http/Controllers/Owner/SettingsController.php:83
+ * @see app/Http/Controllers/Owner/SettingsController.php:95
  * @route '/owner/settings/integrations'
  */
 integrations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

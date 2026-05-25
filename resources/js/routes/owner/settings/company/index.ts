@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition } from './../../../../wayfinder'
+import logo from './logo'
 /**
 * @see \App\Http\Controllers\Owner\SettingsController::update
  * @see app/Http/Controllers/Owner/SettingsController.php:44
@@ -34,6 +35,7 @@ update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 const company = {
     update: Object.assign(update, update),
+logo: Object.assign(logo, logo),
 }
 
 export default company

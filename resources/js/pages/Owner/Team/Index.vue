@@ -2,6 +2,8 @@
 import { Head, useForm, router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
+import { store as teamStore, update as teamUpdate, destroy as teamDestroy, passwordReset as teamPasswordReset } from '@/routes/owner/team/index.ts';
+import { index as subscriptionIndex } from '@/routes/owner/subscription/index.ts';
 
 const props = defineProps<{
     team_members: Array<{
@@ -28,7 +30,7 @@ const addForm = useForm({
 });
 
 function submitAdd() {
-    addForm.post(route('owner.team.store'), {
+    addForm.post(teamStore().url, {
         preserveScroll: true,
         onSuccess: () => {
             addForm.reset();
@@ -38,18 +40,18 @@ function submitAdd() {
 }
 
 function updateRole(userId: number, role: string) {
-    router.patch(route('owner.team.update', userId), { role }, { preserveScroll: true });
+    router.patch(teamUpdate(userId).url, { role }, { preserveScroll: true });
 }
 
 function removeMember(userId: number, name: string) {
     if (confirm(`Remove ${name} from your team? This cannot be undone.`)) {
-        router.delete(route('owner.team.destroy', userId), { preserveScroll: true });
+        router.delete(teamDestroy(userId).url, { preserveScroll: true });
     }
 }
 
 function sendPasswordReset(userId: number, name: string) {
     if (confirm(`Send a password reset email to ${name}?`)) {
-        router.post(route('owner.team.password-reset', userId), {}, { preserveScroll: true });
+        router.post(teamPasswordReset(userId).url, {}, { preserveScroll: true });
     }
 }
 
@@ -119,7 +121,7 @@ const ROLE_COLORS: Record<string, string> = {
                     </div>
                 </div>
                 <div v-if="at_limit" class="shrink-0">
-                    <a :href="route('owner.subscription.index')"
+                    <a :href="subscriptionIndex().url"
                        class="text-xs font-semibold text-amber-700 hover:text-amber-800 underline">
                         Upgrade plan
                     </a>

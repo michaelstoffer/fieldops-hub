@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
+import { checkout } from '@/routes/owner/subscription/index.ts';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 
@@ -40,7 +41,7 @@ const form = useForm({
 function subscribe(planKey: string) {
     form.plan = planKey;
     form.interval = billingAnnual.value ? 'annual' : 'monthly';
-    form.post(route('owner.subscription.checkout'));
+    form.post(checkout().url);
 }
 
 const trialBadgeColor = computed(() => {

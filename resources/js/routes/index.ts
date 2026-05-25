@@ -78,7 +78,7 @@ logout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:21
+ * @see app/Http/Controllers/Auth/RegisteredUserController.php:23
  * @route '/register'
  */
 export const register = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -93,7 +93,7 @@ register.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:21
+ * @see app/Http/Controllers/Auth/RegisteredUserController.php:23
  * @route '/register'
  */
 register.url = (options?: RouteQueryOptions) => {
@@ -102,7 +102,7 @@ register.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:21
+ * @see app/Http/Controllers/Auth/RegisteredUserController.php:23
  * @route '/register'
  */
 register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -111,7 +111,7 @@ register.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Auth\RegisteredUserController::register
- * @see app/Http/Controllers/Auth/RegisteredUserController.php:21
+ * @see app/Http/Controllers/Auth/RegisteredUserController.php:23
  * @route '/register'
  */
 register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -120,7 +120,132 @@ register.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
 /**
- * @see routes/web.php:22
+* @see \App\Http\Controllers\LegalController::privacy
+ * @see app/Http/Controllers/LegalController.php:10
+ * @route '/privacy'
+ */
+export const privacy = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: privacy.url(options),
+    method: 'get',
+})
+
+privacy.definition = {
+    methods: ["get","head"],
+    url: '/privacy',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\LegalController::privacy
+ * @see app/Http/Controllers/LegalController.php:10
+ * @route '/privacy'
+ */
+privacy.url = (options?: RouteQueryOptions) => {
+    return privacy.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\LegalController::privacy
+ * @see app/Http/Controllers/LegalController.php:10
+ * @route '/privacy'
+ */
+privacy.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: privacy.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\LegalController::privacy
+ * @see app/Http/Controllers/LegalController.php:10
+ * @route '/privacy'
+ */
+privacy.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: privacy.url(options),
+    method: 'head',
+})
+
+/**
+* @see \App\Http\Controllers\LegalController::terms
+ * @see app/Http/Controllers/LegalController.php:15
+ * @route '/terms'
+ */
+export const terms = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: terms.url(options),
+    method: 'get',
+})
+
+terms.definition = {
+    methods: ["get","head"],
+    url: '/terms',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\LegalController::terms
+ * @see app/Http/Controllers/LegalController.php:15
+ * @route '/terms'
+ */
+terms.url = (options?: RouteQueryOptions) => {
+    return terms.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\LegalController::terms
+ * @see app/Http/Controllers/LegalController.php:15
+ * @route '/terms'
+ */
+terms.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: terms.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\LegalController::terms
+ * @see app/Http/Controllers/LegalController.php:15
+ * @route '/terms'
+ */
+terms.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: terms.url(options),
+    method: 'head',
+})
+
+/**
+ * @see routes/web.php:33
+ * @route '/'
+ */
+export const home = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: home.url(options),
+    method: 'get',
+})
+
+home.definition = {
+    methods: ["get","head"],
+    url: '/',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+ * @see routes/web.php:33
+ * @route '/'
+ */
+home.url = (options?: RouteQueryOptions) => {
+    return home.definition.url + queryParams(options)
+}
+
+/**
+ * @see routes/web.php:33
+ * @route '/'
+ */
+home.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: home.url(options),
+    method: 'get',
+})
+/**
+ * @see routes/web.php:33
+ * @route '/'
+ */
+home.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: home.url(options),
+    method: 'head',
+})
+
+/**
+ * @see routes/web.php:45
  * @route '/dashboard'
  */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -134,7 +259,7 @@ dashboard.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:22
+ * @see routes/web.php:45
  * @route '/dashboard'
  */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -142,7 +267,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:22
+ * @see routes/web.php:45
  * @route '/dashboard'
  */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -150,7 +275,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:22
+ * @see routes/web.php:45
  * @route '/dashboard'
  */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({

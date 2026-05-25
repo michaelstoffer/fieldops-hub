@@ -1,7 +1,65 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
+* @see \App\Http\Controllers\Owner\PropertyController::quickCreate
+ * @see app/Http/Controllers/Owner/PropertyController.php:97
+ * @route '/owner/customers/{customer}/properties/quick-create'
+ */
+export const quickCreate = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: quickCreate.url(args, options),
+    method: 'post',
+})
+
+quickCreate.definition = {
+    methods: ["post"],
+    url: '/owner/customers/{customer}/properties/quick-create',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Owner\PropertyController::quickCreate
+ * @see app/Http/Controllers/Owner/PropertyController.php:97
+ * @route '/owner/customers/{customer}/properties/quick-create'
+ */
+quickCreate.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { customer: args }
+    }
+
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { customer: args.id }
+        }
+    
+    if (Array.isArray(args)) {
+        args = {
+                    customer: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        customer: typeof args.customer === 'object'
+                ? args.customer.id
+                : args.customer,
+                }
+
+    return quickCreate.definition.url
+            .replace('{customer}', parsedArgs.customer.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Owner\PropertyController::quickCreate
+ * @see app/Http/Controllers/Owner/PropertyController.php:97
+ * @route '/owner/customers/{customer}/properties/quick-create'
+ */
+quickCreate.post = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: quickCreate.url(args, options),
+    method: 'post',
+})
+
+/**
 * @see \App\Http\Controllers\Owner\PropertyController::create
- * @see app/Http/Controllers/Owner/PropertyController.php:18
+ * @see app/Http/Controllers/Owner/PropertyController.php:19
  * @route '/owner/customers/{customer}/properties/create'
  */
 export const create = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +74,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::create
- * @see app/Http/Controllers/Owner/PropertyController.php:18
+ * @see app/Http/Controllers/Owner/PropertyController.php:19
  * @route '/owner/customers/{customer}/properties/create'
  */
 create.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -49,7 +107,7 @@ create.url = (args: { customer: number | { id: number } } | [customer: number | 
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::create
- * @see app/Http/Controllers/Owner/PropertyController.php:18
+ * @see app/Http/Controllers/Owner/PropertyController.php:19
  * @route '/owner/customers/{customer}/properties/create'
  */
 create.get = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -58,7 +116,7 @@ create.get = (args: { customer: number | { id: number } } | [customer: number | 
 })
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::create
- * @see app/Http/Controllers/Owner/PropertyController.php:18
+ * @see app/Http/Controllers/Owner/PropertyController.php:19
  * @route '/owner/customers/{customer}/properties/create'
  */
 create.head = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -68,7 +126,7 @@ create.head = (args: { customer: number | { id: number } } | [customer: number |
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::store
- * @see app/Http/Controllers/Owner/PropertyController.php:27
+ * @see app/Http/Controllers/Owner/PropertyController.php:28
  * @route '/owner/customers/{customer}/properties'
  */
 export const store = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -83,7 +141,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::store
- * @see app/Http/Controllers/Owner/PropertyController.php:27
+ * @see app/Http/Controllers/Owner/PropertyController.php:28
  * @route '/owner/customers/{customer}/properties'
  */
 store.url = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -116,7 +174,7 @@ store.url = (args: { customer: number | { id: number } } | [customer: number | {
 
 /**
 * @see \App\Http\Controllers\Owner\PropertyController::store
- * @see app/Http/Controllers/Owner/PropertyController.php:27
+ * @see app/Http/Controllers/Owner/PropertyController.php:28
  * @route '/owner/customers/{customer}/properties'
  */
 store.post = (args: { customer: number | { id: number } } | [customer: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -124,7 +182,8 @@ store.post = (args: { customer: number | { id: number } } | [customer: number | 
     method: 'post',
 })
 const properties = {
-    create: Object.assign(create, create),
+    quickCreate: Object.assign(quickCreate, quickCreate),
+create: Object.assign(create, create),
 store: Object.assign(store, store),
 }
 

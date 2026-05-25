@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianLocations
- * @see app/Http/Controllers/Owner/DispatchController.php:36
+ * @see app/Http/Controllers/Owner/DispatchController.php:44
  * @route '/owner/dispatch/technicians'
  */
 export const technicianLocations = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -59,7 +59,7 @@ technicianLocations.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianLocations
- * @see app/Http/Controllers/Owner/DispatchController.php:36
+ * @see app/Http/Controllers/Owner/DispatchController.php:44
  * @route '/owner/dispatch/technicians'
  */
 technicianLocations.url = (options?: RouteQueryOptions) => {
@@ -68,7 +68,7 @@ technicianLocations.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianLocations
- * @see app/Http/Controllers/Owner/DispatchController.php:36
+ * @see app/Http/Controllers/Owner/DispatchController.php:44
  * @route '/owner/dispatch/technicians'
  */
 technicianLocations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -77,7 +77,7 @@ technicianLocations.get = (options?: RouteQueryOptions): RouteDefinition<'get'> 
 })
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianLocations
- * @see app/Http/Controllers/Owner/DispatchController.php:36
+ * @see app/Http/Controllers/Owner/DispatchController.php:44
  * @route '/owner/dispatch/technicians'
  */
 technicianLocations.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -87,7 +87,7 @@ technicianLocations.head = (options?: RouteQueryOptions): RouteDefinition<'head'
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianTrail
- * @see app/Http/Controllers/Owner/DispatchController.php:105
+ * @see app/Http/Controllers/Owner/DispatchController.php:113
  * @route '/owner/dispatch/technicians/{user}/trail'
  */
 export const technicianTrail = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -102,7 +102,7 @@ technicianTrail.definition = {
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianTrail
- * @see app/Http/Controllers/Owner/DispatchController.php:105
+ * @see app/Http/Controllers/Owner/DispatchController.php:113
  * @route '/owner/dispatch/technicians/{user}/trail'
  */
 technicianTrail.url = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -135,7 +135,7 @@ technicianTrail.url = (args: { user: number | { id: number } } | [user: number |
 
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianTrail
- * @see app/Http/Controllers/Owner/DispatchController.php:105
+ * @see app/Http/Controllers/Owner/DispatchController.php:113
  * @route '/owner/dispatch/technicians/{user}/trail'
  */
 technicianTrail.get = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -144,7 +144,7 @@ technicianTrail.get = (args: { user: number | { id: number } } | [user: number |
 })
 /**
 * @see \App\Http\Controllers\Owner\DispatchController::technicianTrail
- * @see app/Http/Controllers/Owner/DispatchController.php:105
+ * @see app/Http/Controllers/Owner/DispatchController.php:113
  * @route '/owner/dispatch/technicians/{user}/trail'
  */
 technicianTrail.head = (args: { user: number | { id: number } } | [user: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({

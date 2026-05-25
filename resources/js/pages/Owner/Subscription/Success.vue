@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import { dashboard } from '@/routes/owner/index.ts';
 </script>
 
 <template>
@@ -20,7 +21,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 Your account is fully active. Welcome aboard — let's get back to work.
             </p>
 
-            <Link :href="route('owner.dashboard')"
+            <Link :href="dashboard().url"
                   class="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-8 py-3 text-sm font-semibold text-white transition-colors">
                 Go to dashboard
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

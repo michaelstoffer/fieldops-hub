@@ -1,4 +1,5 @@
 import Auth from './Auth'
+import LegalController from './LegalController'
 import Owner from './Owner'
 import PublicEstimateController from './PublicEstimateController'
 import Technician from './Technician'
@@ -7,6 +8,7 @@ import StripeWebhookController from './StripeWebhookController'
 import Settings from './Settings'
 const Controllers = {
     Auth: Object.assign(Auth, Auth),
+LegalController: Object.assign(LegalController, LegalController),
 Owner: Object.assign(Owner, Owner),
 PublicEstimateController: Object.assign(PublicEstimateController, PublicEstimateController),
 Technician: Object.assign(Technician, Technician),

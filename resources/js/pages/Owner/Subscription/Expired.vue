@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, useForm } from '@inertiajs/vue3';
+import { checkout } from '@/routes/owner/subscription/index.ts';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -20,7 +21,7 @@ const form = useForm({ plan: props.current_plan, interval: 'monthly' });
 function subscribe(planKey: string) {
     form.plan = planKey;
     form.interval = billingAnnual.value ? 'annual' : 'monthly';
-    form.post(route('owner.subscription.checkout'));
+    form.post(checkout().url);
 }
 </script>
 

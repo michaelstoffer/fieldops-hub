@@ -7,13 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0-alpha] - 2026-05-25
+
+### Added
+
+- **Real-time broadcasting** — Laravel Echo + Reverb integration; driver location updates broadcast on organisation-scoped private channels, keeping the dispatch map live without polling
+- **Privacy Policy and Terms of Service** pages with full legal copy; linked from the marketing footer
+- **Quick-create flows in job form** — inline dialogs to create a new Job Type or Property without leaving the job create/edit page; results auto-selected on save
+- **Recent jobs on customer profile** — last 10 jobs shown on the customer detail page with status badges and links
+- **Catalog item activation/deactivation** — items and job types can now be deactivated to hide them from pickers without deleting them
+- **Dashboard quick-create actions** — `+ New Job`, `+ New Customer`, and `+ New Invoice` shortcut buttons on the owner dashboard
+- **Playwright end-to-end test suite** — browser tests covering company settings (logo upload/remove, name save), estimate builder (live totals, tier toggling), invoice payment flow (send, full payment, partial + remainder), job lifecycle (create, advance status, cancel), and technician job detail (navigation, status buttons, notes, photo upload); runs against the local Herd dev site
+
+### Changed
+
+- Owner sidebar navigation now uses Lucide icons throughout for visual consistency
+- Team Members page migrated to `OwnerLayout` and `useForm`; role dropdown width fixed to prevent text clipping
+- Company Settings form refactored to `useForm` with `forceFormData: true`; logo field now correctly included in the multipart POST
+- Table row click navigation standardised across Jobs, Invoices, and Estimates — rows use `@click="router.visit()"` for a consistent pointer cursor and hover state
+- Default reporting date ranges standardised across Jobs by Type, Profitability, and Technician Performance reports
+- `app.blade.php` now includes `<meta name="csrf-token">` so XHR requests (photo uploads, checklist toggles, technician API calls) can read the token correctly
+
+### Fixed
+
+- **Company logo not persisting after save** — `useForm` definition was missing the `logo` field; the file was being built into a `FormData` object that Inertia never sent. Logo now saves correctly and persists across reloads and navigation
+- **`ReferenceError: route is not defined`** on the Team Members page — all `route()` helper calls replaced with Wayfinder-generated TypeScript bindings (`@/routes/…`)
+- Technician PWA photo uploads were silently returning HTTP 419 (CSRF token mismatch) because `meta[name="csrf-token"]` was absent from the HTML shell — now included in `app.blade.php`
+- SSR compatibility for browser-specific APIs (`window`, `navigator`, `document`) guarded behind `typeof window !== 'undefined'` checks
+- HTTPS enforced in production; `SESSION_SECURE_COOKIE` set to `true`
+- `.env.development` removed from repository; `.gitignore` updated to exclude all `.env.*` variants
+
 ### Security
 
-- Added `SecurityHeaders` middleware — sets `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` (HTTPS only) on every response
-- Rate limiting added to registration (10/min) and forgot-password (5/min) endpoints
-- Public estimate endpoints throttled at 30 req/min to prevent token enumeration
-- `SESSION_SECURE_COOKIE` now explicitly configured; set to `true` in production via Forge environment
-- `.gitignore` updated to exclude all `.env.*` files, preventing accidental secret commits
+- `SecurityHeaders` middleware sets `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` on every response
+- Rate limiting on registration (10/min), forgot-password (5/min), and public estimate token endpoints (30/min)
+
+### Tests
+
+- Playwright browser test suite added (`npm run test:browser`) — 16 tests across 5 spec files covering JS-driven interactions that PHP/Pest tests cannot reach
+- `FrontendRouteUsageTest` added — scans all `.vue` files and fails if any call the global `route()` helper, preventing regression of the Wayfinder migration
+- Feature tests added for catalog item CRUD
 
 ## [0.8.14-alpha] - 2026-05-14
 
@@ -153,7 +186,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Demo seeder with sample organisation, users, job types, and customers
 - GitHub Actions CI: test suite (PHP 8.4 + Node 22) and linter (Pint + Prettier + ESLint)
 
-[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.14-alpha...HEAD
+[Unreleased]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.9.0-alpha...HEAD
+[0.9.0-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.14-alpha...v0.9.0-alpha
 [0.8.14-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.13-alpha...v0.8.14-alpha
 [0.8.13-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.12-alpha...v0.8.13-alpha
 [0.8.12-alpha]: https://github.com/michaelstoffer/fieldops-hub/compare/v0.8.11-alpha...v0.8.12-alpha

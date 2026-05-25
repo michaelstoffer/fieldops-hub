@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm, router } from '@inertiajs/vue3';
+import { Head, useForm, router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 
@@ -17,6 +17,7 @@ const props = defineProps<{
     active_plan: string;
 }>();
 
+const page = usePage();
 const showAddForm = ref(false);
 
 const addForm = useForm({
@@ -28,6 +29,7 @@ const addForm = useForm({
 
 function submitAdd() {
     addForm.post(route('owner.team.store'), {
+        preserveScroll: true,
         onSuccess: () => {
             addForm.reset();
             showAddForm.value = false;
@@ -92,6 +94,12 @@ const ROLE_COLORS: Record<string, string> = {
                     </svg>
                     Add member
                 </button>
+            </div>
+
+            <!-- Success message -->
+            <div v-if="(page.props as any).flash?.success"
+                class="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                {{ (page.props as any).flash.success }}
             </div>
 
             <!-- Technician seat usage -->

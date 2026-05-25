@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, router, useForm, usePage } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 interface CompanySettings {
     company_name: string | null;
@@ -18,7 +18,7 @@ interface CompanySettings {
 
 const props = defineProps<{ settings: CompanySettings }>();
 
-const form = ref({
+const form = useForm({
     company_name:     props.settings.company_name ?? '',
     company_email:    props.settings.company_email ?? '',
     company_phone:    props.settings.company_phone ?? '',
@@ -34,8 +34,23 @@ const form = ref({
 
 const logoFile   = ref<File | null>(null);
 const logoPreview = ref<string | null>(props.settings.logo_path);
-const saving     = ref(false);
 const page       = usePage();
+
+watch(() => props.settings, (newSettings) => {
+    form.company_name = newSettings.company_name ?? '';
+    form.company_email = newSettings.company_email ?? '';
+    form.company_phone = newSettings.company_phone ?? '';
+    form.company_address = newSettings.company_address ?? '';
+    form.company_city = newSettings.company_city ?? '';
+    form.company_state = newSettings.company_state ?? '';
+    form.company_zip = newSettings.company_zip ?? '';
+    form.company_website = newSettings.company_website ?? '';
+    form.default_tax_rate = newSettings.default_tax_rate
+        ? String(parseFloat(String(newSettings.default_tax_rate)) * 100)
+        : '';
+    logoPreview.value = newSettings.logo_path;
+    logoFile.value = null;
+});
 
 function onLogoChange(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0] ?? null;
@@ -47,20 +62,20 @@ function onLogoChange(e: Event) {
 
 function removeLogo() {
     if (confirm('Remove the company logo?')) {
-        router.delete('/owner/settings/company/logo', {
+        router.delete(route('owner.settings.company.logo.destroy'), {
             onSuccess: () => { logoPreview.value = null; },
         });
     }
 }
 
 function submit() {
-    saving.value = true;
     const data = new FormData();
-    Object.entries(form.value).forEach(([k, v]) => { if (v) data.append(k, v); });
+    Object.entries(form.data()).forEach(([k, v]) => { if (v) data.append(k, v); });
     if (logoFile.value) data.append('logo', logoFile.value);
 
-    router.post('/owner/settings/company', data, {
-        onFinish: () => { saving.value = false; },
+    form.post(route('owner.settings.company.update'), {
+        forceFormData: true,
+        onSuccess: () => { logoFile.value = null; },
     });
 }
 </script>
@@ -172,9 +187,9 @@ function submit() {
                 </div>
 
                 <div class="flex justify-end">
-                    <button type="submit" :disabled="saving"
+                    <button type="submit" :disabled="form.processing"
                         class="px-5 py-2 bg-slate-800 text-white text-sm rounded hover:bg-slate-700 disabled:opacity-60">
-                        {{ saving ? 'Saving…' : 'Save Settings' }}
+                        {{ form.processing ? 'Saving…' : 'Save Settings' }}
                     </button>
                 </div>
             </div>

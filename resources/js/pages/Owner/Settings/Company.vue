@@ -32,6 +32,7 @@ const form = useForm({
     default_tax_rate: props.settings.default_tax_rate
         ? String(parseFloat(String(props.settings.default_tax_rate)) * 100)
         : '',
+    logo:             null as File | null,
 });
 
 const logoFile   = ref<File | null>(null);
@@ -52,11 +53,13 @@ watch(() => props.settings, (newSettings) => {
         : '';
     logoPreview.value = newSettings.logo_path;
     logoFile.value = null;
+    form.logo = null;
 });
 
 function onLogoChange(e: Event) {
     const file = (e.target as HTMLInputElement).files?.[0] ?? null;
     logoFile.value = file;
+    form.logo = file;
     if (file) {
         logoPreview.value = URL.createObjectURL(file);
     }
@@ -71,13 +74,12 @@ function removeLogo() {
 }
 
 function submit() {
-    const data = new FormData();
-    Object.entries(form.data()).forEach(([k, v]) => { if (v) data.append(k, v); });
-    if (logoFile.value) data.append('logo', logoFile.value);
-
     form.post(companyUpdate().url, {
         forceFormData: true,
-        onSuccess: () => { logoFile.value = null; },
+        onSuccess: () => {
+            logoFile.value = null;
+            form.logo = null;
+        },
     });
 }
 </script>

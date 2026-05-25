@@ -8,12 +8,15 @@
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
-        "lint": "eslint . --fix"
+        "lint": "eslint . --fix",
+        "test:browser": "playwright test",
+        "test:browser:ui": "playwright test --ui"
     },
     "devDependencies": {
         "@eslint/js": "^9.19.0",
         "@inertiajs/vue3": "^2.0.0",
         "@laravel/vite-plugin-wayfinder": "^0.1.3",
+        "@playwright/test": "^1.60.0",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.1.11",
@@ -25,6 +28,7 @@
         "eslint": "^9.17.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-vue": "^9.32.0",
+        "playwright": "^1.60.0",
         "postcss": "^8.4.31",
         "prettier": "^3.4.2",
         "prettier-plugin-organize-imports": "^4.1.0",

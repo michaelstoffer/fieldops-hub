@@ -78,5 +78,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'items.view', 'items.create', 'items.edit',
             'reports.view',
         ]);
+
+        // Master — system-level super-admin, no org affiliation, manages all tenants
+        Role::firstOrCreate(['name' => 'master']);
     }
 }

@@ -38,14 +38,14 @@ const submit = () => {
             </div>
 
             <!-- Logo -->
-            <div class="relative z-10 flex items-center gap-3">
-                <div class="h-9 w-9 rounded-xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <Link href="/" class="relative z-10 flex items-center gap-3 group">
+                <div class="h-9 w-9 rounded-xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:bg-blue-400 transition-colors">
                     <svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="text-white font-semibold text-lg tracking-tight">FieldOps Hub</span>
-            </div>
+                <span class="text-white font-semibold text-lg tracking-tight group-hover:text-blue-200 transition-colors">FieldOps Hub</span>
+            </Link>
 
             <!-- Hero text -->
             <div class="relative z-10 space-y-6">
@@ -80,14 +80,14 @@ const submit = () => {
         <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
 
             <!-- Mobile logo -->
-            <div class="lg:hidden flex items-center gap-2 mb-10">
-                <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center">
+            <Link href="/" class="lg:hidden flex items-center gap-2 mb-10 group">
+                <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
                     <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight">FieldOps Hub</span>
-            </div>
+                <span class="font-semibold text-slate-800 text-base tracking-tight group-hover:text-blue-600 transition-colors">FieldOps Hub</span>
+            </Link>
 
             <div class="w-full max-w-sm">
 
@@ -179,6 +179,11 @@ const submit = () => {
                         {{ form.processing ? 'Signing in…' : 'Sign in' }}
                     </button>
                 </form>
+
+                <p class="mt-6 text-center text-sm text-slate-500">
+                    Don't have an account?
+                    <Link href="/register" class="text-blue-600 hover:text-blue-700 font-medium">Sign up</Link>
+                </p>
             </div>
         </div>
     </div>

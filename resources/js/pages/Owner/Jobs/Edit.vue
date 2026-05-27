@@ -40,10 +40,13 @@ function onJobTypeAdded(jobType: JobType) {
     jobTypes.value.push(jobType);
 }
 
-// datetime-local input expects "YYYY-MM-DDTHH:mm"
+// datetime-local input expects "YYYY-MM-DDTHH:mm".
+// The server returns the stored wall-clock time as "YYYY-MM-DD HH:mm:ss" (no TZ suffix).
+// We must NOT pass it through `new Date()` which would shift it by the browser's UTC offset.
+// Instead, just normalise the separator and truncate to 16 chars.
 function toDatetimeLocal(dt: string | null): string {
     if (!dt) return '';
-    return new Date(dt).toISOString().slice(0, 16);
+    return dt.replace(' ', 'T').slice(0, 16);
 }
 
 const form = useForm({

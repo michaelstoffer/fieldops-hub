@@ -82,7 +82,12 @@ function changeStatus(newStatus: string) {
 
 function formatDate(dt: string | null): string {
     if (!dt) return '—';
-    return new Date(dt).toLocaleString('en-US', {
+    // The server returns wall-clock time without a TZ suffix (e.g. "2026-05-27 14:00:00").
+    // Appending a space and replacing with 'T' keeps it as a local-time literal so the
+    // browser doesn't shift it by the UTC offset.
+    const localStr = dt.replace(' ', 'T').replace(/(\.\d+)?$/, '');
+    const d = new Date(localStr);
+    return d.toLocaleString('en-US', {
         month: 'short', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: '2-digit',
     });

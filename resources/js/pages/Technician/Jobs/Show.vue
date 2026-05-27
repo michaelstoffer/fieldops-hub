@@ -385,7 +385,8 @@ function saveCustomerNotes() {
 
 function formatDate(dt: string | null): string {
     if (!dt) return '—';
-    return new Date(dt).toLocaleString('en-US', {
+    const d = new Date(dt.replace(' ', 'T').replace(/(\.\d+)?$/, ''));
+    return d.toLocaleString('en-US', {
         month: 'short', day: 'numeric', year: 'numeric',
         hour: 'numeric', minute: '2-digit',
     });

@@ -59,7 +59,8 @@ watch(status, applyFilters);
 
 function formatDate(dt: string | null): string {
     if (!dt) return '—';
-    return new Date(dt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const d = new Date(dt.replace(' ', 'T').replace(/(\.\d+)?$/, ''));
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 </script>
 

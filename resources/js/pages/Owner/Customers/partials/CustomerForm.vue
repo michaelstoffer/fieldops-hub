@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { InertiaForm } from '@inertiajs/vue3';
+import { usePhoneFormat } from '@/composables/usePhoneFormat';
+
+const { onPhoneInput } = usePhoneFormat();
 
 interface CustomerFormData {
     first_name: string;
@@ -65,8 +68,10 @@ defineProps<{
                 <label for="phone" class="block text-sm font-medium text-slate-700">Phone</label>
                 <input
                     id="phone"
-                    v-model="form.phone"
+                    :value="form.phone"
+                    @input="onPhoneInput($event, v => form.phone = v)"
                     type="tel"
+                    placeholder="(555) 555-5555"
                     class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-slate-400 focus:outline-none"
                     :class="{ 'border-red-400': form.errors.phone }"
                     autocomplete="tel"
@@ -77,8 +82,10 @@ defineProps<{
                 <label for="mobile" class="block text-sm font-medium text-slate-700">Mobile</label>
                 <input
                     id="mobile"
-                    v-model="form.mobile"
+                    :value="form.mobile"
+                    @input="onPhoneInput($event, v => form.mobile = v)"
                     type="tel"
+                    placeholder="(555) 555-5555"
                     class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-slate-400 focus:outline-none"
                     :class="{ 'border-red-400': form.errors.mobile }"
                     autocomplete="tel"

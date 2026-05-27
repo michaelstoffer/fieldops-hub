@@ -2,6 +2,9 @@
 import type { InertiaForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import axios from 'axios';
+import { usePhoneFormat } from '@/composables/usePhoneFormat';
+
+const { onPhoneInput } = usePhoneFormat();
 
 interface Customer {
     id: number;
@@ -371,16 +374,20 @@ async function saveNewProperty() {
                         <div>
                             <label class="block text-xs font-medium text-slate-600">Phone</label>
                             <input
-                                v-model="newCustomer.phone"
+                                :value="newCustomer.phone"
+                                @input="onPhoneInput($event, v => newCustomer.phone = v)"
                                 type="tel"
+                                placeholder="(555) 555-5555"
                                 class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600">Mobile</label>
                             <input
-                                v-model="newCustomer.mobile"
+                                :value="newCustomer.mobile"
+                                @input="onPhoneInput($event, v => newCustomer.mobile = v)"
                                 type="tel"
+                                placeholder="(555) 555-5555"
                                 class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>

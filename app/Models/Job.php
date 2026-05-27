@@ -51,11 +51,13 @@ class Job extends Model
     protected function casts(): array
     {
         return [
-            'scheduled_at' => 'datetime',
-            'started_at' => 'datetime',
-            'arrived_at' => 'datetime',
-            'completed_at' => 'datetime',
-            'cancelled_at' => 'datetime',
+            // Plain format (no TZ suffix) so the frontend never silently shifts these times.
+            // They are stored and displayed as wall-clock times exactly as entered.
+            'scheduled_at' => 'datetime:Y-m-d H:i:s',
+            'started_at'   => 'datetime:Y-m-d H:i:s',
+            'arrived_at'   => 'datetime:Y-m-d H:i:s',
+            'completed_at' => 'datetime:Y-m-d H:i:s',
+            'cancelled_at' => 'datetime:Y-m-d H:i:s',
         ];
     }
 

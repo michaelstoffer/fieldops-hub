@@ -4,6 +4,7 @@ import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import { update as companyUpdate } from '@/routes/owner/settings/company/index.ts';
 import { destroy as logoDestroy } from '@/routes/owner/settings/company/logo/index.ts';
 import { ref, watch } from 'vue';
+import { usePhoneFormat } from '@/composables/usePhoneFormat';
 
 interface CompanySettings {
     company_name: string | null;
@@ -20,6 +21,14 @@ interface CompanySettings {
 
 const props = defineProps<{ settings: CompanySettings }>();
 
+const { onPhoneInput } = usePhoneFormat();
+
+// Strip leading https:// (or http://) for the input display value
+function stripProtocol(url: string | null): string {
+    if (!url) return '';
+    return url.replace(/^https?:\/\//, '');
+}
+
 const form = useForm({
     company_name:     props.settings.company_name ?? '',
     company_email:    props.settings.company_email ?? '',
@@ -28,7 +37,7 @@ const form = useForm({
     company_city:     props.settings.company_city ?? '',
     company_state:    props.settings.company_state ?? '',
     company_zip:      props.settings.company_zip ?? '',
-    company_website:  props.settings.company_website ?? '',
+    company_website:  stripProtocol(props.settings.company_website),
     default_tax_rate: props.settings.default_tax_rate
         ? String(parseFloat(String(props.settings.default_tax_rate)) * 100)
         : '',
@@ -47,7 +56,7 @@ watch(() => props.settings, (newSettings) => {
     form.company_city = newSettings.company_city ?? '';
     form.company_state = newSettings.company_state ?? '';
     form.company_zip = newSettings.company_zip ?? '';
-    form.company_website = newSettings.company_website ?? '';
+    form.company_website = stripProtocol(newSettings.company_website);
     form.default_tax_rate = newSettings.default_tax_rate
         ? String(parseFloat(String(newSettings.default_tax_rate)) * 100)
         : '';
@@ -74,9 +83,15 @@ function removeLogo() {
 }
 
 function submit() {
+    // Prepend https:// if the user typed anything (and hasn't already added a protocol)
+    if (form.company_website && !form.company_website.match(/^https?:\/\//)) {
+        form.company_website = 'https://' + form.company_website;
+    }
     form.post(companyUpdate().url, {
         forceFormData: true,
         onSuccess: () => {
+            // Strip protocol again so the input shows just the domain after save
+            form.company_website = stripProtocol(form.company_website);
             logoFile.value = null;
             form.logo = null;
         },
@@ -146,13 +161,20 @@ function submit() {
                         </div>
                         <div>
                             <label class="block text-xs text-slate-500 mb-1">Phone</label>
-                            <input v-model="form.company_phone" type="text"
+                            <input
+                                :value="form.company_phone"
+                                @input="onPhoneInput($event, v => form.company_phone = v)"
+                                type="tel"
+                                placeholder="(555) 555-5555"
                                 class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
                         </div>
                         <div>
                             <label class="block text-xs text-slate-500 mb-1">Website</label>
-                            <input v-model="form.company_website" type="url"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="https://" />
+                            <div class="flex rounded border border-slate-300 overflow-hidden focus-within:ring-1 focus-within:ring-slate-400 focus-within:border-slate-400">
+                                <span class="flex items-center bg-slate-50 border-r border-slate-300 px-3 text-sm text-slate-400 select-none whitespace-nowrap">https://</span>
+                                <input v-model="form.company_website" type="text"
+                                    class="flex-1 min-w-0 px-3 py-2 text-sm bg-white focus:outline-none" placeholder="yourcompany.com" />
+                            </div>
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block text-xs text-slate-500 mb-1">Address</label>

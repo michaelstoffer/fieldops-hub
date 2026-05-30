@@ -4,7 +4,7 @@ import { computed, ref } from 'vue';
 import {
     LayoutDashboard, Users, Briefcase, CalendarDays, FileText, Receipt,
     MapPin, BarChart2, TrendingUp, UserCheck, Building2, Plug, UsersRound,
-    Tags, Package, LogOut,
+    Tags, Package, LogOut, UserCircle, KeyRound, Shield, Palette, CreditCard,
 } from 'lucide-vue-next';
 
 defineProps<{
@@ -94,15 +94,33 @@ function navClass(href: string): string {
                 </Link>
             </nav>
 
-            <div class="border-t border-slate-800 px-4 py-3">
-                <Link
-                    href="/logout"
-                    method="post"
-                    as="button"
-                    class="w-full text-left text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2"
-                >
-                    <LogOut class="w-4 h-4 opacity-70" />Sign out
+            <div class="border-t border-slate-800 px-3 py-3 space-y-0.5 text-sm">
+                <div class="pb-1 px-3 text-xs uppercase tracking-wider text-slate-500 font-semibold">Account</div>
+                <Link href="/settings/profile" :class="navClass('/settings/profile')">
+                    <UserCircle class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Profile
                 </Link>
+                <Link href="/settings/password" :class="navClass('/settings/password')">
+                    <KeyRound class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Password
+                </Link>
+                <Link href="/settings/two-factor" :class="navClass('/settings/two-factor')">
+                    <Shield class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Two-Factor Auth
+                </Link>
+                <Link href="/settings/appearance" :class="navClass('/settings/appearance')">
+                    <Palette class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Appearance
+                </Link>
+                <Link href="/owner/subscription" :class="navClass('/owner/subscription')">
+                    <CreditCard class="inline-block w-4 h-4 mr-2 -mt-0.5 opacity-70" />Subscription
+                </Link>
+                <div class="pt-1">
+                    <Link
+                        href="/logout"
+                        method="post"
+                        as="button"
+                        class="w-full text-left text-sm text-slate-400 hover:text-white transition-colors flex items-center gap-2 px-3 py-2"
+                    >
+                        <LogOut class="w-4 h-4 opacity-70" />Sign out
+                    </Link>
+                </div>
             </div>
         </aside>
 

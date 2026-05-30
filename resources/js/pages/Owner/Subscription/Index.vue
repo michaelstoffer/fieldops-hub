@@ -2,12 +2,7 @@
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import { checkout } from '@/routes/owner/subscription/index.ts';
-import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Subscription', href: '/owner/subscription' },
-];
+import OwnerLayout from '@/layouts/OwnerLayout.vue';
 
 const props = defineProps<{
     subscription: {
@@ -59,7 +54,7 @@ function formatDate(iso: string | null): string {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
+    <OwnerLayout title="Subscription">
         <Head title="Subscription" />
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8">
@@ -178,5 +173,5 @@ function formatDate(iso: string | null): string {
                 </p>
             </div>
         </div>
-    </AppLayout>
+    </OwnerLayout>
 </template>

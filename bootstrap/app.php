@@ -41,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission'            => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'subscription'          => \App\Http\Middleware\CheckSubscription::class,
             'technician.limit'      => \App\Http\Middleware\CheckTechnicianLimit::class,
+            'require.2fa'           => \App\Http\Middleware\RequireTwoFactor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

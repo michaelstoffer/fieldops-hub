@@ -21,6 +21,7 @@ class InvoiceController extends Controller
 
     public function index(Request $request): Response|ResponseFactory
     {
+        $this->authorize('viewAny', Invoice::class);
         $orgId = $request->user()->organization_id;
 
         $stats = Invoice::where('organization_id', $orgId)
@@ -63,7 +64,7 @@ class InvoiceController extends Controller
 
     public function show(Request $request, Invoice $invoice): Response|ResponseFactory
     {
-        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('view', $invoice);
 
         $invoice->load(['customer', 'job', 'lineItems', 'payments.recordedBy']);
 
@@ -77,6 +78,7 @@ class InvoiceController extends Controller
 
     public function create(Request $request): Response|ResponseFactory
     {
+        $this->authorize('create', Invoice::class);
         $orgId = $request->user()->organization_id;
 
         return inertia('Owner/Invoices/Create', [
@@ -94,6 +96,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->authorize('create', Invoice::class);
         $orgId = $request->user()->organization_id;
 
         $data = $request->validate([
@@ -156,7 +159,7 @@ class InvoiceController extends Controller
 
     public function generateFromJob(Request $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('generateInvoice', $job);
         abort_unless($job->isCompleted(), 422);
         abort_unless($job->invoice === null, 422);
 
@@ -197,7 +200,7 @@ class InvoiceController extends Controller
 
     public function send(Request $request, Invoice $invoice): RedirectResponse
     {
-        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('send', $invoice);
         abort_unless(in_array($invoice->status, [Invoice::STATUS_DRAFT, Invoice::STATUS_OVERDUE]), 422);
 
         $invoice->update([
@@ -215,7 +218,7 @@ class InvoiceController extends Controller
 
     public function void(Request $request, Invoice $invoice): RedirectResponse
     {
-        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('void', $invoice);
         abort_unless($invoice->status !== Invoice::STATUS_VOID, 422);
         abort_unless($invoice->status !== Invoice::STATUS_PAID, 422);
 
@@ -229,7 +232,7 @@ class InvoiceController extends Controller
 
     public function recordPayment(Request $request, Invoice $invoice): RedirectResponse
     {
-        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('recordPayment', $invoice);
         abort_unless(! in_array($invoice->status, [Invoice::STATUS_VOID, Invoice::STATUS_PAID]), 422);
 
         $data = $request->validate([
@@ -284,7 +287,7 @@ class InvoiceController extends Controller
 
     public function destroy(Request $request, Invoice $invoice): RedirectResponse
     {
-        abort_unless($invoice->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('delete', $invoice);
         abort_unless($invoice->status === Invoice::STATUS_DRAFT, 422);
 
         $invoice->delete();

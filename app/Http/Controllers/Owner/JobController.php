@@ -22,6 +22,7 @@ class JobController extends Controller
 {
     public function index(Request $request): Response|ResponseFactory
     {
+        $this->authorize('viewAny', Job::class);
         $orgId = $request->user()->organization_id;
 
         $jobs = Job::where('organization_id', $orgId)
@@ -54,7 +55,7 @@ class JobController extends Controller
 
     public function show(Request $request, Job $job): Response|ResponseFactory
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('view', $job);
 
         $job->load(['customer', 'property', 'jobType', 'assignedTechnician', 'invoice', 'messages']);
 
@@ -66,6 +67,7 @@ class JobController extends Controller
 
     public function create(Request $request): Response|ResponseFactory
     {
+        $this->authorize('create', Job::class);
         $orgId = $request->user()->organization_id;
 
         return inertia('Owner/Jobs/Create', [
@@ -87,6 +89,7 @@ class JobController extends Controller
 
     public function store(StoreJobRequest $request): RedirectResponse
     {
+        $this->authorize('create', Job::class);
         $job = Job::create([
             ...$request->validated(),
             'organization_id' => $request->user()->organization_id,
@@ -101,7 +104,7 @@ class JobController extends Controller
 
     public function edit(Request $request, Job $job): Response|ResponseFactory
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $job);
 
         $orgId = $request->user()->organization_id;
 
@@ -124,7 +127,7 @@ class JobController extends Controller
 
     public function update(UpdateJobRequest $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $job);
 
         $job->update($request->validated());
 
@@ -134,7 +137,7 @@ class JobController extends Controller
 
     public function destroy(Request $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('delete', $job);
 
         $job->delete();
 
@@ -144,7 +147,7 @@ class JobController extends Controller
 
     public function updateStatus(Request $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $job);
 
         $request->validate([
             'status' => ['required', Rule::in(array_keys(Job::statuses()))],
@@ -167,7 +170,7 @@ class JobController extends Controller
 
     public function reschedule(Request $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $job);
 
         $request->validate([
             'scheduled_at' => ['required', 'date'],
@@ -180,7 +183,7 @@ class JobController extends Controller
 
     public function reassign(Request $request, Job $job): RedirectResponse
     {
-        abort_unless($job->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $job);
 
         $request->validate([
             'assigned_to' => ['nullable', 'integer', 'exists:users,id'],

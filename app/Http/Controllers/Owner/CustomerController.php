@@ -16,6 +16,7 @@ class CustomerController extends Controller
 {
     public function index(Request $request): Response|ResponseFactory
     {
+        $this->authorize('viewAny', Customer::class);
         $orgId = $request->user()->organization_id;
 
         $customers = Customer::where('organization_id', $orgId)
@@ -40,7 +41,7 @@ class CustomerController extends Controller
 
     public function show(Request $request, Customer $customer): Response|ResponseFactory
     {
-        abort_unless($customer->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('view', $customer);
 
         $customer->load('properties');
 
@@ -55,13 +56,15 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function create(): Response|ResponseFactory
+    public function create(Request $request): Response|ResponseFactory
     {
+        $this->authorize('create', Customer::class);
         return inertia('Owner/Customers/Create');
     }
 
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
+        $this->authorize('create', Customer::class);
         $customer = Customer::create([
             ...$request->validated(),
             'organization_id' => $request->user()->organization_id,
@@ -73,7 +76,7 @@ class CustomerController extends Controller
 
     public function edit(Request $request, Customer $customer): Response|ResponseFactory
     {
-        abort_unless($customer->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $customer);
 
         return inertia('Owner/Customers/Edit', [
             'customer' => $customer,
@@ -82,7 +85,7 @@ class CustomerController extends Controller
 
     public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
-        abort_unless($customer->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $customer);
 
         $customer->update($request->validated());
 
@@ -92,7 +95,7 @@ class CustomerController extends Controller
 
     public function destroy(Request $request, Customer $customer): RedirectResponse
     {
-        abort_unless($customer->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('delete', $customer);
 
         $customer->delete();
 
@@ -102,6 +105,7 @@ class CustomerController extends Controller
 
     public function quickCreate(StoreCustomerRequest $request): JsonResponse
     {
+        $this->authorize('create', Customer::class);
         $customer = Customer::create([
             ...$request->validated(),
             'organization_id' => $request->user()->organization_id,
@@ -115,13 +119,15 @@ class CustomerController extends Controller
         ], 201);
     }
 
-    public function importForm(): Response|ResponseFactory
+    public function importForm(Request $request): Response|ResponseFactory
     {
+        $this->authorize('import', Customer::class);
         return inertia('Owner/Customers/Import');
     }
 
     public function import(Request $request): RedirectResponse
     {
+        $this->authorize('import', Customer::class);
         $request->validate([
             'file' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
         ]);

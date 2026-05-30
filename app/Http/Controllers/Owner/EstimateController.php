@@ -21,6 +21,7 @@ class EstimateController extends Controller
 
     public function index(Request $request): Response|ResponseFactory
     {
+        $this->authorize('viewAny', Estimate::class);
         $orgId = $request->user()->organization_id;
 
         $estimates = Estimate::where('organization_id', $orgId)
@@ -51,7 +52,7 @@ class EstimateController extends Controller
 
     public function show(Request $request, Estimate $estimate): Response|ResponseFactory
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('view', $estimate);
 
         $estimate->load(['customer', 'job', 'packages.lineItems', 'convertedJob']);
 
@@ -65,6 +66,7 @@ class EstimateController extends Controller
 
     public function create(Request $request): Response|ResponseFactory
     {
+        $this->authorize('create', Estimate::class);
         $orgId = $request->user()->organization_id;
 
         return inertia('Owner/Estimates/Create', [
@@ -86,6 +88,7 @@ class EstimateController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->authorize('create', Estimate::class);
         $orgId = $request->user()->organization_id;
 
         $data = $request->validate([
@@ -132,7 +135,7 @@ class EstimateController extends Controller
 
     public function edit(Request $request, Estimate $estimate): Response|ResponseFactory
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $estimate);
 
         $orgId = $request->user()->organization_id;
         $estimate->load(['packages.lineItems']);
@@ -157,7 +160,7 @@ class EstimateController extends Controller
 
     public function update(Request $request, Estimate $estimate): RedirectResponse
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('update', $estimate);
 
         $orgId = $request->user()->organization_id;
 
@@ -202,7 +205,7 @@ class EstimateController extends Controller
 
     public function send(Request $request, Estimate $estimate): RedirectResponse
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('send', $estimate);
 
         $estimate->update([
             'status'  => Estimate::STATUS_SENT,
@@ -219,7 +222,7 @@ class EstimateController extends Controller
 
     public function convertToJob(Request $request, Estimate $estimate): RedirectResponse
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('convertToJob', $estimate);
         abort_unless($estimate->status === Estimate::STATUS_ACCEPTED, 422);
         abort_unless($estimate->convertedJob === null, 422);
 
@@ -260,7 +263,7 @@ class EstimateController extends Controller
 
     public function destroy(Request $request, Estimate $estimate): RedirectResponse
     {
-        abort_unless($estimate->organization_id === $request->user()->organization_id, 403);
+        $this->authorize('delete', $estimate);
 
         $estimate->delete();
 

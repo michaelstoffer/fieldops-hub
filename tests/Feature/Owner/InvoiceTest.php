@@ -239,7 +239,7 @@ test('cannot delete a non-draft invoice', function () {
 
     $this->actingAs($user)
         ->delete("/owner/invoices/{$invoice->id}")
-        ->assertStatus(422);
+        ->assertForbidden();
 });
 
 test('user cannot delete another org\'s invoice', function () {

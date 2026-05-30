@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use App\Models\OrganizationSetting;
+use App\Rules\ValidImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +54,7 @@ class SettingsController extends Controller
             'company_zip'      => 'nullable|string|max:20',
             'company_website'  => 'nullable|url|max:255',
             'default_tax_rate' => 'nullable|numeric|min:0|max:100',
-            'logo'             => 'nullable|image|max:2048',
+            'logo'             => ['nullable', 'image', 'max:2048', new ValidImage()],
         ]);
 
         $orgId    = $request->user()->organization_id;

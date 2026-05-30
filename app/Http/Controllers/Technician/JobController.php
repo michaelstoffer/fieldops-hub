@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\Job;
 use App\Models\JobChecklistItem;
 use App\Models\JobLineItem;
+use App\Rules\ValidImage;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -148,7 +149,7 @@ class JobController extends Controller
         abort_unless($job->assigned_to === $request->user()->id, 403);
 
         $request->validate([
-            'photo' => ['required', 'file', 'image', 'max:10240'], // 10 MB max (client compresses first)
+            'photo' => ['required', 'file', 'image', 'max:10240', new ValidImage()],
             'tag'   => ['nullable', Rule::in(['before', 'after'])],
         ]);
 

@@ -51,7 +51,7 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 // ── Subscription routes — outside subscription middleware so expired users can reach them ──
-Route::middleware(['auth', 'role:owner|admin'])
+Route::middleware(['auth', 'role:owner|admin', 'require.2fa'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
@@ -62,7 +62,7 @@ Route::middleware(['auth', 'role:owner|admin'])
     });
 
 // ── Setup wizard — no subscription check (org has no data yet) ──────────────
-Route::middleware(['auth', 'verified', 'role:owner|admin'])
+Route::middleware(['auth', 'verified', 'role:owner|admin', 'require.2fa'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
@@ -75,7 +75,7 @@ Route::middleware(['auth', 'verified', 'role:owner|admin'])
     });
 
 // ── Team management — owner/admin only, subscription-gated ───────────────────
-Route::middleware(['auth', 'verified', 'role:owner|admin', 'subscription'])
+Route::middleware(['auth', 'verified', 'role:owner|admin', 'require.2fa', 'subscription'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {
@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified', 'role:owner|admin', 'subscription'])
         Route::post('/team/{user}/password-reset', [TeamController::class, 'sendPasswordReset'])->name('team.password-reset');
     });
 
-Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper', 'subscription'])
+Route::middleware(['auth', 'verified', 'role:owner|admin|dispatcher|bookkeeper', 'require.2fa', 'subscription'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () {

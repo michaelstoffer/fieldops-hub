@@ -24,10 +24,12 @@ class RequireTwoFactor
             return $next($request);
         }
 
-        // two_factor_confirmed_at is set by Fortify after the user confirms their TOTP code
+        // two_factor_confirmed_at is set by Fortify after the user confirms their TOTP code.
+        // Redirect to profile.edit rather than two-factor.show because the latter is gated
+        // behind password.confirm middleware, which produces an unstyled interstitial page.
         if (! $user->two_factor_confirmed_at) {
-            return redirect()->route('two-factor.show')
-                ->with('warning', 'Two-factor authentication is required for your account. Please enable it to continue.');
+            return redirect()->route('profile.edit')
+                ->with('warning', 'Two-factor authentication is required for your account. Go to Settings → Two-Factor Authentication to enable it.');
         }
 
         return $next($request);

@@ -79,6 +79,11 @@ class HandleInertiaRequests extends Middleware
             ],
             'subscription' => $subscription,
             'plan'         => $planData,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'warning' => $request->session()->get('warning'),
+                'error'   => $request->session()->get('error'),
+            ],
         ];
     }
 }

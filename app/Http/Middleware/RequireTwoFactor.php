@@ -4,11 +4,13 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Forces owner and admin users to have 2FA confirmed before accessing protected routes.
- * Users without 2FA set up are redirected to the profile/security page.
+ * Renders a styled Inertia page in-place rather than redirecting, avoiding redirect loops
+ * and unstyled interstitials caused by the password.confirm gate on two-factor.show.
  */
 class RequireTwoFactor
 {
@@ -24,12 +26,9 @@ class RequireTwoFactor
             return $next($request);
         }
 
-        // two_factor_confirmed_at is set by Fortify after the user confirms their TOTP code.
-        // Redirect to profile.edit rather than two-factor.show because the latter is gated
-        // behind password.confirm middleware, which produces an unstyled interstitial page.
+        // two_factor_confirmed_at is set by Fortify after the user confirms their TOTP code
         if (! $user->two_factor_confirmed_at) {
-            return redirect()->route('profile.edit')
-                ->with('warning', 'Two-factor authentication is required for your account. Go to Settings → Two-Factor Authentication to enable it.');
+            return Inertia::render('auth/TwoFactorRequired')->toResponse($request);
         }
 
         return $next($request);

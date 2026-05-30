@@ -25,6 +25,17 @@
         <meta name="apple-mobile-web-app-title" content="FieldOps">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+        <!-- Apply saved theme before first paint to avoid flash -->
+        <script>
+            (function () {
+                var appearance = document.cookie.match(/(?:^|;\s*)appearance=([^;]+)/);
+                var value = appearance ? appearance[1] : localStorage.getItem('appearance');
+                if (value === 'dark' || (value !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            })();
+        </script>
+
         <!-- Scripts -->
         @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         @inertiaHead

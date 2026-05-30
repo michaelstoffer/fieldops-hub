@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StorePropertyRequest;
 use App\Http\Requests\Owner\UpdatePropertyRequest;
 use App\Models\Customer;
+use App\Models\Job;
 use App\Models\Property;
 use App\Services\GeocodingService;
 use Illuminate\Http\JsonResponse;
@@ -122,6 +123,12 @@ class PropertyController extends Controller
     public function destroy(Request $request, Property $property): RedirectResponse
     {
         abort_unless($property->organization_id === $request->user()->organization_id, 403);
+
+        $hasActiveJobs = Job::where('property_id', $property->id)
+            ->whereNotIn('status', [Job::STATUS_COMPLETED, Job::STATUS_CANCELLED])
+            ->exists();
+
+        abort_if($hasActiveJobs, 422, 'Cannot delete a property with active jobs. Complete or cancel them first.');
 
         $customerId = $property->customer_id;
         $property->delete();

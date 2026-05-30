@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\MarkEstimatesExpired;
 use App\Console\Commands\PruneDriverLocations;
 use App\Console\Commands\SendInvoiceReminders;
 use App\Console\Commands\SendJobReminders;
@@ -12,6 +13,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Schedule::command(MarkEstimatesExpired::class)->dailyAt('00:05');
 Schedule::command(SendInvoiceReminders::class)->dailyAt('08:00');
 Schedule::command(SendJobReminders::class)->hourly();
 Schedule::command(PruneDriverLocations::class)->dailyAt('03:00');

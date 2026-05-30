@@ -31,6 +31,7 @@ class PublicEstimateController extends Controller
         $estimate = Estimate::where('token', $token)->firstOrFail();
 
         abort_unless($estimate->status === Estimate::STATUS_SENT, 422);
+        abort_if($estimate->isExpired(), 422, 'This estimate has expired.');
 
         $request->validate([
             'tier' => ['required', 'in:' . implode(',', Estimate::TIERS)],
@@ -56,6 +57,7 @@ class PublicEstimateController extends Controller
         $estimate = Estimate::where('token', $token)->firstOrFail();
 
         abort_unless($estimate->status === Estimate::STATUS_SENT, 422);
+        abort_if($estimate->isExpired(), 422, 'This estimate has expired.');
 
         $estimate->update([
             'status'      => Estimate::STATUS_DECLINED,

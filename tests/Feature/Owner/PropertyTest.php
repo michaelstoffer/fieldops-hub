@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Customer;
+use App\Models\Job;
 use App\Models\Organization;
 use App\Models\Property;
 use App\Models\User;
@@ -123,6 +124,42 @@ test('user cannot remove a property from another organization', function () {
     $this->actingAs($user)
         ->delete("/owner/properties/{$property->id}")
         ->assertForbidden();
+});
+
+test('cannot delete a property that has active jobs', function () {
+    [$user, $customer] = userWithOrgAndCustomer();
+    $property = Property::factory()->forCustomer($customer)->create();
+
+    Job::factory()->forCustomer($customer)->create([
+        'property_id' => $property->id,
+        'status'      => Job::STATUS_SCHEDULED,
+    ]);
+
+    $this->actingAs($user)
+        ->delete("/owner/properties/{$property->id}")
+        ->assertStatus(422);
+
+    expect(Property::find($property->id))->not->toBeNull();
+});
+
+test('can delete a property whose jobs are all completed or cancelled', function () {
+    [$user, $customer] = userWithOrgAndCustomer();
+    $property = Property::factory()->forCustomer($customer)->create();
+
+    Job::factory()->forCustomer($customer)->create([
+        'property_id' => $property->id,
+        'status'      => Job::STATUS_COMPLETED,
+    ]);
+    Job::factory()->forCustomer($customer)->create([
+        'property_id' => $property->id,
+        'status'      => Job::STATUS_CANCELLED,
+    ]);
+
+    $this->actingAs($user)
+        ->delete("/owner/properties/{$property->id}")
+        ->assertRedirect("/owner/customers/{$customer->id}");
+
+    expect(Property::find($property->id))->toBeNull();
 });
 
 // ── Customer show includes properties ────────────────────────────────────────

@@ -105,3 +105,31 @@ test('cannot decline an already accepted estimate', function () {
 
     $this->post("/estimates/{$estimate->token}/decline")->assertStatus(422);
 });
+
+// ── Expiration ────────────────────────────────────────────────────────────────
+
+test('cannot accept an expired estimate', function () {
+    $org      = Organization::factory()->create();
+    $customer = Customer::factory()->create(['organization_id' => $org->id]);
+    $estimate = Estimate::factory()->forCustomer($customer)->expired()->create();
+
+    $estimate->packages()->create([
+        'tier' => 'good', 'label' => 'Basic', 'is_recommended' => false,
+        'subtotal' => 100, 'tax_amount' => 0, 'total' => 100,
+    ]);
+
+    $this->post("/estimates/{$estimate->token}/accept", ['tier' => 'good'])
+        ->assertStatus(422);
+
+    expect($estimate->fresh()->status)->toBe(Estimate::STATUS_SENT);
+});
+
+test('cannot decline an expired estimate', function () {
+    $org      = Organization::factory()->create();
+    $customer = Customer::factory()->create(['organization_id' => $org->id]);
+    $estimate = Estimate::factory()->forCustomer($customer)->expired()->create();
+
+    $this->post("/estimates/{$estimate->token}/decline")->assertStatus(422);
+
+    expect($estimate->fresh()->status)->toBe(Estimate::STATUS_SENT);
+});

@@ -504,3 +504,55 @@ test('invoice create applies discount to total', function () {
 test('invoice create page requires authentication', function () {
     $this->get('/owner/invoices/create')->assertRedirect('/login');
 });
+
+test('invoice create rejects a customer from another organization', function () {
+    [$user] = invoiceSetup();
+    [, , $otherCustomer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id'     => $otherCustomer->id,
+            'issued_at'       => '2026-05-01',
+            'due_at'          => '2026-05-31',
+            'tax_rate'        => 0,
+            'line_items'      => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ])
+        ->assertSessionHasErrors(['customer_id']);
+});
+
+test('invoice create rejects a discount exceeding the invoice total', function () {
+    [$user, , $customer] = invoiceSetup();
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id'     => $customer->id,
+            'issued_at'       => '2026-05-01',
+            'due_at'          => '2026-05-31',
+            'tax_rate'        => 0,
+            'discount_amount' => 999,
+            'line_items'      => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => null],
+            ],
+        ])
+        ->assertSessionHasErrors(['discount_amount']);
+});
+
+test('invoice create rejects a catalog item from another organization', function () {
+    [$user, , $customer] = invoiceSetup();
+    [, $otherOrg] = invoiceSetup();
+    $otherItem = Item::factory()->create(['organization_id' => $otherOrg->id]);
+
+    $this->actingAs($user)
+        ->post('/owner/invoices', [
+            'customer_id'     => $customer->id,
+            'issued_at'       => '2026-05-01',
+            'due_at'          => '2026-05-31',
+            'tax_rate'        => 0,
+            'line_items'      => [
+                ['name' => 'Service', 'unit_price' => 100, 'quantity' => 1, 'is_taxable' => false, 'item_id' => $otherItem->id],
+            ],
+        ])
+        ->assertSessionHasErrors(['line_items.0.item_id']);
+});

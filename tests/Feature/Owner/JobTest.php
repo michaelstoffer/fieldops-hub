@@ -3,6 +3,7 @@
 use App\Models\Customer;
 use App\Models\Job;
 use App\Models\Organization;
+use App\Models\Property;
 use App\Models\User;
 
 function userOrgCustomer(): array
@@ -117,6 +118,37 @@ test('job creation requires a title and customer', function () {
     $this->actingAs($user)
         ->post('/owner/jobs', [])
         ->assertSessionHasErrors(['title', 'customer_id']);
+});
+
+test('job creation rejects a customer from another organization', function () {
+    [$user] = userOrgCustomer();
+    [, , $otherCustomer] = userOrgCustomer();
+
+    $this->actingAs($user)
+        ->post('/owner/jobs', [
+            'customer_id'  => $otherCustomer->id,
+            'title'        => 'Should Fail',
+            'property_id'  => null,
+            'job_type_id'  => null,
+            'assigned_to'  => null,
+        ])
+        ->assertSessionHasErrors(['customer_id']);
+});
+
+test('job creation rejects a property that does not belong to the selected customer', function () {
+    [$user, $org, $customer] = userOrgCustomer();
+    $otherCustomer = Customer::factory()->create(['organization_id' => $org->id]);
+    $property = \App\Models\Property::factory()->forCustomer($otherCustomer)->create();
+
+    $this->actingAs($user)
+        ->post('/owner/jobs', [
+            'customer_id'  => $customer->id,
+            'property_id'  => $property->id,
+            'title'        => 'Mismatched Property',
+            'job_type_id'  => null,
+            'assigned_to'  => null,
+        ])
+        ->assertSessionHasErrors(['property_id']);
 });
 
 // ── Edit / Update ─────────────────────────────────────────────────────────────

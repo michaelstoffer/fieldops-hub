@@ -10,6 +10,7 @@ use App\Models\Job;
 use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Response;
 use Inertia\ResponseFactory;
@@ -96,7 +97,7 @@ class InvoiceController extends Controller
         $orgId = $request->user()->organization_id;
 
         $data = $request->validate([
-            'customer_id'     => ['required', 'integer', 'exists:customers,id'],
+            'customer_id'     => ['required', 'integer', Rule::exists('customers', 'id')->where('organization_id', $orgId)],
             'issued_at'       => ['required', 'date'],
             'due_at'          => ['required', 'date', 'after_or_equal:issued_at'],
             'tax_rate'        => ['required', 'numeric', 'min:0', 'max:1'],
@@ -108,8 +109,17 @@ class InvoiceController extends Controller
             'line_items.*.unit_price' => ['required', 'numeric', 'min:0'],
             'line_items.*.quantity'   => ['required', 'numeric', 'min:0.001'],
             'line_items.*.is_taxable' => ['boolean'],
-            'line_items.*.item_id'    => ['nullable', 'integer'],
+            'line_items.*.item_id'    => ['nullable', 'integer', Rule::exists('items', 'id')->where('organization_id', $orgId)],
         ]);
+
+        // Ensure discount doesn't exceed subtotal + tax (which would produce a negative total)
+        $lineItems = collect($data['line_items']);
+        $subtotal  = $lineItems->sum(fn ($li) => (float) $li['unit_price'] * (float) $li['quantity']);
+        $taxable   = $lineItems->where('is_taxable', true)->sum(fn ($li) => (float) $li['unit_price'] * (float) $li['quantity']);
+        $maxTotal  = round($subtotal + ($taxable * (float) $data['tax_rate']), 2);
+        if ((float) ($data['discount_amount'] ?? 0) > $maxTotal) {
+            return back()->withInput()->withErrors(['discount_amount' => 'Discount cannot exceed the invoice total.']);
+        }
 
         $invoice = Invoice::create([
             'organization_id' => $orgId,
@@ -223,7 +233,7 @@ class InvoiceController extends Controller
         abort_unless(! in_array($invoice->status, [Invoice::STATUS_VOID, Invoice::STATUS_PAID]), 422);
 
         $data = $request->validate([
-            'amount'    => ['required', 'numeric', 'min:0.01', 'max:' . (float) $invoice->balance_due],
+            'amount'    => ['required', 'numeric', 'min:0.01'],
             'method'    => ['required', Rule::in([
                 Payment::METHOD_CASH,
                 Payment::METHOD_CHECK,
@@ -235,30 +245,39 @@ class InvoiceController extends Controller
             'paid_at'   => ['required', 'date'],
         ]);
 
-        Payment::create([
-            'organization_id' => $invoice->organization_id,
-            'invoice_id'      => $invoice->id,
-            'recorded_by'     => $request->user()->id,
-            'amount'          => $data['amount'],
-            'method'          => $data['method'],
-            'reference'       => $data['reference'] ?? null,
-            'notes'           => $data['notes'] ?? null,
-            'status'          => 'completed',
-            'paid_at'         => $data['paid_at'],
-        ]);
+        return DB::transaction(function () use ($invoice, $data, $request) {
+            // Re-fetch with a row lock to prevent race conditions on simultaneous payments
+            $invoice = Invoice::lockForUpdate()->findOrFail($invoice->id);
 
-        $newAmountPaid = round((float) $invoice->amount_paid + (float) $data['amount'], 2);
-        $balanceDue    = max(0, round((float) $invoice->total - $newAmountPaid, 2));
+            if ((float) $data['amount'] > (float) $invoice->balance_due) {
+                return back()->withErrors(['amount' => 'Payment amount exceeds the remaining balance of ' . number_format((float) $invoice->balance_due, 2) . '.']);
+            }
 
-        $invoice->update([
-            'amount_paid' => $newAmountPaid,
-            'balance_due' => $balanceDue,
-            'status'      => $balanceDue <= 0 ? Invoice::STATUS_PAID : Invoice::STATUS_PARTIAL,
-            'paid_at'     => $balanceDue <= 0 ? now() : $invoice->paid_at,
-        ]);
+            Payment::create([
+                'organization_id' => $invoice->organization_id,
+                'invoice_id'      => $invoice->id,
+                'recorded_by'     => $request->user()->id,
+                'amount'          => $data['amount'],
+                'method'          => $data['method'],
+                'reference'       => $data['reference'] ?? null,
+                'notes'           => $data['notes'] ?? null,
+                'status'          => 'completed',
+                'paid_at'         => $data['paid_at'],
+            ]);
 
-        return redirect()->route('owner.invoices.show', $invoice)
-            ->with('success', 'Payment recorded.');
+            $newAmountPaid = round((float) $invoice->amount_paid + (float) $data['amount'], 2);
+            $balanceDue    = max(0, round((float) $invoice->total - $newAmountPaid, 2));
+
+            $invoice->update([
+                'amount_paid' => $newAmountPaid,
+                'balance_due' => $balanceDue,
+                'status'      => $balanceDue <= 0 ? Invoice::STATUS_PAID : Invoice::STATUS_PARTIAL,
+                'paid_at'     => $balanceDue <= 0 ? now() : $invoice->paid_at,
+            ]);
+
+            return redirect()->route('owner.invoices.show', $invoice)
+                ->with('success', 'Payment recorded.');
+        });
     }
 
     // ── Destroy ───────────────────────────────────────────────────────────────

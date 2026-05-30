@@ -66,4 +66,13 @@ class EstimateFactory extends Factory
             'accepted_package' => $tier,
         ]);
     }
+
+    public function expired(): static
+    {
+        return $this->state([
+            'status'     => Estimate::STATUS_SENT,
+            'sent_at'    => now()->subDays(35),
+            'expires_at' => now()->subDays(5)->toDateString(),
+        ]);
+    }
 }

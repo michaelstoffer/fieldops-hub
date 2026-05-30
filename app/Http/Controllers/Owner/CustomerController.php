@@ -143,6 +143,10 @@ class CustomerController extends Controller
                 $skipped++;
                 continue;
             }
+            if (! empty($data['email']) && ! filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                $skipped++;
+                continue;
+            }
             $filtered = array_filter(
                 array_intersect_key($data, array_flip($allowed)),
                 fn ($v) => $v !== '',

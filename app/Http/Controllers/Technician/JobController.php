@@ -9,6 +9,7 @@ use App\Models\Item;
 use App\Models\Job;
 use App\Models\JobChecklistItem;
 use App\Models\JobLineItem;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -153,7 +154,12 @@ class JobController extends Controller
 
         $disk = config('filesystems.attachment_disk', 'public');
         $file = $request->file('photo');
-        $path = $file->store("jobs/{$job->id}/photos", $disk);
+
+        try {
+            $path = $file->store("jobs/{$job->id}/photos", $disk);
+        } catch (Exception) {
+            return response()->json(['error' => 'Photo upload failed. Please try again.'], 500);
+        }
 
         $attachment = $job->attachments()->create([
             'organization_id' => $job->organization_id,
@@ -184,8 +190,10 @@ class JobController extends Controller
     {
         abort_unless($job->assigned_to === $request->user()->id, 403);
 
+        $orgId = $request->user()->organization_id;
+
         $data = $request->validate([
-            'item_id'    => ['nullable', 'integer', 'exists:items,id'],
+            'item_id'    => ['nullable', 'integer', Rule::exists('items', 'id')->where('organization_id', $orgId)],
             'name'       => ['required', 'string', 'max:255'],
             'unit_price' => ['required', 'numeric', 'min:0'],
             'quantity'   => ['required', 'numeric', 'min:0.001'],

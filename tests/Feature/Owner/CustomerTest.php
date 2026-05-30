@@ -347,3 +347,25 @@ test('import rejects non-csv files', function () {
 test('import requires authentication', function () {
     $this->post('/owner/customers/import', [])->assertRedirect('/login');
 });
+
+test('import skips rows with invalid email format', function () {
+    $user = userWithOrg();
+
+    $csv = implode("\n", [
+        'first_name,last_name,email',
+        'Valid,Person,valid@example.com',
+        'Bad,Email,not-an-email',
+        'Also,Bad,missing@',
+    ]);
+
+    $file = \Illuminate\Http\UploadedFile::fake()->createWithContent('customers.csv', $csv);
+
+    $this->actingAs($user)
+        ->post('/owner/customers/import', ['file' => $file])
+        ->assertSessionHas('success');
+
+    expect(Customer::where('organization_id', $user->organization_id)->count())->toBe(1);
+    expect(Customer::where('email', 'valid@example.com')->exists())->toBeTrue();
+    expect(Customer::where('email', 'not-an-email')->exists())->toBeFalse();
+    expect(Customer::where('email', 'missing@')->exists())->toBeFalse();
+});

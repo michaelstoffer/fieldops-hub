@@ -9,10 +9,19 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { regenerateRecoveryCodes } from '@/routes/two-factor';
-import { Form } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-vue-next';
 import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
+
+const regenerating = ref(false);
+function regenerateCodes() {
+    regenerating.value = true;
+    router.post('/user/two-factor-recovery-codes', {}, {
+        preserveScroll: true,
+        onSuccess: () => fetchRecoveryCodes(),
+        onFinish: () => { regenerating.value = false; },
+    });
+}
 
 const { recoveryCodesList, fetchRecoveryCodes, errors } = useTwoFactorAuth();
 const isRecoveryCodesVisible = ref<boolean>(false);
@@ -62,22 +71,14 @@ onMounted(async () => {
                     Codes
                 </Button>
 
-                <Form
+                <Button
                     v-if="isRecoveryCodesVisible && recoveryCodesList.length"
-                    v-bind="regenerateRecoveryCodes.form()"
-                    method="post"
-                    :options="{ preserveScroll: true }"
-                    @success="fetchRecoveryCodes"
-                    #default="{ processing }"
+                    variant="secondary"
+                    :disabled="regenerating"
+                    @click="regenerateCodes"
                 >
-                    <Button
-                        variant="secondary"
-                        type="submit"
-                        :disabled="processing"
-                    >
-                        <RefreshCw /> Regenerate Codes
-                    </Button>
-                </Form>
+                    <RefreshCw /> {{ regenerating ? 'Regenerating…' : 'Regenerate Codes' }}
+                </Button>
             </div>
             <div
                 :class="[

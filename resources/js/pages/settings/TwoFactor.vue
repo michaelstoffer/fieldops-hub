@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { disable, enable } from '@/routes/two-factor/index.ts';
-import { Form, Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
 
@@ -24,6 +23,25 @@ withDefaults(defineProps<Props>(), {
 
 const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
+const enabling = ref(false);
+const disabling = ref(false);
+
+function enableTwoFactor() {
+    enabling.value = true;
+    router.post('/user/two-factor-authentication', {}, {
+        preserveScroll: true,
+        onSuccess: () => { showSetupModal.value = true; },
+        onFinish: () => { enabling.value = false; },
+    });
+}
+
+function disableTwoFactor() {
+    disabling.value = true;
+    router.delete('/user/two-factor-authentication', {
+        preserveScroll: true,
+        onFinish: () => { disabling.value = false; },
+    });
+}
 
 onUnmounted(() => {
     clearTwoFactorAuthData();
@@ -40,46 +58,27 @@ onUnmounted(() => {
                     description="Manage your two-factor authentication settings"
                 />
 
-                <div
-                    v-if="!twoFactorEnabled"
-                    class="flex flex-col items-start justify-start space-y-4"
-                >
+                <div v-if="!twoFactorEnabled" class="flex flex-col items-start space-y-4">
                     <Badge variant="destructive">Disabled</Badge>
 
-                    <p class="text-muted-foreground">
+                    <p class="text-sm text-slate-600">
                         When you enable two-factor authentication, you will be
                         prompted for a secure pin during login. This pin can be
-                        retrieved from a TOTP-supported application on your
-                        phone.
+                        retrieved from a TOTP-supported application on your phone.
                     </p>
 
-                    <div>
-                        <Button
-                            v-if="hasSetupData"
-                            @click="showSetupModal = true"
-                        >
-                            <ShieldCheck />Continue Setup
-                        </Button>
-                        <Form
-                            v-else
-                            v-bind="enable.form()"
-                            @success="showSetupModal = true"
-                            #default="{ processing }"
-                        >
-                            <Button type="submit" :disabled="processing">
-                                <ShieldCheck />Enable 2FA</Button
-                            ></Form
-                        >
-                    </div>
+                    <Button v-if="hasSetupData" @click="showSetupModal = true">
+                        <ShieldCheck />Continue Setup
+                    </Button>
+                    <Button v-else @click="enableTwoFactor" :disabled="enabling">
+                        <ShieldCheck />{{ enabling ? 'Enabling…' : 'Enable 2FA' }}
+                    </Button>
                 </div>
 
-                <div
-                    v-else
-                    class="flex flex-col items-start justify-start space-y-4"
-                >
+                <div v-else class="flex flex-col items-start space-y-4">
                     <Badge variant="default">Enabled</Badge>
 
-                    <p class="text-muted-foreground">
+                    <p class="text-sm text-slate-600">
                         With two-factor authentication enabled, you will be
                         prompted for a secure, random pin during login, which
                         you can retrieve from the TOTP-supported application on
@@ -88,18 +87,9 @@ onUnmounted(() => {
 
                     <TwoFactorRecoveryCodes />
 
-                    <div class="relative inline">
-                        <Form v-bind="disable.form()" #default="{ processing }">
-                            <Button
-                                variant="destructive"
-                                type="submit"
-                                :disabled="processing"
-                            >
-                                <ShieldBan />
-                                Disable 2FA
-                            </Button>
-                        </Form>
-                    </div>
+                    <Button variant="destructive" @click="disableTwoFactor" :disabled="disabling">
+                        <ShieldBan />{{ disabling ? 'Disabling…' : 'Disable 2FA' }}
+                    </Button>
                 </div>
 
                 <TwoFactorSetupModal

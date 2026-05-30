@@ -18,11 +18,11 @@ class SecurityHeaders
         $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
         $response->headers->set('Content-Security-Policy', implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://js.stripe.com",
+            "script-src 'self' 'unsafe-inline' https://js.stripe.com https://static.cloudflareinsights.com https://www.googletagmanager.com",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data:",
-            "connect-src 'self' https://api.stripe.com wss: ws:",
+            "connect-src 'self' https://api.stripe.com https://cloudflareinsights.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.google.com wss: ws:",
             "frame-src https://js.stripe.com https://hooks.stripe.com",
             "object-src 'none'",
             "base-uri 'self'",

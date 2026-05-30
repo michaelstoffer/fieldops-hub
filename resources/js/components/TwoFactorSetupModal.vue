@@ -16,11 +16,27 @@ import {
     PinInputSlot,
 } from '@/components/ui/pin-input';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
-import { confirm } from '@/routes/two-factor';
-import { Form } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
 import { Check, Copy, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+
+const confirmProcessing = ref(false);
+const confirmError = ref<string | null>(null);
+
+function submitConfirmCode() {
+    confirmProcessing.value = true;
+    confirmError.value = null;
+    router.post('/user/confirmed-two-factor-authentication', { code: codeValue.value }, {
+        preserveScroll: true,
+        onSuccess: () => { isOpen.value = false; },
+        onError: (errors) => {
+            confirmError.value = errors?.code ?? 'Invalid code. Please try again.';
+            code.value = [];
+        },
+        onFinish: () => { confirmProcessing.value = false; },
+    });
+}
 
 interface Props {
     requiresConfirmation: boolean;
@@ -231,68 +247,38 @@ watch(
                 </template>
 
                 <template v-else>
-                    <Form
-                        v-bind="confirm.form()"
-                        reset-on-error
-                        @finish="code = []"
-                        @success="isOpen = false"
-                        v-slot="{ errors, processing }"
-                    >
-                        <input type="hidden" name="code" :value="codeValue" />
-                        <div
-                            ref="pinInputContainerRef"
-                            class="relative w-full space-y-3"
-                        >
-                            <div
-                                class="flex w-full flex-col items-center justify-center space-y-3 py-2"
-                            >
-                                <PinInput
-                                    id="otp"
-                                    placeholder="○"
-                                    v-model="code"
-                                    type="number"
-                                    otp
-                                >
-                                    <PinInputGroup>
-                                        <PinInputSlot
-                                            autofocus
-                                            v-for="(id, index) in 6"
-                                            :key="id"
-                                            :index="index"
-                                            :disabled="processing"
-                                        />
-                                    </PinInputGroup>
-                                </PinInput>
-                                <InputError
-                                    :message="
-                                        errors?.confirmTwoFactorAuthentication
-                                            ?.code
-                                    "
-                                />
-                            </div>
-
-                            <div class="flex w-full items-center space-x-5">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    class="w-auto flex-1"
-                                    @click="showVerificationStep = false"
-                                    :disabled="processing"
-                                >
-                                    Back
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    class="w-auto flex-1"
-                                    :disabled="
-                                        processing || codeValue.length < 6
-                                    "
-                                >
-                                    Confirm
-                                </Button>
-                            </div>
+                    <div ref="pinInputContainerRef" class="relative w-full space-y-3">
+                        <div class="flex w-full flex-col items-center justify-center space-y-3 py-2">
+                            <PinInput id="otp" placeholder="○" v-model="code" type="number" otp>
+                                <PinInputGroup>
+                                    <PinInputSlot
+                                        autofocus
+                                        v-for="(id, index) in 6"
+                                        :key="id"
+                                        :index="index"
+                                        :disabled="confirmProcessing"
+                                    />
+                                </PinInputGroup>
+                            </PinInput>
+                            <InputError :message="confirmError ?? undefined" />
                         </div>
-                    </Form>
+
+                        <div class="flex w-full items-center space-x-5">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                class="w-auto flex-1"
+                                @click="showVerificationStep = false"
+                                :disabled="confirmProcessing"
+                            >Back</Button>
+                            <Button
+                                type="button"
+                                class="w-auto flex-1"
+                                :disabled="confirmProcessing || codeValue.length < 6"
+                                @click="submitConfirmCode"
+                            >{{ confirmProcessing ? 'Confirming…' : 'Confirm' }}</Button>
+                        </div>
+                    </div>
                 </template>
             </div>
         </DialogContent>

@@ -350,13 +350,6 @@ show.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(options),
     method: 'head',
 })
-// .form() helpers — return the { url, method } binding Inertia's <Form> component expects.
-// These are the formVariants that Wayfinder would generate with formVariants:true.
-enable.form = () => ({ url: enable.url(), method: 'post' as const });
-disable.form = () => ({ url: disable.url(), method: 'delete' as const });
-confirm.form = () => ({ url: confirm.url(), method: 'post' as const });
-regenerateRecoveryCodes.form = () => ({ url: regenerateRecoveryCodes.url(), method: 'post' as const });
-
 const twoFactor = {
     login: Object.assign(login, loginDf2c2a),
 enable: Object.assign(enable, enable),

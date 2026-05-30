@@ -2,8 +2,6 @@
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/composables/useTwoFactorAuth';
 import OwnerLayout from '@/layouts/OwnerLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
@@ -59,7 +57,7 @@ onUnmounted(() => {
                 />
 
                 <div v-if="!twoFactorEnabled" class="flex flex-col items-start space-y-4">
-                    <Badge variant="destructive">Disabled</Badge>
+                    <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700">Disabled</span>
 
                     <p class="text-sm text-slate-600">
                         When you enable two-factor authentication, you will be
@@ -67,16 +65,18 @@ onUnmounted(() => {
                         retrieved from a TOTP-supported application on your phone.
                     </p>
 
-                    <Button v-if="hasSetupData" @click="showSetupModal = true">
-                        <ShieldCheck />Continue Setup
-                    </Button>
-                    <Button v-else @click="enableTwoFactor" :disabled="enabling">
-                        <ShieldCheck />{{ enabling ? 'Enabling…' : 'Enable 2FA' }}
-                    </Button>
+                    <button v-if="hasSetupData" @click="showSetupModal = true"
+                        class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
+                        <ShieldCheck class="w-4 h-4" />Continue Setup
+                    </button>
+                    <button v-else @click="enableTwoFactor" :disabled="enabling"
+                        class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors">
+                        <ShieldCheck class="w-4 h-4" />{{ enabling ? 'Enabling…' : 'Enable 2FA' }}
+                    </button>
                 </div>
 
                 <div v-else class="flex flex-col items-start space-y-4">
-                    <Badge variant="default">Enabled</Badge>
+                    <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">Enabled</span>
 
                     <p class="text-sm text-slate-600">
                         With two-factor authentication enabled, you will be
@@ -87,9 +87,10 @@ onUnmounted(() => {
 
                     <TwoFactorRecoveryCodes />
 
-                    <Button variant="destructive" @click="disableTwoFactor" :disabled="disabling">
-                        <ShieldBan />{{ disabling ? 'Disabling…' : 'Disable 2FA' }}
-                    </Button>
+                    <button @click="disableTwoFactor" :disabled="disabling"
+                        class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50 transition-colors">
+                        <ShieldBan class="w-4 h-4" />{{ disabling ? 'Disabling…' : 'Disable 2FA' }}
+                    </button>
                 </div>
 
                 <TwoFactorSetupModal

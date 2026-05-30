@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__laravel-boost__database-query",
+      "mcp__laravel-boost__last-error",
+      "mcp__laravel-boost__database-schema",
+      "mcp__laravel-boost__application-info",
+      "mcp__laravel-boost__read-log-entries"
+    ]
+  }
+}

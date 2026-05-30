@@ -34,7 +34,7 @@ A modern field service management platform built for small-to-medium field opera
 | **Message Templates** | Reusable message templates for job notifications and customer communications |
 | **Item Catalog** | Maintain a reusable catalog of services and parts for quick line item entry |
 | **Roles & Permissions** | Five built-in roles scoped per organization with granular permission control |
-| **Two-Factor Auth** | Optional TOTP 2FA for all user accounts via Laravel Fortify |
+| **Two-Factor Auth** | TOTP 2FA via Laravel Fortify — required for owner and admin accounts |
 | **Technician PWA** | Mobile-optimized progressive web app with offline support and background sync for field technicians |
 
 ---
@@ -184,9 +184,11 @@ app/
 │   │   ├── Technician/        # Technician PWA controllers
 │   │   ├── Auth/              # Fortify-style auth controllers
 │   │   └── Settings/          # Profile, password, 2FA settings
-│   ├── Middleware/            # HandleInertiaRequests, HandleAppearance, SecurityHeaders
+│   ├── Middleware/            # HandleInertiaRequests, HandleAppearance, SecurityHeaders, RequireTwoFactor
 │   └── Requests/              # Form request validation
 ├── Models/                    # Eloquent models (all org-scoped)
+├── Policies/                  # Authorization policies (Invoice, Job, Customer, Estimate, Payment)
+├── Rules/                     # Custom validation rules (ValidImage — magic-byte check)
 └── Providers/                 # FortifyServiceProvider
 
 database/
@@ -261,15 +263,20 @@ Integration keys can also be managed per-organization through the **Settings →
 ## Security Notes
 
 - All owner routes require authentication (`auth` + `verified` middleware)
+- Owner and admin accounts must have 2FA confirmed (`require.2fa` middleware) — they are redirected to the 2FA setup page until enabled
 - All queries are scoped to `organization_id` — no cross-tenant data leakage
+- Authorization enforced via Laravel Policies (`InvoicePolicy`, `JobPolicy`, `CustomerPolicy`, `EstimatePolicy`, `PaymentPolicy`) on all resource controllers
 - Integration API keys are stored using Laravel's `encrypted` cast (AES-256-CBC)
 - Keys are masked in the settings UI (last 4 chars visible); submitting a masked value does not overwrite the stored key
-- Logo uploads are validated for file type (`image` rule) and size (2 MB limit)
+- Image uploads (logo, job photos) are validated for file type, size, and magic bytes — MIME spoofing is rejected
+- Job photos default to the `local` (private) disk; set `ATTACHMENT_DISK=s3` in production to route to object storage
 - Stripe webhook endpoint verifies the request signature before processing
 - CSRF protection is enabled on all routes except the Stripe webhook
-- HTTP security headers set on every response: `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` (HTTPS only)
-- Rate limiting on all auth endpoints: login (5/min), registration (10/min), password reset (5/min), 2FA (5/min)
+- HTTP security headers set on every response: `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, and `Strict-Transport-Security` (HTTPS only)
+- Rate limiting on auth endpoints: login (5/min), registration (10/min), password reset (5/min), 2FA (5/min)
+- Rate limiting on API endpoints: reads (120/min), mutations (60/min), photo uploads (20/min)
 - Public estimate endpoints are throttled (30 req/min) to prevent token enumeration
+- Password confirmation window is 10 minutes (not the Laravel default of 3 hours)
 - Session cookie secure flag should be set via `SESSION_SECURE_COOKIE=true` in production
 
 ---

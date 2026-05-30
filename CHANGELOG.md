@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **Mandatory 2FA for owner and admin accounts** — `RequireTwoFactor` middleware redirects privileged users to the 2FA setup page until a TOTP device is confirmed
+- **Laravel Policies** added for `Invoice`, `Job`, `Customer`, `Estimate`, and `Payment` — all resource controllers now use `$this->authorize()` instead of ad-hoc `abort_unless()` checks, with role + org-scoping enforced in one place
+- **Content-Security-Policy header** added to `SecurityHeaders` middleware — restricts script, style, frame, and connection sources; Stripe iframes explicitly allowed
+- **Magic-byte file validation** — new `ValidImage` rule verifies image uploads by reading file header bytes, not just the declared MIME type or extension; applied to logo and job photo uploads
+- **API rate limiting** — technician API endpoints now have per-user throttle limits: reads 120/min, mutations 60/min, photo uploads 20/min
+- **Password confirmation timeout** reduced from 3 hours to 10 minutes
+- **Attachment disk default** changed from `public` to `local` (private); set `ATTACHMENT_DISK=public` in `.env` for local dev or `ATTACHMENT_DISK=s3` for production object storage
+
 ## [0.9.0-alpha] - 2026-05-25
 
 ### Added

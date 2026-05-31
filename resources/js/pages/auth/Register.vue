@@ -200,6 +200,8 @@ const submit = () => {
                         v-for="p in PLANS"
                         :key="p.key"
                         type="button"
+                        :aria-pressed="selectedPlan === p.key"
+                        :aria-label="`Select ${p.name} plan — ${p.seats}`"
                         @click="choosePlan(p.key)"
                         class="w-full flex items-center gap-4 rounded-xl border-2 p-4 text-left transition-all"
                         :class="selectedPlan === p.key
@@ -255,7 +257,7 @@ const submit = () => {
                     <div class="flex items-center gap-3 mb-5">
                         <button type="button" @click="step = 1"
                                 class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
                             Back
@@ -365,7 +367,7 @@ const submit = () => {
                         :disabled="form.processing"
                         class="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                         </svg>

@@ -17,7 +17,12 @@ const showingNavigationDropdown = ref(false);
 <template>
     <div>
         <div class="min-h-screen bg-background">
+            <a
+                href="#main-content"
+                class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg focus:ring-2 focus:ring-ring"
+            >Skip to main content</a>
             <nav
+                aria-label="Main navigation"
                 class="border-b border-border bg-card"
             >
                 <!-- Primary Navigation Menu -->
@@ -95,10 +100,10 @@ const showingNavigationDropdown = ref(false);
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
-                                @click="
-                                    showingNavigationDropdown =
-                                        !showingNavigationDropdown
-                                "
+                                @click="showingNavigationDropdown = !showingNavigationDropdown"
+                                :aria-expanded="showingNavigationDropdown"
+                                aria-controls="responsive-nav"
+                                aria-label="Toggle navigation menu"
                                 class="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground transition duration-150 ease-in-out hover:bg-accent hover:text-foreground focus:bg-accent focus:text-foreground focus:outline-none"
                             >
                                 <svg
@@ -137,6 +142,7 @@ const showingNavigationDropdown = ref(false);
 
                 <!-- Responsive Navigation Menu -->
                 <div
+                    id="responsive-nav"
                     :class="{
                         block: showingNavigationDropdown,
                         hidden: !showingNavigationDropdown,
@@ -194,7 +200,7 @@ const showingNavigationDropdown = ref(false);
             </header>
 
             <!-- Page Content -->
-            <main>
+            <main id="main-content">
                 <slot />
             </main>
         </div>

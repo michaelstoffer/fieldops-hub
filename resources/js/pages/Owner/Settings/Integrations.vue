@@ -38,7 +38,7 @@ function submit() {
         </div>
 
         <div v-if="(page.props as any).flash?.success"
-            class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+            role="alert" class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
             {{ (page.props as any).flash.success }}
         </div>
 

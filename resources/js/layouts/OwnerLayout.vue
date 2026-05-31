@@ -24,10 +24,17 @@ function navClass(href: string): string {
 
 <template>
     <div class="min-h-screen bg-background flex">
+        <!-- Skip to main content — visible on focus for keyboard/screen reader users -->
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg focus:ring-2 focus:ring-ring"
+        >Skip to main content</a>
+
         <!-- Mobile sidebar backdrop -->
         <div
             v-if="sidebarOpen"
             class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+            aria-hidden="true"
             @click="sidebarOpen = false"
         />
 
@@ -35,6 +42,7 @@ function navClass(href: string): string {
         <aside
             class="fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 text-slate-100 flex flex-col transform transition-transform duration-200 ease-in-out lg:static lg:translate-x-0"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            aria-label="Main navigation"
         >
             <div class="px-6 h-14 flex items-center text-xl font-bold border-b border-border tracking-tight">
                 FieldOps Hub
@@ -150,7 +158,7 @@ function navClass(href: string): string {
             </header>
 
             <!-- Page body -->
-            <main class="flex-1 p-4 sm:p-6">
+            <main id="main-content" class="flex-1 p-4 sm:p-6">
                 <slot />
             </main>
         </div>

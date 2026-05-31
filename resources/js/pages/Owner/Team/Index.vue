@@ -100,7 +100,7 @@ const ROLE_COLORS: Record<string, string> = {
 
             <!-- Success message -->
             <div v-if="(page.props as any).flash?.success"
-                class="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                role="alert" class="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
                 {{ (page.props as any).flash.success }}
             </div>
 
@@ -170,7 +170,7 @@ const ROLE_COLORS: Record<string, string> = {
                     <div class="sm:col-span-2 flex items-center gap-3">
                         <button type="submit" :disabled="addForm.processing"
                                 class="inline-flex items-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50 transition-colors">
-                            <svg v-if="addForm.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <svg v-if="addForm.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                             </svg>

@@ -84,15 +84,19 @@ function formatDate(dt: string | null): string {
 
         <!-- Filters -->
         <div class="mb-4 flex flex-wrap gap-3">
+            <label for="job-search" class="sr-only">Search jobs or customers</label>
             <input
+                id="job-search"
                 v-model="search"
                 type="search"
                 placeholder="Search jobs or customers…"
                 class="w-full max-w-xs rounded-lg border border-border bg-background px-4 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
             />
+            <label for="job-status" class="sr-only">Filter by status</label>
             <select
+                id="job-status"
                 v-model="status"
-                class="rounded-lg border border-border bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                class="rounded-lg border border-border bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none dark:[color-scheme:dark]"
             >
                 <option value="">All statuses</option>
                 <option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option>
@@ -101,7 +105,7 @@ function formatDate(dt: string | null): string {
 
         <!-- Table -->
         <div class="overflow-hidden rounded-xl bg-card shadow ring-1 ring-border">
-            <table class="min-w-full divide-y divide-border">
+            <table class="min-w-full divide-y divide-border" aria-label="Jobs">
                 <thead class="bg-background">
                     <tr>
                         <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Title</th>

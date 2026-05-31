@@ -109,7 +109,7 @@ function formatDate(dt: string | null): string {
         <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
 
             <!-- Flash message -->
-            <div v-if="flash?.success" class="mb-6 rounded-xl bg-green-50 p-4 text-sm font-medium text-green-700 ring-1 ring-green-200 dark:bg-green-900/20 dark:ring-green-800 dark:text-green-400">
+            <div v-if="flash?.success" role="alert" class="mb-6 rounded-xl bg-green-50 p-4 text-sm font-medium text-green-700 ring-1 ring-green-200 dark:bg-green-900/20 dark:ring-green-800 dark:text-green-400">
                 {{ flash.success }}
             </div>
 

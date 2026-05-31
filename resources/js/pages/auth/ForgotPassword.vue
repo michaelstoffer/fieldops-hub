@@ -60,7 +60,7 @@ const submit = () => form.post(passwordEmail.url());
                     <p class="mt-1 text-sm text-muted-foreground">Enter your email and we'll send you a reset link.</p>
                 </div>
 
-                <div v-if="status" class="mb-5 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+                <div v-if="status" role="alert" class="mb-5 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-700 dark:text-green-400">
                     {{ status }}
                 </div>
 
@@ -75,10 +75,12 @@ const submit = () => form.post(passwordEmail.url());
                             required
                             autofocus
                             placeholder="you@company.com"
+                            :aria-describedby="form.errors.email ? 'email-error' : undefined"
+                            :aria-invalid="!!form.errors.email"
                             class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
                             :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.email }"
                         />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" id="email-error" role="alert" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
                     </div>
 
                     <button
@@ -86,7 +88,7 @@ const submit = () => form.post(passwordEmail.url());
                         :disabled="form.processing"
                         class="w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
-                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <svg v-if="form.processing" class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                         </svg>

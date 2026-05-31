@@ -77,7 +77,9 @@ watch(search, (value) => {
 
         <!-- Search -->
         <div class="mb-4">
+            <label for="customer-search" class="sr-only">Search customers</label>
             <input
+                id="customer-search"
                 v-model="search"
                 type="search"
                 placeholder="Search by name, email, or phone…"
@@ -87,7 +89,7 @@ watch(search, (value) => {
 
         <!-- Table -->
         <div class="overflow-hidden rounded-xl bg-card shadow ring-1 ring-border">
-            <table class="min-w-full divide-y divide-border">
+            <table class="min-w-full divide-y divide-border" aria-label="Customers">
                 <thead class="bg-background">
                     <tr>
                         <th class="px-5 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">Name</th>

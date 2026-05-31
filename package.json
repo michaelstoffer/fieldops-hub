@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "NODE_OPTIONS=--max-old-space-size=4096 vite build",
-        "build:ssr": "NODE_OPTIONS=--max-old-space-size=4096 vite build && NODE_OPTIONS=--max-old-space-size=4096 vite build --ssr",
+        "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+        "build:ssr": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build && cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build --ssr",
         "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
@@ -25,7 +25,6 @@
         "@vue/eslint-config-typescript": "^14.3.0",
         "autoprefixer": "^10.4.12",
         "concurrently": "^9.0.1",
-        "cross-env": "^7.0.3",
         "eslint": "^9.17.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-vue": "^9.32.0",
@@ -43,6 +42,7 @@
         "vue-tsc": "^2.2.4"
     },
     "dependencies": {
+        "cross-env": "^7.0.3",
         "@fullcalendar/core": "^6.1.20",
         "@fullcalendar/daygrid": "^6.1.20",
         "@fullcalendar/interaction": "^6.1.20",

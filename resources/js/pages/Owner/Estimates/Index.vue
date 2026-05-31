@@ -81,15 +81,19 @@ function formatDate(dt: string | null): string {
 
         <!-- Filters -->
         <div class="mb-4 flex flex-wrap gap-3">
+            <label for="estimate-search" class="sr-only">Search estimates</label>
             <input
+                id="estimate-search"
                 v-model="search"
                 type="search"
                 placeholder="Search estimates…"
-                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground focus:border-slate-500 focus:outline-none"
             />
+            <label for="estimate-status" class="sr-only">Filter by status</label>
             <select
+                id="estimate-status"
                 v-model="status"
-                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm text-foreground focus:border-slate-500 focus:outline-none dark:[color-scheme:dark]"
             >
                 <option value="">All statuses</option>
                 <option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option>
@@ -157,7 +161,7 @@ function formatDate(dt: string | null): string {
                     :class="link.active ? 'bg-slate-800 text-white' : 'text-muted-foreground hover:bg-accent'"
                     v-html="link.label"
                 />
-                <span v-else class="rounded px-3 py-1 text-sm text-muted-foreground/40" v-html="link.label" />
+                <span v-else class="rounded px-3 py-1 text-sm text-muted-foreground" v-html="link.label" />
             </template>
         </div>
     </OwnerLayout>

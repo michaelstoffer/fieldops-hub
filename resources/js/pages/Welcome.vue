@@ -214,7 +214,7 @@ function getPrice(tier: typeof tiers[0]) {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <!-- Logo -->
-                    <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
+                    <button type="button" @click="scrollToTop" aria-label="FieldOps Hub — scroll to top" class="flex items-center gap-2.5 focus:outline-none">
                         <div class="h-8 w-8 rounded-lg bg-blue-500 flex items-center justify-center shadow-md shadow-blue-500/30">
                             <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -462,6 +462,9 @@ function getPrice(tier: typeof tiers[0]) {
                     <span class="text-sm font-medium" :class="!billingAnnual ? 'text-foreground' : 'text-muted-foreground'">Monthly</span>
                     <button
                         type="button"
+                        role="switch"
+                        :aria-checked="billingAnnual"
+                        aria-label="Toggle annual billing"
                         @click="billingAnnual = !billingAnnual"
                         class="relative inline-flex h-6 w-11 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         :class="billingAnnual ? 'bg-blue-600' : 'bg-muted'"
@@ -578,6 +581,7 @@ function getPrice(tier: typeof tiers[0]) {
                         <!-- CTA -->
                         <Link
                             :href="registerUrl(tier.name.toLowerCase())"
+                            :aria-label="`Start free trial — ${tier.name} plan`"
                             class="block w-full text-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors mb-8"
                             :class="tier.highlight
                                 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm'
@@ -628,6 +632,7 @@ function getPrice(tier: typeof tiers[0]) {
                         <button
                             type="button"
                             class="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-accent transition-colors"
+                            :aria-expanded="openFaq === i"
                             @click="toggleFaq(i)"
                         >
                             <span class="font-semibold text-foreground text-sm sm:text-base">{{ faq.q }}</span>
@@ -706,7 +711,7 @@ function getPrice(tier: typeof tiers[0]) {
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
                     <!-- Logo + tagline -->
                     <div>
-                        <button type="button" @click="scrollToTop" class="flex items-center gap-2.5 focus:outline-none">
+                        <button type="button" @click="scrollToTop" aria-label="FieldOps Hub — scroll to top" class="flex items-center gap-2.5 focus:outline-none">
                             <div class="h-7 w-7 rounded-lg bg-blue-500 flex items-center justify-center">
                                 <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -714,7 +719,7 @@ function getPrice(tier: typeof tiers[0]) {
                             </div>
                             <span class="text-white font-semibold text-sm tracking-tight">FieldOps Hub</span>
                         </button>
-                        <p class="mt-2 text-xs text-slate-600 max-w-xs">Field service management for growing teams.</p>
+                        <p class="mt-2 text-xs text-slate-400 max-w-xs">Field service management for growing teams.</p>
                     </div>
 
                     <!-- Nav columns -->
@@ -746,7 +751,7 @@ function getPrice(tier: typeof tiers[0]) {
                 </div>
 
                 <div class="mt-10 pt-6 border-t border-white/5">
-                    <p class="text-xs text-slate-600 text-center sm:text-left">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
+                    <p class="text-xs text-slate-400 text-center sm:text-left">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
                 </div>
             </div>
         </footer>

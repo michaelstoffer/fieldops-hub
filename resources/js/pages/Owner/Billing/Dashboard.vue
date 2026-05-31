@@ -134,7 +134,9 @@ function formatCurrency(val: string | number): string {
                 {{ label }}
             </button>
 
+            <label for="billing-search" class="sr-only">Search invoices</label>
             <input
+                id="billing-search"
                 v-model="search"
                 type="search"
                 placeholder="Search number or customer…"
@@ -191,7 +193,8 @@ function formatCurrency(val: string | number): string {
                         <td class="px-4 py-3 text-right">
                             <Link
                                 :href="`/owner/invoices/${inv.id}`"
-                                class="text-xs font-medium text-blue-600 hover:underline"
+                                :aria-label="`View invoice ${inv.invoice_number ?? inv.id}`"
+                                class="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
                             >
                                 View
                             </Link>

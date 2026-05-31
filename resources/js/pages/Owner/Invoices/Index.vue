@@ -136,7 +136,9 @@ function setStatus(val: string) {
             >
                 {{ label }}
             </button>
+            <label for="invoice-search" class="sr-only">Search invoices</label>
             <input
+                id="invoice-search"
                 v-model="search"
                 type="search"
                 placeholder="Search by number or customer…"
@@ -192,7 +194,14 @@ function setStatus(val: string) {
                             {{ formatCurrency(inv.balance_due) }}
                         </td>
                         <td class="px-4 py-3 text-muted-foreground">{{ formatDate(inv.due_at) }}</td>
-                        <td class="px-4 py-3 text-right text-muted-foreground text-xs">View →</td>
+                        <td class="px-4 py-3 text-right text-xs">
+                            <Link
+                                :href="`/owner/invoices/${inv.id}`"
+                                :aria-label="`View invoice ${inv.invoice_number ?? inv.id}`"
+                                class="font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                                @click.stop
+                            >View →</Link>
+                        </td>
                     </tr>
                     <tr v-if="invoices.data.length === 0">
                         <td colspan="8" class="px-4 py-16 text-center">
@@ -218,7 +227,7 @@ function setStatus(val: string) {
                 />
                 <span
                     v-else
-                    class="cursor-default rounded border border-border px-2.5 py-1 text-xs text-muted-foreground/40"
+                    class="cursor-default rounded border border-border px-2.5 py-1 text-xs text-muted-foreground"
                     v-html="link.label"
                 />
             </template>

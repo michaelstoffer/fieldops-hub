@@ -162,7 +162,7 @@ function formatDate(dt: string | null): string {
                             :class="link.active ? 'bg-slate-800 text-white' : 'text-muted-foreground hover:bg-accent'"
                             v-html="link.label"
                         />
-                        <span v-else class="rounded px-2 py-1 text-xs text-muted-foreground/40" v-html="link.label" />
+                        <span v-else class="rounded px-2 py-1 text-xs text-muted-foreground" v-html="link.label" />
                     </template>
                 </div>
             </div>

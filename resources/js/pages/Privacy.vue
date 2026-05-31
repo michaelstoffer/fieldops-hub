@@ -38,7 +38,7 @@ import { login } from '@/routes';
                 <p class="mt-3 text-sm text-muted-foreground">Last updated: May 18, 2026</p>
             </div>
 
-            <div class="prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-slate-800 prose-p:text-slate-600 prose-p:leading-relaxed prose-li:text-slate-600 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
+            <div class="prose prose-slate dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-li:text-muted-foreground prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline">
 
                 <p>FieldOps Hub ("we", "us", or "our") operates the FieldOps Hub platform (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal information when you use our Service.</p>
 
@@ -104,11 +104,11 @@ import { login } from '@/routes';
         <footer class="bg-slate-950 border-t border-white/5 mt-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p class="text-xs text-slate-600">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
-                    <nav class="flex items-center gap-6">
-                        <Link href="/" class="text-xs text-slate-600 hover:text-slate-400 transition-colors">Home</Link>
-                        <a href="/privacy" class="text-xs text-slate-400 font-medium">Privacy Policy</a>
-                        <a href="/terms" class="text-xs text-slate-600 hover:text-slate-400 transition-colors">Terms of Service</a>
+                    <p class="text-xs text-slate-400">&copy; {{ new Date().getFullYear() }} FieldOps Hub. All rights reserved.</p>
+                    <nav class="flex items-center gap-6" aria-label="Footer navigation">
+                        <Link href="/" class="text-xs text-slate-400 hover:text-slate-200 transition-colors">Home</Link>
+                        <a href="/privacy" class="text-xs text-slate-200 font-medium" aria-current="page">Privacy Policy</a>
+                        <a href="/terms" class="text-xs text-slate-400 hover:text-slate-200 transition-colors">Terms of Service</a>
                     </nav>
                 </div>
             </div>

@@ -64,11 +64,11 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
-                    // FullCalendar — only used on /owner/calendar, ~150KB gzipped
+                    // FullCalendar — only used on /owner/calendar
                     if (id.includes('@fullcalendar')) {
                         return 'fullcalendar';
                     }
-                    // Sentry — error monitoring, not needed on initial paint
+                    // Sentry — error monitoring, loaded async in production only
                     if (id.includes('@sentry')) {
                         return 'sentry';
                     }
@@ -78,12 +78,13 @@ export default defineConfig({
                         id.includes('node_modules/@inertiajs')) {
                         return 'vue-vendor';
                     }
-                    // UI primitives — reka-ui, lucide, clsx, cva
+                    // UI primitives — stable, long-cache TTL
                     if (id.includes('node_modules/reka-ui') ||
                         id.includes('node_modules/lucide-vue-next') ||
                         id.includes('node_modules/class-variance-authority') ||
                         id.includes('node_modules/clsx') ||
-                        id.includes('node_modules/tailwind-merge')) {
+                        id.includes('node_modules/tailwind-merge') ||
+                        id.includes('node_modules/@vueuse')) {
                         return 'ui-vendor';
                     }
                 },

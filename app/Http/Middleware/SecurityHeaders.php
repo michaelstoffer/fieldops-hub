@@ -12,6 +12,11 @@ class SecurityHeaders
     {
         $response = $next($request);
 
+        // Vite build assets have content-hashed filenames — cache forever
+        if (str_starts_with($request->path(), 'build/')) {
+            $response->headers->set('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'DENY');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');

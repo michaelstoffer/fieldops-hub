@@ -7,6 +7,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Preconnect to external origins used on some pages -->
+        <link rel="preconnect" href="https://maps.googleapis.com">
+        <link rel="preconnect" href="https://maps.gstatic.com" crossorigin>
+        <link rel="preconnect" href="https://js.stripe.com">
+        <link rel="dns-prefetch" href="https://api.stripe.com">
+        <link rel="dns-prefetch" href="https://cloudflareinsights.com">
+
         <!-- Fonts — self-hosted to avoid render-blocking external request -->
         <link rel="preload" href="/fonts/figtree-400.woff2" as="font" type="font/woff2" crossorigin>
         <link rel="preload" href="/fonts/figtree-500.woff2" as="font" type="font/woff2" crossorigin>

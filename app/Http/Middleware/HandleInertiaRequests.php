@@ -27,29 +27,24 @@ class HandleInertiaRequests extends Middleware
             $orgId       = $org->id;
             $planService = app(PlanService::class);
 
-            // Cache subscription for 5 minutes — invalidated on checkout/webhook
-            $activeSub = Cache::remember(
-                "org.{$orgId}.active_subscription",
+            // Single cache key — consolidates 3 round-trips into 1
+            $orgData = Cache::remember(
+                "org.{$orgId}.inertia_share",
                 300,
-                fn () => $org->activeSubscription()
+                function () use ($org, $planService) {
+                    $activeSub  = $org->activeSubscription();
+                    $activePlan = $planService->activePlan($org);
+                    $techCount  = $planService->technicianCount($org);
+                    return compact('activeSub', 'activePlan', 'techCount');
+                }
             );
 
-            // Cache active plan (depends on subscription state) for 5 minutes
-            $activePlan = Cache::remember(
-                "org.{$orgId}.active_plan",
-                300,
-                fn () => $planService->activePlan($org)
-            );
+            $activeSub  = $orgData['activeSub'];
+            $activePlan = $orgData['activePlan'];
+            $techCount  = $orgData['techCount'];
 
-            // Cache technician count for 5 minutes — invalidated on team changes
-            $techCount = Cache::remember(
-                "org.{$orgId}.tech_count",
-                300,
-                fn () => $planService->technicianCount($org)
-            );
-
-            $techLimit    = PlanService::TECHNICIAN_LIMITS[$activePlan] ?? null;
-            $atTechLimit  = $techLimit !== null && $techCount >= $techLimit;
+            $techLimit   = PlanService::TECHNICIAN_LIMITS[$activePlan] ?? null;
+            $atTechLimit = $techLimit !== null && $techCount >= $techLimit;
 
             if ($activeSub) {
                 $subscription = [

@@ -18,12 +18,12 @@ defineProps<{
 }>();
 
 const STATUS_CLASSES: Record<string, string> = {
-    scheduled:   'bg-blue-100 text-blue-700',
-    en_route:    'bg-purple-100 text-purple-700',
-    in_progress: 'bg-amber-100 text-amber-700',
-    completed:   'bg-green-100 text-green-700',
-    cancelled:   'bg-slate-100 text-slate-500',
-    on_hold:     'bg-orange-100 text-orange-700',
+    scheduled:   'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    en_route:    'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+    in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+    completed:   'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    cancelled:   'bg-muted text-muted-foreground',
+    on_hold:     'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
 };
 
 function formatTime(dt: string | null): string {
@@ -37,27 +37,27 @@ function formatTime(dt: string | null): string {
         <Head title="Today's Jobs" />
 
         <div class="p-4">
-            <div v-if="jobs.length === 0" class="rounded-xl bg-white py-12 text-center shadow-sm ring-1 ring-slate-200">
-                <p class="text-sm text-slate-500">No jobs scheduled for today.</p>
+            <div v-if="jobs.length === 0" class="rounded-xl bg-card py-12 text-center shadow-sm ring-1 ring-border">
+                <p class="text-sm text-muted-foreground">No jobs scheduled for today.</p>
             </div>
 
             <ul v-else class="space-y-3">
                 <li v-for="job in jobs" :key="job.id">
                     <Link
                         :href="`/technician/jobs/${job.id}`"
-                        class="block rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200 active:ring-slate-400"
+                        class="block rounded-xl bg-card p-4 shadow-sm ring-1 ring-border active:ring-border"
                     >
                         <div class="mb-2 flex items-start justify-between gap-2">
-                            <p class="font-semibold text-slate-900">{{ job.title }}</p>
+                            <p class="font-semibold text-foreground">{{ job.title }}</p>
                             <span
                                 class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                                :class="STATUS_CLASSES[job.status] ?? 'bg-slate-100 text-slate-600'"
+                                :class="STATUS_CLASSES[job.status] ?? 'bg-muted text-muted-foreground'"
                             >
                                 {{ statuses[job.status] ?? job.status }}
                             </span>
                         </div>
 
-                        <div class="space-y-1 text-sm text-slate-500">
+                        <div class="space-y-1 text-sm text-muted-foreground">
                             <p v-if="job.customer">
                                 {{ job.customer.first_name }} {{ job.customer.last_name }}
                             </p>

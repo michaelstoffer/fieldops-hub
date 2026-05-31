@@ -54,16 +54,16 @@ function submit() {
     <OwnerLayout title="New Job">
         <Head title="New Job" />
 
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/jobs" class="hover:underline">Jobs</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">New Job</span>
+            <span class="text-foreground">New Job</span>
         </nav>
 
         <div class="max-w-2xl">
-            <div class="rounded-xl bg-white shadow">
-                <div class="border-b border-slate-100 px-6 py-4">
-                    <h2 class="text-base font-semibold text-slate-800">Create Job</h2>
+            <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                <div class="border-b border-border px-6 py-4">
+                    <h2 class="text-base font-semibold text-foreground">Create Job</h2>
                 </div>
                 <form @submit.prevent="submit" class="px-6 py-5">
                     <JobForm
@@ -84,7 +84,7 @@ function submit() {
                         >
                             Create Job
                         </button>
-                        <Link href="/owner/jobs" class="text-sm text-slate-500 hover:text-slate-700">Cancel</Link>
+                        <Link href="/owner/jobs" class="text-sm text-muted-foreground hover:text-foreground">Cancel</Link>
                     </div>
                 </form>
             </div>

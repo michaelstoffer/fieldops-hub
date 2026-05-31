@@ -119,11 +119,11 @@ function finish() {
 <template>
     <Head title="Setup — FieldOps Hub" />
 
-    <div class="min-h-screen bg-slate-50 flex flex-col items-center justify-start py-12 px-4">
+    <div class="min-h-screen bg-background flex flex-col items-center justify-start py-12 px-4">
         <!-- Header -->
         <div class="w-full max-w-2xl mb-8 text-center">
-            <h1 class="text-2xl font-bold text-slate-900">Welcome to FieldOps Hub</h1>
-            <p class="mt-2 text-slate-500 text-sm">Let's get your account set up in a few quick steps.</p>
+            <h1 class="text-2xl font-bold text-foreground">Welcome to FieldOps Hub</h1>
+            <p class="mt-2 text-muted-foreground text-sm">Let's get your account set up in a few quick steps.</p>
         </div>
 
         <!-- Step progress -->
@@ -141,7 +141,7 @@ function finish() {
                                 ? 'bg-green-600 border-green-600 text-white'
                                 : step === s.id
                                     ? 'bg-slate-900 border-slate-900 text-white'
-                                    : 'border-slate-300 text-slate-400'"
+                                    : 'border-input text-muted-foreground'"
                         >
                             <svg v-if="step > s.id" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.5 7.5a1 1 0 01-1.42 0l-3.5-3.5a1 1 0 111.42-1.42L8.5 12.08l6.79-6.79a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -150,29 +150,29 @@ function finish() {
                         </div>
                         <span
                             class="hidden sm:inline text-sm font-medium"
-                            :class="step === s.id ? 'text-slate-900' : 'text-slate-400'"
+                            :class="step === s.id ? 'text-foreground' : 'text-muted-foreground'"
                         >{{ s.label }}</span>
                     </div>
-                    <div v-if="idx < steps.length - 1" class="flex-1 h-0.5 mx-3" :class="step > s.id ? 'bg-green-500' : 'bg-slate-200'" />
+                    <div v-if="idx < steps.length - 1" class="flex-1 h-0.5 mx-3" :class="step > s.id ? 'bg-green-500' : 'bg-border'" />
                 </li>
             </ol>
         </div>
 
         <!-- Card -->
-        <div class="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8">
+        <div class="w-full max-w-2xl bg-card rounded-2xl border border-border shadow-sm p-6 sm:p-8">
 
             <!-- ── Step 1: Company Info ──────────────────────────────────────── -->
             <div v-if="step === 1">
-                <h2 class="text-lg font-semibold text-slate-800 mb-1">Company Information</h2>
-                <p class="text-sm text-slate-500 mb-6">This appears on invoices and customer communications.</p>
+                <h2 class="text-lg font-semibold text-foreground mb-1">Company Information</h2>
+                <p class="text-sm text-muted-foreground mb-6">This appears on invoices and customer communications.</p>
 
                 <form @submit.prevent="saveCompany" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Company name <span class="text-rose-500">*</span></label>
+                        <label class="block text-sm font-medium text-foreground mb-1">Company name <span class="text-rose-500">*</span></label>
                         <input
                             v-model="companyForm.name"
                             type="text"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                            class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                             placeholder="Acme HVAC Services"
                             required
                         />
@@ -181,32 +181,32 @@ function finish() {
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                            <input v-model="companyForm.email" type="email" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="info@company.com" />
+                            <label class="block text-sm font-medium text-foreground mb-1">Email</label>
+                            <input v-model="companyForm.email" type="email" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="info@company.com" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Phone</label>
-                            <input v-model="companyForm.phone" type="tel" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="(555) 000-1234" />
+                            <label class="block text-sm font-medium text-foreground mb-1">Phone</label>
+                            <input v-model="companyForm.phone" type="tel" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="(555) 000-1234" />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Street address</label>
-                        <input v-model="companyForm.address" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="123 Main St" />
+                        <label class="block text-sm font-medium text-foreground mb-1">Street address</label>
+                        <input v-model="companyForm.address" type="text" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="123 Main St" />
                     </div>
 
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div class="col-span-2 sm:col-span-1">
-                            <label class="block text-sm font-medium text-slate-700 mb-1">City</label>
-                            <input v-model="companyForm.city" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="Springfield" />
+                            <label class="block text-sm font-medium text-foreground mb-1">City</label>
+                            <input v-model="companyForm.city" type="text" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="Springfield" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">State</label>
-                            <input v-model="companyForm.state" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="IL" maxlength="2" />
+                            <label class="block text-sm font-medium text-foreground mb-1">State</label>
+                            <input v-model="companyForm.state" type="text" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="IL" maxlength="2" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">ZIP</label>
-                            <input v-model="companyForm.zip" type="text" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500" placeholder="62701" />
+                            <label class="block text-sm font-medium text-foreground mb-1">ZIP</label>
+                            <input v-model="companyForm.zip" type="text" class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring" placeholder="62701" />
                         </div>
                     </div>
 
@@ -224,45 +224,45 @@ function finish() {
 
             <!-- ── Step 2: Job Types ─────────────────────────────────────────── -->
             <div v-if="step === 2">
-                <h2 class="text-lg font-semibold text-slate-800 mb-1">Service / Job Types</h2>
-                <p class="text-sm text-slate-500 mb-6">Add the types of work your team performs (e.g. HVAC, Plumbing, Electrical).</p>
+                <h2 class="text-lg font-semibold text-foreground mb-1">Service / Job Types</h2>
+                <p class="text-sm text-muted-foreground mb-6">Add the types of work your team performs (e.g. HVAC, Plumbing, Electrical).</p>
 
                 <!-- Existing job types -->
                 <ul v-if="job_types.length > 0" class="mb-5 space-y-2">
                     <li
                         v-for="jt in job_types"
                         :key="jt.id"
-                        class="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2.5"
+                        class="flex items-center justify-between rounded-lg border border-border px-3 py-2.5"
                     >
                         <div class="flex items-center gap-2.5">
                             <span class="h-3 w-3 rounded-full" :style="{ background: jt.color }" />
-                            <span class="text-sm font-medium text-slate-800">{{ jt.name }}</span>
+                            <span class="text-sm font-medium text-foreground">{{ jt.name }}</span>
                         </div>
                         <button
                             type="button"
-                            class="text-xs text-slate-400 hover:text-rose-600 transition-colors"
+                            class="text-xs text-muted-foreground hover:text-rose-600 transition-colors"
                             @click="removeJobType(jt.id)"
                         >Remove</button>
                     </li>
                 </ul>
-                <p v-else class="mb-5 rounded-lg border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-400">
+                <p v-else class="mb-5 rounded-lg border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
                     No job types added yet. Add at least one below.
                 </p>
 
                 <!-- Add job type form -->
                 <form @submit.prevent="addJobType" class="flex items-end gap-3">
                     <div class="flex-1">
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Name</label>
+                        <label class="block text-xs font-medium text-muted-foreground mb-1">Name</label>
                         <input
                             v-model="jobTypeForm.name"
                             type="text"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                            class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                             placeholder="HVAC Service"
                             required
                         />
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Color</label>
+                        <label class="block text-xs font-medium text-muted-foreground mb-1">Color</label>
                         <div class="flex items-center gap-1.5">
                             <span
                                 v-for="c in PRESET_COLORS"
@@ -277,7 +277,7 @@ function finish() {
                     <button
                         type="submit"
                         :disabled="jobTypeForm.processing"
-                        class="shrink-0 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                        class="shrink-0 rounded-lg border border-input px-3 py-2 text-sm font-medium text-foreground hover:bg-accent disabled:opacity-50 transition-colors"
                     >
                         + Add
                     </button>
@@ -285,7 +285,7 @@ function finish() {
                 <p v-if="jobTypeForm.errors.name" class="mt-1 text-xs text-rose-600">{{ jobTypeForm.errors.name }}</p>
 
                 <div class="flex justify-between pt-6">
-                    <button type="button" class="text-sm text-slate-500 hover:text-slate-700" @click="step = 1">← Back</button>
+                    <button type="button" class="text-sm text-muted-foreground hover:text-foreground" @click="step = 1">← Back</button>
                     <button
                         type="button"
                         :disabled="job_types.length === 0"
@@ -299,26 +299,26 @@ function finish() {
 
             <!-- ── Step 3: Technicians ───────────────────────────────────────── -->
             <div v-if="step === 3">
-                <h2 class="text-lg font-semibold text-slate-800 mb-1">Add Technicians</h2>
-                <p class="text-sm text-slate-500 mb-6">Create accounts for your field technicians. They'll use the mobile app to manage jobs.</p>
+                <h2 class="text-lg font-semibold text-foreground mb-1">Add Technicians</h2>
+                <p class="text-sm text-muted-foreground mb-6">Create accounts for your field technicians. They'll use the mobile app to manage jobs.</p>
 
                 <!-- Existing technicians -->
                 <ul v-if="technicians.length > 0" class="mb-5 space-y-2">
                     <li
                         v-for="tech in technicians"
                         :key="tech.id"
-                        class="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5"
+                        class="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5"
                     >
-                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground">
                             {{ tech.name.charAt(0).toUpperCase() }}
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-slate-800">{{ tech.name }}</p>
-                            <p class="text-xs text-slate-400">{{ tech.email }}</p>
+                            <p class="text-sm font-medium text-foreground">{{ tech.name }}</p>
+                            <p class="text-xs text-muted-foreground">{{ tech.email }}</p>
                         </div>
                     </li>
                 </ul>
-                <p v-else class="mb-5 rounded-lg border border-dashed border-slate-200 px-4 py-6 text-center text-sm text-slate-400">
+                <p v-else class="mb-5 rounded-lg border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
                     No technicians added yet. Add at least one below.
                 </p>
 
@@ -326,22 +326,22 @@ function finish() {
                 <form @submit.prevent="addTechnician" class="space-y-3">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Full name</label>
+                            <label class="block text-xs font-medium text-muted-foreground mb-1">Full name</label>
                             <input
                                 v-model="techForm.name"
                                 type="text"
-                                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                                class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                                 placeholder="Jane Doe"
                                 required
                             />
                             <p v-if="techForm.errors.name" class="mt-0.5 text-xs text-rose-600">{{ techForm.errors.name }}</p>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Email</label>
+                            <label class="block text-xs font-medium text-muted-foreground mb-1">Email</label>
                             <input
                                 v-model="techForm.email"
                                 type="email"
-                                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                                class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                                 placeholder="jane@company.com"
                                 required
                             />
@@ -349,11 +349,11 @@ function finish() {
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">Password</label>
+                        <label class="block text-xs font-medium text-muted-foreground mb-1">Password</label>
                         <input
                             v-model="techForm.password"
                             type="password"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                            class="w-full rounded-lg border border-input px-3 py-2 text-sm shadow-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
                             placeholder="Minimum 8 characters"
                             required
                         />
@@ -363,7 +363,7 @@ function finish() {
                         <button
                             type="submit"
                             :disabled="techForm.processing"
-                            class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                            class="rounded-lg border border-input px-3 py-2 text-sm font-medium text-foreground hover:bg-accent disabled:opacity-50 transition-colors"
                         >
                             + Add Technician
                         </button>
@@ -371,7 +371,7 @@ function finish() {
                 </form>
 
                 <div class="flex justify-between pt-6">
-                    <button type="button" class="text-sm text-slate-500 hover:text-slate-700" @click="step = 2">← Back</button>
+                    <button type="button" class="text-sm text-muted-foreground hover:text-foreground" @click="step = 2">← Back</button>
                     <button
                         type="button"
                         :disabled="!canFinish || finishing"
@@ -385,7 +385,7 @@ function finish() {
 
         </div>
 
-        <p class="mt-6 text-xs text-slate-400">
+        <p class="mt-6 text-xs text-muted-foreground">
             You can update all of this later in <strong>Settings</strong>.
         </p>
     </div>

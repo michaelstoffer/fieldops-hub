@@ -193,22 +193,22 @@ async function saveNewProperty() {
     <div class="space-y-5">
         <!-- Title -->
         <div>
-            <label for="title" class="block text-sm font-medium text-slate-700">Title <span class="text-red-500">*</span></label>
+            <label for="title" class="block text-sm font-medium text-foreground">Title <span class="text-red-500">*</span></label>
             <input
                 id="title"
                 v-model="form.title"
                 type="text"
-                class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
-                :class="{ 'border-red-400': form.errors.title }"
+                class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                :class="{ 'border-destructive': form.errors.title }"
             />
-            <p v-if="form.errors.title" class="mt-1 text-xs text-red-600">{{ form.errors.title }}</p>
+            <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
         </div>
 
         <!-- Customer + Property row -->
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="customer_id" class="block text-sm font-medium text-slate-700">Customer <span class="text-red-500">*</span></label>
+                    <label for="customer_id" class="block text-sm font-medium text-foreground">Customer <span class="text-red-500">*</span></label>
                     <button
                         type="button"
                         class="text-xs font-medium text-blue-600 hover:text-blue-800"
@@ -220,8 +220,8 @@ async function saveNewProperty() {
                 <select
                     id="customer_id"
                     v-model="form.customer_id"
-                    class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
-                    :class="{ 'border-red-400': form.errors.customer_id }"
+                    class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                    :class="{ 'border-destructive': form.errors.customer_id }"
                     @change="onCustomerChange"
                 >
                     <option :value="null">— Select customer —</option>
@@ -229,11 +229,11 @@ async function saveNewProperty() {
                         {{ c.last_name }}, {{ c.first_name }}
                     </option>
                 </select>
-                <p v-if="form.errors.customer_id" class="mt-1 text-xs text-red-600">{{ form.errors.customer_id }}</p>
+                <p v-if="form.errors.customer_id" class="mt-1 text-xs text-destructive">{{ form.errors.customer_id }}</p>
             </div>
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="property_id" class="block text-sm font-medium text-slate-700">Property</label>
+                    <label for="property_id" class="block text-sm font-medium text-foreground">Property</label>
                     <button
                         v-if="form.customer_id"
                         type="button"
@@ -247,7 +247,7 @@ async function saveNewProperty() {
                     id="property_id"
                     v-model="form.property_id"
                     :disabled="!form.customer_id || selectedCustomerProperties.length === 0"
-                    class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none disabled:bg-slate-50 disabled:text-slate-400"
+                    class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none disabled:bg-background disabled:text-muted-foreground"
                 >
                     <option :value="null">— Select property —</option>
                     <option v-for="p in selectedCustomerProperties" :key="p.id" :value="p.id">
@@ -261,7 +261,7 @@ async function saveNewProperty() {
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="job_type_id" class="block text-sm font-medium text-slate-700">Job Type</label>
+                    <label for="job_type_id" class="block text-sm font-medium text-foreground">Job Type</label>
                     <button
                         type="button"
                         class="text-xs font-medium text-blue-600 hover:text-blue-800"
@@ -273,18 +273,18 @@ async function saveNewProperty() {
                 <select
                     id="job_type_id"
                     v-model="form.job_type_id"
-                    class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                    class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
                 >
                     <option :value="null">— Select type —</option>
                     <option v-for="t in jobTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
                 </select>
             </div>
             <div>
-                <label for="assigned_to" class="block text-sm font-medium text-slate-700">Assign To</label>
+                <label for="assigned_to" class="block text-sm font-medium text-foreground">Assign To</label>
                 <select
                     id="assigned_to"
                     v-model="form.assigned_to"
-                    class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                    class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
                 >
                     <option :value="null">— Unassigned —</option>
                     <option v-for="t in technicians" :key="t.id" :value="t.id">{{ t.name }}</option>
@@ -294,35 +294,35 @@ async function saveNewProperty() {
 
         <!-- Scheduled at -->
         <div>
-            <label for="scheduled_at" class="block text-sm font-medium text-slate-700">Scheduled Date & Time</label>
+            <label for="scheduled_at" class="block text-sm font-medium text-foreground">Scheduled Date & Time</label>
             <input
                 id="scheduled_at"
                 v-model="form.scheduled_at"
                 type="datetime-local"
-                class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
             />
-            <p v-if="form.errors.scheduled_at" class="mt-1 text-xs text-red-600">{{ form.errors.scheduled_at }}</p>
+            <p v-if="form.errors.scheduled_at" class="mt-1 text-xs text-destructive">{{ form.errors.scheduled_at }}</p>
         </div>
 
         <!-- Description -->
         <div>
-            <label for="description" class="block text-sm font-medium text-slate-700">Description</label>
+            <label for="description" class="block text-sm font-medium text-foreground">Description</label>
             <textarea
                 id="description"
                 v-model="form.description"
                 rows="3"
-                class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
             />
         </div>
 
         <!-- Office notes -->
         <div>
-            <label for="office_notes" class="block text-sm font-medium text-slate-700">Office Notes</label>
+            <label for="office_notes" class="block text-sm font-medium text-foreground">Office Notes</label>
             <textarea
                 id="office_notes"
                 v-model="form.office_notes"
                 rows="3"
-                class="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
+                class="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-slate-400 focus:outline-none"
             />
         </div>
     </div>
@@ -334,69 +334,69 @@ async function saveNewProperty() {
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
             @click.self="closeCustomerDialog"
         >
-            <div class="w-full max-w-md rounded-xl bg-white shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                    <h3 class="text-base font-semibold text-slate-800">New Customer</h3>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeCustomerDialog">✕</button>
+            <div class="w-full max-w-md rounded-xl bg-card shadow-xl">
+                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                    <h3 class="text-base font-semibold text-foreground">New Customer</h3>
+                    <button type="button" class="text-muted-foreground hover:text-foreground" @click="closeCustomerDialog">✕</button>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <p v-if="customerDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ customerDialogError }}</p>
+                    <p v-if="customerDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-destructive">{{ customerDialogError }}</p>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-600">First Name <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-medium text-muted-foreground">First Name <span class="text-red-500">*</span></label>
                             <input
                                 v-model="newCustomer.first_name"
                                 type="text"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-600">Last Name <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-medium text-muted-foreground">Last Name <span class="text-red-500">*</span></label>
                             <input
                                 v-model="newCustomer.last_name"
                                 type="text"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Email</label>
+                        <label class="block text-xs font-medium text-muted-foreground">Email</label>
                         <input
                             v-model="newCustomer.email"
                             type="email"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-600">Phone</label>
+                            <label class="block text-xs font-medium text-muted-foreground">Phone</label>
                             <input
                                 :value="newCustomer.phone"
                                 @input="onPhoneInput($event, v => newCustomer.phone = v)"
                                 type="tel"
                                 placeholder="(555) 555-5555"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-600">Mobile</label>
+                            <label class="block text-xs font-medium text-muted-foreground">Mobile</label>
                             <input
                                 :value="newCustomer.mobile"
                                 @input="onPhoneInput($event, v => newCustomer.mobile = v)"
                                 type="tel"
                                 placeholder="(555) 555-5555"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                <div class="flex justify-end gap-3 border-t border-border px-6 py-4">
                     <button
                         type="button"
-                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                         @click="closeCustomerDialog"
                     >
                         Cancel
@@ -421,26 +421,26 @@ async function saveNewProperty() {
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
             @click.self="closeJobTypeDialog"
         >
-            <div class="w-full max-w-sm rounded-xl bg-white shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                    <h3 class="text-base font-semibold text-slate-800">New Job Type</h3>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closeJobTypeDialog">✕</button>
+            <div class="w-full max-w-sm rounded-xl bg-card shadow-xl">
+                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                    <h3 class="text-base font-semibold text-foreground">New Job Type</h3>
+                    <button type="button" class="text-muted-foreground hover:text-foreground" @click="closeJobTypeDialog">✕</button>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <p v-if="jobTypeDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ jobTypeDialogError }}</p>
+                    <p v-if="jobTypeDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-destructive">{{ jobTypeDialogError }}</p>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Name <span class="text-red-500">*</span></label>
+                        <label class="block text-xs font-medium text-muted-foreground">Name <span class="text-red-500">*</span></label>
                         <input
                             v-model="newJobType.name"
                             type="text"
                             placeholder="e.g. HVAC Maintenance"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Color</label>
+                        <label class="block text-xs font-medium text-muted-foreground">Color</label>
                         <div class="mt-2 flex flex-wrap gap-2">
                             <button
                                 v-for="c in PRESET_COLORS"
@@ -454,16 +454,16 @@ async function saveNewProperty() {
                             <input
                                 v-model="newJobType.color"
                                 type="color"
-                                class="h-7 w-7 cursor-pointer rounded-full border border-slate-200"
+                                class="h-7 w-7 cursor-pointer rounded-full border border-border"
                                 title="Custom color"
                             />
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                <div class="flex justify-end gap-3 border-t border-border px-6 py-4">
                     <button
                         type="button"
-                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                         @click="closeJobTypeDialog"
                     >
                         Cancel
@@ -488,79 +488,79 @@ async function saveNewProperty() {
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
             @click.self="closePropertyDialog"
         >
-            <div class="w-full max-w-md rounded-xl bg-white shadow-xl">
-                <div class="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-                    <h3 class="text-base font-semibold text-slate-800">New Property</h3>
-                    <button type="button" class="text-slate-400 hover:text-slate-600" @click="closePropertyDialog">✕</button>
+            <div class="w-full max-w-md rounded-xl bg-card shadow-xl">
+                <div class="flex items-center justify-between border-b border-border px-6 py-4">
+                    <h3 class="text-base font-semibold text-foreground">New Property</h3>
+                    <button type="button" class="text-muted-foreground hover:text-foreground" @click="closePropertyDialog">✕</button>
                 </div>
                 <div class="space-y-4 px-6 py-5">
-                    <p v-if="propertyDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-red-600">{{ propertyDialogError }}</p>
+                    <p v-if="propertyDialogError" class="rounded bg-red-50 px-3 py-2 text-xs text-destructive">{{ propertyDialogError }}</p>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Property Name <span class="text-slate-400">(optional)</span></label>
+                        <label class="block text-xs font-medium text-muted-foreground">Property Name <span class="text-muted-foreground">(optional)</span></label>
                         <input
                             v-model="newProperty.name"
                             type="text"
                             placeholder="e.g. Main Office, Warehouse"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Address <span class="text-red-500">*</span></label>
+                        <label class="block text-xs font-medium text-muted-foreground">Address <span class="text-red-500">*</span></label>
                         <input
                             v-model="newProperty.address_line1"
                             type="text"
                             placeholder="Street address"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Address Line 2</label>
+                        <label class="block text-xs font-medium text-muted-foreground">Address Line 2</label>
                         <input
                             v-model="newProperty.address_line2"
                             type="text"
                             placeholder="Apt, suite, unit…"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
 
                     <div class="grid grid-cols-3 gap-3">
                         <div class="col-span-2">
-                            <label class="block text-xs font-medium text-slate-600">City <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-medium text-muted-foreground">City <span class="text-red-500">*</span></label>
                             <input
                                 v-model="newProperty.city"
                                 type="text"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-600">State <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-medium text-muted-foreground">State <span class="text-red-500">*</span></label>
                             <input
                                 v-model="newProperty.state"
                                 type="text"
                                 maxlength="2"
                                 placeholder="TX"
-                                class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm uppercase focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm uppercase focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-medium text-slate-600">Postal Code <span class="text-red-500">*</span></label>
+                        <label class="block text-xs font-medium text-muted-foreground">Postal Code <span class="text-red-500">*</span></label>
                         <input
                             v-model="newProperty.postal_code"
                             type="text"
                             placeholder="12345"
-                            class="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
+                            class="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-400 focus:outline-none"
                         />
                     </div>
                 </div>
-                <div class="flex justify-end gap-3 border-t border-slate-100 px-6 py-4">
+                <div class="flex justify-end gap-3 border-t border-border px-6 py-4">
                     <button
                         type="button"
-                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                         @click="closePropertyDialog"
                     >
                         Cancel

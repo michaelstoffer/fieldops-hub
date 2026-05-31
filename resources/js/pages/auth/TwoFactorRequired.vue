@@ -11,8 +11,8 @@ import { ShieldAlert } from 'lucide-vue-next';
 
         <div class="flex min-h-[60vh] flex-col items-center justify-center text-center">
             <ShieldAlert class="mb-4 h-12 w-12 text-yellow-500" />
-            <h1 class="mb-2 text-2xl font-semibold text-slate-900">Two-Factor Authentication Required</h1>
-            <p class="mb-6 max-w-md text-slate-500">
+            <h1 class="mb-2 text-2xl font-semibold text-foreground">Two-Factor Authentication Required</h1>
+            <p class="mb-6 max-w-md text-muted-foreground">
                 Your account role requires two-factor authentication before you can access this area.
                 Set it up now to continue.
             </p>

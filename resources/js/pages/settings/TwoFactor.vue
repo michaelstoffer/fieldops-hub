@@ -57,9 +57,9 @@ onUnmounted(() => {
                 />
 
                 <div v-if="!twoFactorEnabled" class="flex flex-col items-start space-y-4">
-                    <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-700">Disabled</span>
+                    <span class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/40 px-2.5 py-0.5 text-xs font-semibold text-red-700 dark:text-red-400">Disabled</span>
 
-                    <p class="text-sm text-slate-600">
+                    <p class="text-sm text-slate-600 dark:text-slate-400">
                         When you enable two-factor authentication, you will be
                         prompted for a secure pin during login. This pin can be
                         retrieved from a TOTP-supported application on your phone.
@@ -76,9 +76,9 @@ onUnmounted(() => {
                 </div>
 
                 <div v-else class="flex flex-col items-start space-y-4">
-                    <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">Enabled</span>
+                    <span class="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/40 px-2.5 py-0.5 text-xs font-semibold text-green-700 dark:text-green-400">Enabled</span>
 
-                    <p class="text-sm text-slate-600">
+                    <p class="text-sm text-slate-600 dark:text-slate-400">
                         With two-factor authentication enabled, you will be
                         prompted for a secure, random pin during login, which
                         you can retrieve from the TOTP-supported application on

@@ -272,12 +272,12 @@ onUnmounted(() => {
             <!-- Sidebar: technician list -->
             <aside class="flex w-64 shrink-0 flex-col gap-3">
                 <!-- Trails toggle -->
-                <div class="flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow ring-1 ring-slate-200">
-                    <span class="text-sm font-medium text-slate-700">Show Trails</span>
+                <div class="flex items-center justify-between rounded-xl bg-card px-4 py-3 shadow ring-1 ring-border">
+                    <span class="text-sm font-medium text-foreground">Show Trails</span>
                     <button
                         type="button"
                         class="relative inline-flex h-6 w-11 items-center rounded-full transition"
-                        :class="showTrails ? 'bg-slate-800' : 'bg-slate-200'"
+                        :class="showTrails ? 'bg-slate-800' : 'bg-muted'"
                         @click="toggleTrails"
                     >
                         <span
@@ -293,8 +293,8 @@ onUnmounted(() => {
                         v-for="tech in techs"
                         :key="tech.id"
                         type="button"
-                        class="w-full rounded-xl bg-white px-4 py-3 text-left shadow ring-1 transition"
-                        :class="focused?.id === tech.id ? 'ring-slate-800' : 'ring-slate-200 hover:ring-slate-300'"
+                        class="w-full rounded-xl bg-card px-4 py-3 text-left shadow ring-1 transition"
+                        :class="focused?.id === tech.id ? 'ring-slate-800' : 'ring-border hover:ring-slate-300'"
                         @click="focused = tech"
                     >
                         <div class="flex items-center gap-2">
@@ -305,28 +305,28 @@ onUnmounted(() => {
                                 {{ tech.name.charAt(0) }}
                             </span>
                             <div class="min-w-0 flex-1">
-                                <p class="truncate text-sm font-semibold text-slate-800">{{ tech.name }}</p>
-                                <p class="text-xs capitalize text-slate-500">
+                                <p class="truncate text-sm font-semibold text-foreground">{{ tech.name }}</p>
+                                <p class="text-xs capitalize text-muted-foreground">
                                     {{ tech.current_job ? statusLabel(tech.current_job.status) : (tech.location ? 'Available' : 'Offline') }}
                                 </p>
                             </div>
                         </div>
                     </button>
 
-                    <p v-if="techs.length === 0" class="py-4 text-center text-sm text-slate-400">
+                    <p v-if="techs.length === 0" class="py-4 text-center text-sm text-muted-foreground">
                         No technicians found.
                     </p>
                 </div>
             </aside>
 
             <!-- Map area -->
-            <div class="relative flex-1 overflow-hidden rounded-xl shadow ring-1 ring-slate-200">
-                <div ref="mapRef" class="h-full w-full bg-slate-100">
+            <div class="relative flex-1 overflow-hidden rounded-xl shadow ring-1 ring-border">
+                <div ref="mapRef" class="h-full w-full bg-background">
                     <div
                         v-if="!hasMapsKey"
-                        class="flex h-full items-center justify-center text-slate-400"
+                        class="flex h-full items-center justify-center text-muted-foreground"
                     >
-                        <p class="text-sm">Set <code class="rounded bg-slate-200 px-1">GOOGLE_MAPS_API_KEY</code> to enable the map.</p>
+                        <p class="text-sm">Set <code class="rounded bg-muted px-1">GOOGLE_MAPS_API_KEY</code> to enable the map.</p>
                     </div>
                 </div>
 
@@ -341,10 +341,10 @@ onUnmounted(() => {
                 >
                     <div
                         v-if="focused"
-                        class="absolute right-0 top-0 h-full w-72 overflow-y-auto bg-white shadow-xl ring-1 ring-slate-200"
+                        class="absolute right-0 top-0 h-full w-72 overflow-y-auto bg-card shadow-xl ring-1 ring-border"
                     >
                         <!-- Header -->
-                        <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                        <div class="flex items-center justify-between border-b border-border px-4 py-3">
                             <div class="flex items-center gap-2">
                                 <span
                                     class="flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white"
@@ -353,15 +353,15 @@ onUnmounted(() => {
                                     {{ focused.name.charAt(0) }}
                                 </span>
                                 <div>
-                                    <p class="text-sm font-semibold text-slate-800">{{ focused.name }}</p>
-                                    <p class="text-xs capitalize text-slate-500">
+                                    <p class="text-sm font-semibold text-foreground">{{ focused.name }}</p>
+                                    <p class="text-xs capitalize text-muted-foreground">
                                         {{ focused.current_job ? statusLabel(focused.current_job.status) : (focused.location ? 'Available' : 'Offline') }}
                                     </p>
                                 </div>
                             </div>
                             <button
                                 type="button"
-                                class="text-slate-400 hover:text-slate-600"
+                                class="text-muted-foreground hover:text-foreground"
                                 @click="focused = null; showAssignDropdown = false"
                             >
                                 <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -371,22 +371,22 @@ onUnmounted(() => {
                         </div>
 
                         <!-- Location info -->
-                        <div v-if="focused.location" class="border-b border-slate-100 px-4 py-3">
-                            <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Location</p>
-                            <p class="text-xs text-slate-600">
+                        <div v-if="focused.location" class="border-b border-border px-4 py-3">
+                            <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Location</p>
+                            <p class="text-xs text-muted-foreground">
                                 {{ focused.location.latitude.toFixed(4) }}, {{ focused.location.longitude.toFixed(4) }}
                             </p>
-                            <p class="text-xs text-slate-400">
+                            <p class="text-xs text-muted-foreground">
                                 Updated {{ formatTime(focused.location.recorded_at) }}
                             </p>
                         </div>
 
                         <!-- Current job -->
-                        <div v-if="focused.current_job" class="border-b border-slate-100 px-4 py-3">
-                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Current Job</p>
-                            <p class="text-sm font-medium text-slate-800">{{ focused.current_job.title }}</p>
-                            <p v-if="focused.current_job.customer" class="mt-0.5 text-xs text-slate-500">{{ focused.current_job.customer }}</p>
-                            <p v-if="focused.current_job.address" class="mt-0.5 text-xs text-slate-500">{{ focused.current_job.address }}</p>
+                        <div v-if="focused.current_job" class="border-b border-border px-4 py-3">
+                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Current Job</p>
+                            <p class="text-sm font-medium text-foreground">{{ focused.current_job.title }}</p>
+                            <p v-if="focused.current_job.customer" class="mt-0.5 text-xs text-muted-foreground">{{ focused.current_job.customer }}</p>
+                            <p v-if="focused.current_job.address" class="mt-0.5 text-xs text-muted-foreground">{{ focused.current_job.address }}</p>
                             <span
                                 class="mt-1.5 inline-block rounded-full px-2 py-0.5 text-xs font-medium"
                                 :style="{ background: (STATUS_COLORS[focused.current_job.status] ?? '#94a3b8') + '22', color: STATUS_COLORS[focused.current_job.status] ?? '#94a3b8' }"
@@ -397,53 +397,53 @@ onUnmounted(() => {
 
                         <!-- Upcoming jobs -->
                         <div v-if="focused.upcoming_jobs.length > 0" class="px-4 py-3">
-                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Upcoming Today</p>
+                            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Upcoming Today</p>
                             <div class="space-y-3">
                                 <div
                                     v-for="job in focused.upcoming_jobs"
                                     :key="job.id"
-                                    class="rounded-lg bg-slate-50 p-3"
+                                    class="rounded-lg bg-background p-3"
                                 >
-                                    <p class="text-sm font-medium text-slate-800">{{ job.title }}</p>
-                                    <p v-if="job.customer" class="mt-0.5 text-xs text-slate-500">{{ job.customer }}</p>
-                                    <p class="mt-0.5 text-xs text-slate-400">{{ formatTime(job.scheduled_at) }}</p>
+                                    <p class="text-sm font-medium text-foreground">{{ job.title }}</p>
+                                    <p v-if="job.customer" class="mt-0.5 text-xs text-muted-foreground">{{ job.customer }}</p>
+                                    <p class="mt-0.5 text-xs text-muted-foreground">{{ formatTime(job.scheduled_at) }}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div v-if="!focused.current_job && focused.upcoming_jobs.length === 0" class="px-4 py-6 text-center">
-                            <p class="text-sm text-slate-400">No active or upcoming jobs today.</p>
+                            <p class="text-sm text-muted-foreground">No active or upcoming jobs today.</p>
                         </div>
 
                         <!-- Assign job -->
-                        <div class="border-t border-slate-100 px-4 py-3">
+                        <div class="border-t border-border px-4 py-3">
                             <button
                                 v-if="!showAssignDropdown"
                                 type="button"
-                                class="w-full rounded-lg border border-slate-200 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                                class="w-full rounded-lg border border-border py-2 text-xs font-medium text-muted-foreground hover:bg-accent"
                                 @click="showAssignDropdown = true"
                             >
                                 + Assign Job
                             </button>
                             <div v-else>
-                                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Assign Unassigned Job</p>
-                                <div v-if="unassignedJobs.length === 0" class="text-xs text-slate-400">No unassigned upcoming jobs.</div>
+                                <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Assign Unassigned Job</p>
+                                <div v-if="unassignedJobs.length === 0" class="text-xs text-muted-foreground">No unassigned upcoming jobs.</div>
                                 <div v-else class="space-y-1">
                                     <button
                                         v-for="job in unassignedJobs"
                                         :key="job.id"
                                         type="button"
-                                        class="w-full rounded-lg bg-slate-50 px-3 py-2 text-left text-xs hover:bg-slate-100 disabled:opacity-50"
+                                        class="w-full rounded-lg bg-background px-3 py-2 text-left text-xs hover:bg-accent disabled:opacity-50"
                                         :disabled="assigning"
                                         @click="assignJob(job.id)"
                                     >
-                                        <p class="font-medium text-slate-800">{{ job.title }}</p>
-                                        <p class="text-slate-400">{{ formatTime(job.scheduled_at) }}</p>
+                                        <p class="font-medium text-foreground">{{ job.title }}</p>
+                                        <p class="text-muted-foreground">{{ formatTime(job.scheduled_at) }}</p>
                                     </button>
                                 </div>
                                 <button
                                     type="button"
-                                    class="mt-2 text-xs text-slate-400 hover:text-slate-600"
+                                    class="mt-2 text-xs text-muted-foreground hover:text-foreground"
                                     @click="showAssignDropdown = false"
                                 >
                                     Cancel

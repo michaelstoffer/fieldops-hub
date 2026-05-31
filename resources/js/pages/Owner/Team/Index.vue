@@ -64,11 +64,11 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const ROLE_COLORS: Record<string, string> = {
-    owner: 'bg-purple-100 text-purple-700',
-    admin: 'bg-blue-100 text-blue-700',
-    dispatcher: 'bg-teal-100 text-teal-700',
-    bookkeeper: 'bg-amber-100 text-amber-700',
-    technician: 'bg-slate-100 text-slate-700',
+    owner: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+    admin: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    dispatcher: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400',
+    bookkeeper: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+    technician: 'bg-muted text-foreground',
 };
 </script>
 
@@ -81,8 +81,8 @@ const ROLE_COLORS: Record<string, string> = {
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold text-slate-900">Team Members</h1>
-                    <p class="text-sm text-slate-500 mt-0.5">
+                    <h1 class="text-xl font-bold text-foreground">Team Members</h1>
+                    <p class="text-sm text-muted-foreground mt-0.5">
                         Manage your organization's users and their roles.
                     </p>
                 </div>
@@ -107,12 +107,12 @@ const ROLE_COLORS: Record<string, string> = {
             <!-- Technician seat usage -->
             <div v-if="technician_limit !== null"
                  class="rounded-xl border p-4 flex items-center gap-4"
-                 :class="at_limit ? 'border-amber-200 bg-amber-50' : 'border-slate-200 bg-slate-50'">
+                 :class="at_limit ? 'border-amber-200 bg-amber-50' : 'border-border bg-background'">
                 <div class="flex-1">
-                    <p class="text-sm font-medium" :class="at_limit ? 'text-amber-800' : 'text-slate-700'">
+                    <p class="text-sm font-medium" :class="at_limit ? 'text-amber-800' : 'text-foreground'">
                         Technician seats — {{ technician_count }} / {{ technician_limit }} used
                     </p>
-                    <div class="mt-1.5 h-2 rounded-full bg-slate-200 overflow-hidden">
+                    <div class="mt-1.5 h-2 rounded-full bg-muted overflow-hidden">
                         <div
                             class="h-full rounded-full transition-all"
                             :class="at_limit ? 'bg-amber-400' : 'bg-blue-500'"
@@ -129,42 +129,42 @@ const ROLE_COLORS: Record<string, string> = {
             </div>
 
             <!-- Add member form -->
-            <div v-if="showAddForm" class="rounded-2xl border border-slate-200 bg-white p-6">
-                <h2 class="text-base font-semibold text-slate-900 mb-4">Add a team member</h2>
+            <div v-if="showAddForm" class="rounded-2xl border border-border bg-card p-6">
+                <h2 class="text-base font-semibold text-foreground mb-4">Add a team member</h2>
 
                 <form @submit.prevent="submitAdd" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+                        <label class="block text-sm font-medium text-foreground mb-1">Name</label>
                         <input v-model="addForm.name" type="text" required placeholder="Jane Smith"
-                               class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                               :class="{ 'border-red-400': addForm.errors.name }" />
-                        <p v-if="addForm.errors.name" class="mt-1 text-xs text-red-600">{{ addForm.errors.name }}</p>
+                               class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                               :class="{ 'border-destructive': addForm.errors.name }" />
+                        <p v-if="addForm.errors.name" class="mt-1 text-xs text-destructive">{{ addForm.errors.name }}</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <label class="block text-sm font-medium text-foreground mb-1">Email</label>
                         <input v-model="addForm.email" type="email" required placeholder="jane@company.com"
-                               class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                               :class="{ 'border-red-400': addForm.errors.email }" />
-                        <p v-if="addForm.errors.email" class="mt-1 text-xs text-red-600">{{ addForm.errors.email }}</p>
+                               class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                               :class="{ 'border-destructive': addForm.errors.email }" />
+                        <p v-if="addForm.errors.email" class="mt-1 text-xs text-destructive">{{ addForm.errors.email }}</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Temporary password</label>
+                        <label class="block text-sm font-medium text-foreground mb-1">Temporary password</label>
                         <input v-model="addForm.password" type="password" required placeholder="••••••••"
-                               class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                               :class="{ 'border-red-400': addForm.errors.password }" />
-                        <p v-if="addForm.errors.password" class="mt-1 text-xs text-red-600">{{ addForm.errors.password }}</p>
+                               class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                               :class="{ 'border-destructive': addForm.errors.password }" />
+                        <p v-if="addForm.errors.password" class="mt-1 text-xs text-destructive">{{ addForm.errors.password }}</p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                        <label class="block text-sm font-medium text-foreground mb-1">Role</label>
                         <select v-model="addForm.role" required
-                                class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                :class="{ 'border-red-400': addForm.errors.role }">
+                                class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                :class="{ 'border-destructive': addForm.errors.role }">
                             <option v-for="r in roles" :key="r" :value="r">{{ ROLE_LABELS[r] ?? r }}</option>
                         </select>
-                        <p v-if="addForm.errors.role" class="mt-1 text-xs text-red-600">{{ addForm.errors.role }}</p>
+                        <p v-if="addForm.errors.role" class="mt-1 text-xs text-destructive">{{ addForm.errors.role }}</p>
                     </div>
 
                     <div class="sm:col-span-2 flex items-center gap-3">
@@ -177,7 +177,7 @@ const ROLE_COLORS: Record<string, string> = {
                             {{ addForm.processing ? 'Adding…' : 'Add member' }}
                         </button>
                         <button type="button" @click="showAddForm = false"
-                                class="text-sm text-slate-500 hover:text-slate-700">
+                                class="text-sm text-muted-foreground hover:text-foreground">
                             Cancel
                         </button>
                     </div>
@@ -185,25 +185,25 @@ const ROLE_COLORS: Record<string, string> = {
             </div>
 
             <!-- Team table -->
-            <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+            <div class="rounded-2xl border border-border bg-card overflow-hidden">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-slate-100 bg-slate-50">
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Name</th>
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Email</th>
-                            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Role</th>
+                        <tr class="border-b border-border bg-background">
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Name</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</th>
+                            <th class="text-left px-6 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Role</th>
                             <th class="px-6 py-3"></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <tr v-for="member in team_members" :key="member.id" class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 font-medium text-slate-900">{{ member.name }}</td>
-                            <td class="px-6 py-4 text-slate-500">{{ member.email }}</td>
+                    <tbody class="divide-y divide-border">
+                        <tr v-for="member in team_members" :key="member.id" class="hover:bg-accent transition-colors">
+                            <td class="px-6 py-4 font-medium text-foreground">{{ member.name }}</td>
+                            <td class="px-6 py-4 text-muted-foreground">{{ member.email }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-wrap gap-1">
                                     <span v-for="role in member.roles" :key="role"
                                           class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                                          :class="ROLE_COLORS[role] ?? 'bg-slate-100 text-slate-600'">
+                                          :class="ROLE_COLORS[role] ?? 'bg-muted text-muted-foreground'">
                                         {{ ROLE_LABELS[role] ?? role }}
                                     </span>
                                 </div>
@@ -213,7 +213,7 @@ const ROLE_COLORS: Record<string, string> = {
                                     <select
                                         :value="member.roles[0]"
                                         @change="updateRole(member.id, ($event.target as HTMLSelectElement).value)"
-                                        class="w-36 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                        class="w-36 rounded-lg border border-border bg-background text-foreground px-2.5 py-1.5 text-xs focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:[color-scheme:dark]"
                                     >
                                         <option v-for="r in roles" :key="r" :value="r">{{ ROLE_LABELS[r] ?? r }}</option>
                                     </select>
@@ -221,7 +221,7 @@ const ROLE_COLORS: Record<string, string> = {
                                         v-if="member.roles[0] !== 'owner'"
                                         type="button"
                                         @click="sendPasswordReset(member.id, member.name)"
-                                        class="rounded-lg p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                                        class="rounded-lg p-1.5 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 transition-colors"
                                         title="Send password reset email"
                                     >
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -231,7 +231,7 @@ const ROLE_COLORS: Record<string, string> = {
                                     <button
                                         type="button"
                                         @click="removeMember(member.id, member.name)"
-                                        class="rounded-lg p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                                        class="rounded-lg p-1.5 text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors"
                                         title="Remove member"
                                     >
                                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -242,7 +242,7 @@ const ROLE_COLORS: Record<string, string> = {
                             </td>
                         </tr>
                         <tr v-if="!team_members.length">
-                            <td colspan="4" class="px-6 py-12 text-center text-slate-400 text-sm">
+                            <td colspan="4" class="px-6 py-12 text-center text-muted-foreground text-sm">
                                 No team members yet. Add your first member above.
                             </td>
                         </tr>

@@ -6,7 +6,7 @@ import { login } from '@/routes';
 <template>
     <Head title="Terms of Service — FieldOps Hub" />
 
-    <div class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <div class="min-h-screen bg-background text-foreground antialiased">
 
         <!-- Nav -->
         <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-white/5">
@@ -28,14 +28,14 @@ import { login } from '@/routes';
         <!-- Content -->
         <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
             <div class="mb-10">
-                <Link href="/" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700 transition-colors mb-6">
+                <Link href="/" class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                     Back to home
                 </Link>
-                <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Terms of Service</h1>
-                <p class="mt-3 text-sm text-slate-500">Last updated: May 18, 2026</p>
+                <h1 class="text-3xl sm:text-4xl font-bold text-foreground">Terms of Service</h1>
+                <p class="mt-3 text-sm text-muted-foreground">Last updated: May 18, 2026</p>
             </div>
 
             <div class="prose prose-slate max-w-none prose-headings:font-semibold prose-headings:text-slate-800 prose-p:text-slate-600 prose-p:leading-relaxed prose-li:text-slate-600 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">

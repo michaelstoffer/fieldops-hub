@@ -85,7 +85,7 @@ const submit = () => {
 
     <div class="min-h-screen flex">
 
-        <!-- ── Left panel ────────────────────────────────────────────────────── -->
+        <!-- ── Left panel — intentionally always dark ───────────────────────── -->
         <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 bg-slate-900 overflow-hidden">
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_#1e40af55_0%,_transparent_60%)]"></div>
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_#0f766e44_0%,_transparent_60%)]"></div>
@@ -129,7 +129,7 @@ const submit = () => {
         </div>
 
         <!-- ── Right panel ───────────────────────────────────────────────────── -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-background">
 
             <!-- Mobile logo -->
             <div class="lg:hidden flex items-center gap-2 mb-10">
@@ -138,14 +138,14 @@ const submit = () => {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight">FieldOps Hub</span>
+                <span class="font-semibold text-foreground text-base tracking-tight">FieldOps Hub</span>
             </div>
 
             <!-- ── Step 1: Plan selection ───────────────────────────────────── -->
             <div v-if="step === 1" class="w-full max-w-lg">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Choose your plan</h2>
-                    <p class="mt-1 text-sm text-slate-500">
+                    <h2 class="text-2xl font-bold text-foreground">Choose your plan</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">
                         14-day free trial on all plans. Starter and Growth trials both include full Growth features.
                     </p>
                 </div>
@@ -156,13 +156,13 @@ const submit = () => {
                         type="button"
                         @click="billingInterval = 'monthly'"
                         class="text-sm font-medium transition-colors"
-                        :class="billingInterval === 'monthly' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                        :class="billingInterval === 'monthly' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'"
                     >Monthly</button>
                     <button
                         type="button"
                         @click="billingInterval = billingInterval === 'monthly' ? 'annual' : 'monthly'"
                         class="relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        :class="billingInterval === 'annual' ? 'bg-blue-600' : 'bg-slate-200'"
+                        :class="billingInterval === 'annual' ? 'bg-blue-600' : 'bg-muted'"
                         role="switch"
                         :aria-checked="billingInterval === 'annual'"
                     >
@@ -175,23 +175,23 @@ const submit = () => {
                         type="button"
                         @click="billingInterval = 'annual'"
                         class="text-sm font-medium transition-colors"
-                        :class="billingInterval === 'annual' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                        :class="billingInterval === 'annual' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'"
                     >
                         Annual
-                        <span class="ml-1.5 inline-flex items-center rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">Save 20%</span>
+                        <span class="ml-1.5 inline-flex items-center rounded-full bg-teal-100 dark:bg-teal-900/40 px-2 py-0.5 text-xs font-semibold text-teal-700 dark:text-teal-400">Save 20%</span>
                     </button>
                 </div>
 
                 <!-- Founding member banner -->
-                <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3">
+                <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3 flex items-start gap-3">
                     <span class="mt-0.5 h-4 w-4 shrink-0 text-amber-500">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                         </svg>
                     </span>
                     <div>
-                        <p class="text-sm font-semibold text-amber-800">Founding Member invite</p>
-                        <p class="text-xs text-amber-700 mt-0.5">Your price locks in at the founding rate — forever. No annual commitment required. Prices shown below.</p>
+                        <p class="text-sm font-semibold text-amber-800 dark:text-amber-400">Founding Member invite</p>
+                        <p class="text-xs text-amber-700 dark:text-amber-500 mt-0.5">Your price locks in at the founding rate — forever. No annual commitment required. Prices shown below.</p>
                     </div>
                 </div>
 
@@ -203,30 +203,30 @@ const submit = () => {
                         @click="choosePlan(p.key)"
                         class="w-full flex items-center gap-4 rounded-xl border-2 p-4 text-left transition-all"
                         :class="selectedPlan === p.key
-                            ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
-                            : 'border-slate-200 bg-white hover:border-slate-300'"
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/40 ring-1 ring-blue-500'
+                            : 'border-border bg-card hover:border-border/80'"
                     >
                         <!-- Radio indicator -->
                         <div class="shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center"
-                             :class="selectedPlan === p.key ? 'border-blue-600' : 'border-slate-300'">
+                             :class="selectedPlan === p.key ? 'border-blue-600' : 'border-input'">
                             <div v-if="selectedPlan === p.key" class="h-2.5 w-2.5 rounded-full bg-blue-600"></div>
                         </div>
 
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2">
-                                <span class="font-semibold text-slate-900">{{ p.name }}</span>
+                                <span class="font-semibold text-foreground">{{ p.name }}</span>
                                 <span v-if="p.popular"
-                                      class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                                      class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:text-blue-400">
                                     Most Popular
                                 </span>
                             </div>
-                            <p class="text-xs text-slate-500 mt-0.5">{{ p.seats }} &bull; {{ p.description }}</p>
+                            <p class="text-xs text-muted-foreground mt-0.5">{{ p.seats }} &bull; {{ p.description }}</p>
                         </div>
 
                         <div class="shrink-0 text-right">
-                            <span class="font-bold text-slate-900">${{ planPrice(p) }}</span>
-                            <span class="text-xs text-slate-400">/mo</span>
-                            <div v-if="isFoundingInvite || billingInterval === 'annual'" class="text-xs text-slate-400 line-through">${{ p.monthlyPrice }}/mo</div>
+                            <span class="font-bold text-foreground">${{ planPrice(p) }}</span>
+                            <span class="text-xs text-muted-foreground">/mo</span>
+                            <div v-if="isFoundingInvite || billingInterval === 'annual'" class="text-xs text-muted-foreground line-through">${{ p.monthlyPrice }}/mo</div>
                         </div>
                     </button>
                 </div>
@@ -242,9 +242,9 @@ const submit = () => {
                     </svg>
                 </button>
 
-                <p class="mt-4 text-center text-sm text-slate-500">
+                <p class="mt-4 text-center text-sm text-muted-foreground">
                     Already have an account?
-                    <Link :href="login()" class="text-blue-600 hover:text-blue-700 font-medium">Sign in</Link>
+                    <Link :href="login()" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">Sign in</Link>
                 </p>
             </div>
 
@@ -254,38 +254,38 @@ const submit = () => {
                     <!-- Back + plan indicator -->
                     <div class="flex items-center gap-3 mb-5">
                         <button type="button" @click="step = 1"
-                                class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 transition-colors">
+                                class="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
                             Back
                         </button>
-                        <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                        <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/40 px-3 py-1 text-xs font-semibold text-blue-700 dark:text-blue-400">
                             {{ selectedPlanLabel }} · {{ billingInterval === 'annual' ? 'Annual' : 'Monthly' }} — 14-day free trial
                         </span>
                     </div>
 
                     <!-- Founding member invite callout -->
-                    <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3">
+                    <div v-if="isFoundingInvite" class="mb-5 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3 flex items-start gap-3">
                         <span class="mt-0.5 h-4 w-4 shrink-0 text-amber-500">
                             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
                         </span>
                         <div>
-                            <p class="text-sm font-semibold text-amber-800">Founding Member invite</p>
-                            <p class="text-xs text-amber-700 mt-0.5">Your price locks in at the annual rate, billed monthly — forever. No annual commitment required.</p>
+                            <p class="text-sm font-semibold text-amber-800 dark:text-amber-400">Founding Member invite</p>
+                            <p class="text-xs text-amber-700 dark:text-amber-500 mt-0.5">Your price locks in at the annual rate, billed monthly — forever. No annual commitment required.</p>
                         </div>
                     </div>
 
-                    <h2 class="text-2xl font-bold text-slate-900">Create your account</h2>
-                    <p class="mt-1 text-sm text-slate-500">Get your team up and running today.</p>
+                    <h2 class="text-2xl font-bold text-foreground">Create your account</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">Get your team up and running today.</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5">
 
                     <div>
-                        <label for="company_name" class="block text-sm font-medium text-slate-700 mb-1.5">Company name</label>
+                        <label for="company_name" class="block text-sm font-medium text-foreground mb-1.5">Company name</label>
                         <input
                             id="company_name"
                             v-model="form.company_name"
@@ -294,14 +294,14 @@ const submit = () => {
                             required
                             autofocus
                             placeholder="Acme Field Services"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.company_name }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.company_name }"
                         />
-                        <p v-if="form.errors.company_name" class="mt-1.5 text-xs text-red-600">{{ form.errors.company_name }}</p>
+                        <p v-if="form.errors.company_name" class="mt-1.5 text-xs text-destructive">{{ form.errors.company_name }}</p>
                     </div>
 
                     <div>
-                        <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Your name</label>
+                        <label for="name" class="block text-sm font-medium text-foreground mb-1.5">Your name</label>
                         <input
                             id="name"
                             v-model="form.name"
@@ -309,14 +309,14 @@ const submit = () => {
                             autocomplete="name"
                             required
                             placeholder="Jane Smith"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.name }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.name }"
                         />
-                        <p v-if="form.errors.name" class="mt-1.5 text-xs text-red-600">{{ form.errors.name }}</p>
+                        <p v-if="form.errors.name" class="mt-1.5 text-xs text-destructive">{{ form.errors.name }}</p>
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Work email</label>
+                        <label for="email" class="block text-sm font-medium text-foreground mb-1.5">Work email</label>
                         <input
                             id="email"
                             v-model="form.email"
@@ -324,14 +324,14 @@ const submit = () => {
                             autocomplete="username"
                             required
                             placeholder="you@company.com"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.email }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.email }"
                         />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+                        <label for="password" class="block text-sm font-medium text-foreground mb-1.5">Password</label>
                         <input
                             id="password"
                             v-model="form.password"
@@ -339,14 +339,14 @@ const submit = () => {
                             autocomplete="new-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.password }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.password }"
                         />
-                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-red-600">{{ form.errors.password }}</p>
+                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-destructive">{{ form.errors.password }}</p>
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1.5">Confirm password</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-foreground mb-1.5">Confirm password</label>
                         <input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
@@ -354,10 +354,10 @@ const submit = () => {
                             autocomplete="new-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.password_confirmation }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.password_confirmation }"
                         />
-                        <p v-if="form.errors.password_confirmation" class="mt-1.5 text-xs text-red-600">{{ form.errors.password_confirmation }}</p>
+                        <p v-if="form.errors.password_confirmation" class="mt-1.5 text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
                     </div>
 
                     <button
@@ -372,13 +372,13 @@ const submit = () => {
                         {{ form.processing ? 'Creating account…' : 'Start free trial' }}
                     </button>
 
-                    <p class="text-center text-xs text-slate-400">
+                    <p class="text-center text-xs text-muted-foreground">
                         No credit card required. Cancel any time.
                     </p>
 
-                    <p class="text-center text-sm text-slate-500">
+                    <p class="text-center text-sm text-muted-foreground">
                         Already have an account?
-                        <Link :href="login()" class="text-blue-600 hover:text-blue-700 font-medium">Sign in</Link>
+                        <Link :href="login()" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">Sign in</Link>
                     </p>
                 </form>
             </div>

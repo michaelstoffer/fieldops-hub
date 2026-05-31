@@ -50,11 +50,11 @@ const props = defineProps<{
 }>();
 
 const STATUS_CLASSES: Record<string, string> = {
-    draft:    'bg-slate-100 text-slate-600',
-    sent:     'bg-blue-100 text-blue-700',
-    accepted: 'bg-green-100 text-green-700',
-    declined: 'bg-red-100 text-red-600',
-    expired:  'bg-amber-100 text-amber-700',
+    draft:    'bg-muted text-muted-foreground',
+    sent:     'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    accepted: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    declined: 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400',
+    expired:  'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
 };
 
 const TIER_LABELS: Record<string, string> = { good: 'Good', better: 'Better', best: 'Best' };
@@ -103,25 +103,25 @@ function formatCurrency(val: string | number): string {
         <Head :title="estimate.title" />
 
         <!-- Breadcrumb -->
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/estimates" class="hover:underline">Estimates</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">{{ estimate.estimate_number ?? estimate.title }}</span>
+            <span class="text-foreground">{{ estimate.estimate_number ?? estimate.title }}</span>
         </nav>
 
         <!-- Header -->
         <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
                 <div class="flex items-center gap-3">
-                    <h2 class="text-xl font-semibold text-slate-800">{{ estimate.title }}</h2>
+                    <h2 class="text-xl font-semibold text-foreground">{{ estimate.title }}</h2>
                     <span
                         class="rounded-full px-2.5 py-0.5 text-xs font-medium"
-                        :class="STATUS_CLASSES[estimate.status] ?? 'bg-slate-100 text-slate-600'"
+                        :class="STATUS_CLASSES[estimate.status] ?? 'bg-muted text-muted-foreground'"
                     >
                         {{ statuses[estimate.status] ?? estimate.status }}
                     </span>
                 </div>
-                <p v-if="estimate.customer" class="mt-1 text-sm text-slate-500">
+                <p v-if="estimate.customer" class="mt-1 text-sm text-muted-foreground">
                     {{ estimate.customer.first_name }} {{ estimate.customer.last_name }}
                 </p>
             </div>
@@ -129,7 +129,7 @@ function formatCurrency(val: string | number): string {
                 <Link
                     v-if="estimate.status === 'draft'"
                     :href="`/owner/estimates/${estimate.id}/edit`"
-                    class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    class="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent"
                 >
                     Edit
                 </Link>
@@ -159,7 +159,7 @@ function formatCurrency(val: string | number): string {
                 </Link>
                 <button
                     type="button"
-                    class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600"
+                    class="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-red-50 hover:text-red-600"
                     @click="deleteEstimate"
                 >
                     Delete
@@ -176,19 +176,19 @@ function formatCurrency(val: string | number): string {
 
         <!-- Meta -->
         <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-                <p class="text-xs text-slate-400">Number</p>
-                <p class="mt-1 font-mono text-sm font-medium text-slate-700">{{ estimate.estimate_number ?? '—' }}</p>
+            <div class="rounded-xl bg-card p-4 shadow-sm ring-1 ring-border">
+                <p class="text-xs text-muted-foreground">Number</p>
+                <p class="mt-1 font-mono text-sm font-medium text-foreground">{{ estimate.estimate_number ?? '—' }}</p>
             </div>
-            <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-                <p class="text-xs text-slate-400">Expires</p>
-                <p class="mt-1 text-sm font-medium text-slate-700">{{ formatDate(estimate.expires_at) }}</p>
+            <div class="rounded-xl bg-card p-4 shadow-sm ring-1 ring-border">
+                <p class="text-xs text-muted-foreground">Expires</p>
+                <p class="mt-1 text-sm font-medium text-foreground">{{ formatDate(estimate.expires_at) }}</p>
             </div>
-            <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-                <p class="text-xs text-slate-400">Sent</p>
-                <p class="mt-1 text-sm font-medium text-slate-700">{{ formatDate(estimate.sent_at) }}</p>
+            <div class="rounded-xl bg-card p-4 shadow-sm ring-1 ring-border">
+                <p class="text-xs text-muted-foreground">Sent</p>
+                <p class="mt-1 text-sm font-medium text-foreground">{{ formatDate(estimate.sent_at) }}</p>
             </div>
-            <div v-if="estimate.accepted_at" class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-green-200">
+            <div v-if="estimate.accepted_at" class="rounded-xl bg-card p-4 shadow-sm ring-1 ring-green-200">
                 <p class="text-xs text-green-500">Accepted</p>
                 <p class="mt-1 text-sm font-medium text-green-700">
                     {{ formatDate(estimate.accepted_at) }} · {{ TIER_LABELS[estimate.accepted_package ?? ''] ?? estimate.accepted_package }}
@@ -197,8 +197,8 @@ function formatCurrency(val: string | number): string {
         </div>
 
         <!-- Intro -->
-        <div v-if="estimate.intro" class="mb-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-            <p class="whitespace-pre-wrap text-sm text-slate-600">{{ estimate.intro }}</p>
+        <div v-if="estimate.intro" class="mb-4 rounded-xl bg-card p-4 shadow-sm ring-1 ring-border">
+            <p class="whitespace-pre-wrap text-sm text-muted-foreground">{{ estimate.intro }}</p>
         </div>
 
         <!-- Packages -->
@@ -206,51 +206,51 @@ function formatCurrency(val: string | number): string {
             <div
                 v-for="pkg in estimate.packages"
                 :key="pkg.id"
-                class="rounded-xl bg-white shadow-sm ring-1"
-                :class="pkg.is_recommended ? 'ring-blue-400' : 'ring-slate-200'"
+                class="rounded-xl bg-card shadow-sm ring-1"
+                :class="pkg.is_recommended ? 'ring-blue-400' : 'ring-border'"
             >
                 <!-- Package header -->
                 <div
                     class="flex items-center justify-between rounded-t-xl px-4 py-3"
-                    :class="pkg.is_recommended ? 'bg-blue-50' : 'bg-slate-50'"
+                    :class="pkg.is_recommended ? 'bg-blue-50' : 'bg-background'"
                 >
                     <div class="flex items-center gap-2">
-                        <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ TIER_LABELS[pkg.tier] ?? pkg.tier }}</span>
-                        <span class="font-semibold text-slate-800">{{ pkg.label }}</span>
+                        <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{{ TIER_LABELS[pkg.tier] ?? pkg.tier }}</span>
+                        <span class="font-semibold text-foreground">{{ pkg.label }}</span>
                         <span v-if="pkg.is_recommended" class="rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">Recommended</span>
                         <span v-if="estimate.accepted_package === pkg.tier" class="rounded-full bg-green-600 px-2 py-0.5 text-xs font-medium text-white">Accepted</span>
                     </div>
-                    <span class="text-lg font-bold text-slate-800">{{ formatCurrency(pkg.total) }}</span>
+                    <span class="text-lg font-bold text-foreground">{{ formatCurrency(pkg.total) }}</span>
                 </div>
 
                 <!-- Description -->
-                <p v-if="pkg.description" class="border-b border-slate-100 px-4 py-2 text-sm text-slate-500">{{ pkg.description }}</p>
+                <p v-if="pkg.description" class="border-b border-border px-4 py-2 text-sm text-muted-foreground">{{ pkg.description }}</p>
 
                 <!-- Line items -->
-                <table class="min-w-full divide-y divide-slate-100 text-sm">
+                <table class="min-w-full divide-y divide-border text-sm">
                     <thead>
-                        <tr class="text-xs text-slate-400">
+                        <tr class="text-xs text-muted-foreground">
                             <th class="px-4 py-2 text-left font-medium">Item</th>
                             <th class="px-4 py-2 text-right font-medium">Qty</th>
                             <th class="px-4 py-2 text-right font-medium">Unit Price</th>
                             <th class="px-4 py-2 text-right font-medium">Total</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
+                    <tbody class="divide-y divide-border/50">
                         <tr v-for="li in pkg.line_items" :key="li.id">
-                            <td class="px-4 py-2.5 text-slate-700">
+                            <td class="px-4 py-2.5 text-foreground">
                                 {{ li.name }}
-                                <span v-if="!li.is_taxable" class="ml-1 text-xs text-slate-400">(non-taxable)</span>
+                                <span v-if="!li.is_taxable" class="ml-1 text-xs text-muted-foreground">(non-taxable)</span>
                             </td>
-                            <td class="px-4 py-2.5 text-right text-slate-500">{{ li.quantity }}</td>
-                            <td class="px-4 py-2.5 text-right text-slate-500">{{ formatCurrency(li.unit_price) }}</td>
-                            <td class="px-4 py-2.5 text-right font-medium text-slate-700">{{ formatCurrency(li.total) }}</td>
+                            <td class="px-4 py-2.5 text-right text-muted-foreground">{{ li.quantity }}</td>
+                            <td class="px-4 py-2.5 text-right text-muted-foreground">{{ formatCurrency(li.unit_price) }}</td>
+                            <td class="px-4 py-2.5 text-right font-medium text-foreground">{{ formatCurrency(li.total) }}</td>
                         </tr>
                         <tr v-if="pkg.line_items.length === 0">
-                            <td colspan="4" class="px-4 py-3 text-center text-xs text-slate-400">No line items.</td>
+                            <td colspan="4" class="px-4 py-3 text-center text-xs text-muted-foreground">No line items.</td>
                         </tr>
                     </tbody>
-                    <tfoot class="border-t border-slate-200 bg-slate-50 text-xs text-slate-500">
+                    <tfoot class="border-t border-border bg-background text-xs text-muted-foreground">
                         <tr>
                             <td colspan="3" class="px-4 py-2 text-right">Subtotal</td>
                             <td class="px-4 py-2 text-right font-medium">{{ formatCurrency(pkg.subtotal) }}</td>
@@ -259,7 +259,7 @@ function formatCurrency(val: string | number): string {
                             <td colspan="3" class="px-4 py-2 text-right">Tax ({{ (Number(estimate.tax_rate) * 100).toFixed(2) }}%)</td>
                             <td class="px-4 py-2 text-right font-medium">{{ formatCurrency(pkg.tax_amount) }}</td>
                         </tr>
-                        <tr class="text-slate-700">
+                        <tr class="text-foreground">
                             <td colspan="3" class="px-4 py-2 text-right font-semibold">Total</td>
                             <td class="px-4 py-2 text-right font-bold">{{ formatCurrency(pkg.total) }}</td>
                         </tr>
@@ -269,32 +269,32 @@ function formatCurrency(val: string | number): string {
         </div>
 
         <!-- Footer -->
-        <div v-if="estimate.footer" class="mt-4 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-            <p class="whitespace-pre-wrap text-sm text-slate-500">{{ estimate.footer }}</p>
+        <div v-if="estimate.footer" class="mt-4 rounded-xl bg-card p-4 shadow-sm ring-1 ring-border">
+            <p class="whitespace-pre-wrap text-sm text-muted-foreground">{{ estimate.footer }}</p>
         </div>
 
         <!-- Send confirmation modal -->
         <div v-if="showSendModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-            <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-                <h3 class="text-base font-semibold text-slate-800">Send Estimate to Customer?</h3>
-                <p class="mt-1 text-sm text-slate-500">This will send the estimate link to the customer by email.</p>
-                <dl class="mt-4 space-y-2 rounded-lg bg-slate-50 px-4 py-3 text-sm">
+            <div class="w-full max-w-md rounded-xl bg-card p-6 shadow-xl">
+                <h3 class="text-base font-semibold text-foreground">Send Estimate to Customer?</h3>
+                <p class="mt-1 text-sm text-muted-foreground">This will send the estimate link to the customer by email.</p>
+                <dl class="mt-4 space-y-2 rounded-lg bg-background px-4 py-3 text-sm">
                     <div class="flex gap-2">
-                        <dt class="w-16 shrink-0 font-medium text-slate-500">To:</dt>
-                        <dd class="text-slate-800">
+                        <dt class="w-16 shrink-0 font-medium text-muted-foreground">To:</dt>
+                        <dd class="text-foreground">
                             {{ estimate.customer ? `${estimate.customer.first_name} ${estimate.customer.last_name}` : '—' }}
-                            <span v-if="estimate.customer?.email" class="text-slate-500">({{ estimate.customer.email }})</span>
+                            <span v-if="estimate.customer?.email" class="text-muted-foreground">({{ estimate.customer.email }})</span>
                         </dd>
                     </div>
                     <div class="flex gap-2">
-                        <dt class="w-16 shrink-0 font-medium text-slate-500">Link:</dt>
+                        <dt class="w-16 shrink-0 font-medium text-muted-foreground">Link:</dt>
                         <dd class="truncate text-blue-600">{{ publicUrl }}</dd>
                     </div>
                 </dl>
                 <div class="mt-5 flex justify-end gap-2">
                     <button
                         type="button"
-                        class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                        class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                         @click="showSendModal = false"
                     >
                         Cancel

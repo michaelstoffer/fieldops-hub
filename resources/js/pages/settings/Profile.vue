@@ -27,47 +27,47 @@ const submitDelete = () => deleteForm.delete('/settings/profile', { preserveScro
             <!-- Profile information -->
             <div class="space-y-6">
                 <div>
-                    <h3 class="text-base font-medium text-slate-900">Profile information</h3>
-                    <p class="text-sm text-slate-500">Update your name and email address.</p>
+                    <h3 class="text-base font-medium text-foreground">Profile information</h3>
+                    <p class="text-sm text-muted-foreground">Update your name and email address.</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5 max-w-md">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Name</label>
+                        <label for="name" class="block text-sm font-medium text-foreground mb-1.5">Name</label>
                         <input
                             id="name"
                             v-model="form.name"
                             type="text"
                             autocomplete="name"
                             required
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400': form.errors.name }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition placeholder:text-muted-foreground"
+                            :class="{ 'border-destructive': form.errors.name }"
                         />
                         <InputError :message="form.errors.name" class="mt-1.5" />
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
+                        <label for="email" class="block text-sm font-medium text-foreground mb-1.5">Email address</label>
                         <input
                             id="email"
                             v-model="form.email"
                             type="email"
                             autocomplete="username"
                             required
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400': form.errors.email }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition placeholder:text-muted-foreground"
+                            :class="{ 'border-destructive': form.errors.email }"
                         />
                         <InputError :message="form.errors.email" class="mt-1.5" />
 
-                        <div v-if="mustVerifyEmail && !user.email_verified_at" class="mt-2 text-sm text-slate-500">
+                        <div v-if="mustVerifyEmail && !user.email_verified_at" class="mt-2 text-sm text-muted-foreground">
                             Your email address is unverified.
                             <button
                                 type="button"
-                                class="text-blue-600 underline hover:text-blue-700"
+                                class="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300"
                                 @click="$inertia.post('/email/verification-notification')"
                             >Resend verification email.</button>
                         </div>
-                        <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm text-green-600">
+                        <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm text-green-600 dark:text-green-400">
                             A new verification link has been sent to your email address.
                         </div>
                     </div>
@@ -79,7 +79,7 @@ const submitDelete = () => deleteForm.delete('/settings/profile', { preserveScro
                             class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                         >Save</button>
                         <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition" leave-active-class="transition">
-                            <span v-show="form.recentlySuccessful" class="text-sm text-slate-500">Saved.</span>
+                            <span v-show="form.recentlySuccessful" class="text-sm text-muted-foreground">Saved.</span>
                         </Transition>
                     </div>
                 </form>
@@ -88,19 +88,19 @@ const submitDelete = () => deleteForm.delete('/settings/profile', { preserveScro
             <!-- Delete account -->
             <div class="space-y-4">
                 <div>
-                    <h3 class="text-base font-medium text-slate-900">Delete account</h3>
-                    <p class="text-sm text-slate-500">Permanently delete your account and all data.</p>
+                    <h3 class="text-base font-medium text-foreground">Delete account</h3>
+                    <p class="text-sm text-muted-foreground">Permanently delete your account and all data.</p>
                 </div>
 
-                <div class="rounded-lg border border-red-200 bg-red-50 p-4 space-y-4">
-                    <p class="text-sm font-medium text-red-700">Warning — this cannot be undone.</p>
+                <div class="rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 space-y-4">
+                    <p class="text-sm font-medium text-red-700 dark:text-red-400">Warning — this cannot be undone.</p>
                     <details class="group">
-                        <summary class="cursor-pointer text-sm font-semibold text-red-700 list-none flex items-center gap-2">
+                        <summary class="cursor-pointer text-sm font-semibold text-red-700 dark:text-red-400 list-none flex items-center gap-2">
                             <span>Delete my account</span>
                         </summary>
                         <form @submit.prevent="submitDelete" class="mt-4 space-y-4">
                             <div>
-                                <label for="delete-password" class="block text-sm font-medium text-slate-700 mb-1.5">Confirm your password</label>
+                                <label for="delete-password" class="block text-sm font-medium text-foreground mb-1.5">Confirm your password</label>
                                 <input
                                     id="delete-password"
                                     v-model="deleteForm.password"
@@ -108,8 +108,8 @@ const submitDelete = () => deleteForm.delete('/settings/profile', { preserveScro
                                     autocomplete="current-password"
                                     required
                                     placeholder="••••••••"
-                                    class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
-                                    :class="{ 'border-red-400': deleteForm.errors.password }"
+                                    class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition"
+                                    :class="{ 'border-destructive': deleteForm.errors.password }"
                                 />
                                 <InputError :message="deleteForm.errors.password" class="mt-1.5" />
                             </div>

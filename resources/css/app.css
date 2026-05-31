@@ -76,6 +76,7 @@
     --radius-xl: calc(var(--radius) + 4px);
 }
 
+
 @font-face {
     font-family: 'Figtree';
     font-style: normal;
@@ -102,4 +103,16 @@
 
 html {
     scroll-behavior: smooth;
+}
+
+@layer utilities {
+    .divide-border > * + * {
+        border-color: hsl(var(--border));
+    }
+    .border-border {
+        border-color: hsl(var(--border));
+    }
+    .ring-border {
+        --tw-ring-color: hsl(var(--border));
+    }
 }

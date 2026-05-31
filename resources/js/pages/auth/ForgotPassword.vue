@@ -13,7 +13,7 @@ const submit = () => form.post(passwordEmail.url());
 
     <div class="min-h-screen flex">
 
-        <!-- Left branding panel -->
+        <!-- Left branding panel — intentionally always dark -->
         <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 bg-slate-900 overflow-hidden">
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_#1e40af55_0%,_transparent_60%)]"></div>
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_#0f766e44_0%,_transparent_60%)]"></div>
@@ -43,7 +43,7 @@ const submit = () => form.post(passwordEmail.url());
         </div>
 
         <!-- Right form panel -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-background">
 
             <Link href="/" class="lg:hidden flex items-center gap-2 mb-10 group">
                 <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
@@ -51,22 +51,22 @@ const submit = () => form.post(passwordEmail.url());
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight">FieldOps Hub</span>
+                <span class="font-semibold text-foreground text-base tracking-tight">FieldOps Hub</span>
             </Link>
 
             <div class="w-full max-w-sm">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Forgot your password?</h2>
-                    <p class="mt-1 text-sm text-slate-500">Enter your email and we'll send you a reset link.</p>
+                    <h2 class="text-2xl font-bold text-foreground">Forgot your password?</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">Enter your email and we'll send you a reset link.</p>
                 </div>
 
-                <div v-if="status" class="mb-5 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                <div v-if="status" class="mb-5 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-700 dark:text-green-400">
                     {{ status }}
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
+                        <label for="email" class="block text-sm font-medium text-foreground mb-1.5">Email address</label>
                         <input
                             id="email"
                             v-model="form.email"
@@ -75,10 +75,10 @@ const submit = () => form.post(passwordEmail.url());
                             required
                             autofocus
                             placeholder="you@company.com"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.email }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.email }"
                         />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
                     </div>
 
                     <button
@@ -94,9 +94,9 @@ const submit = () => form.post(passwordEmail.url());
                     </button>
                 </form>
 
-                <p class="mt-6 text-center text-sm text-slate-500">
+                <p class="mt-6 text-center text-sm text-muted-foreground">
                     Remember it?
-                    <Link href="/login" class="text-blue-600 hover:text-blue-700 font-medium">Back to sign in</Link>
+                    <Link href="/login" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">Back to sign in</Link>
                 </p>
             </div>
         </div>

@@ -104,7 +104,7 @@ function submit() {
         <Head title="Company Settings" />
 
         <div class="mb-6 flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-800">Company Settings</h2>
+            <h2 class="text-xl font-semibold text-foreground">Company Settings</h2>
         </div>
 
         <div v-if="(page.props as any).flash?.success"
@@ -116,22 +116,22 @@ function submit() {
             <div class="space-y-6">
 
                 <!-- Logo -->
-                <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="text-sm font-semibold text-slate-700 mb-4">Branding</h3>
+                <div class="bg-card rounded-xl shadow p-6">
+                    <h3 class="text-sm font-semibold text-foreground mb-4">Branding</h3>
                     <div class="flex items-center gap-4">
                         <div class="relative">
                             <img v-if="logoPreview" :src="logoPreview"
-                                alt="Company logo" class="w-20 h-20 object-contain rounded border border-slate-200" />
-                            <div v-else class="w-20 h-20 rounded border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-400 text-xs">
+                                alt="Company logo" class="w-20 h-20 object-contain rounded border border-border" />
+                            <div v-else class="w-20 h-20 rounded border border-border bg-background flex items-center justify-center text-muted-foreground text-xs">
                                 No logo
                             </div>
                         </div>
                         <div class="space-y-2">
                             <div>
-                                <label class="block text-xs text-slate-500 mb-1">Upload Logo</label>
+                                <label class="block text-xs text-muted-foreground mb-1">Upload Logo</label>
                                 <input type="file" accept="image/*" @change="onLogoChange"
-                                    class="text-sm text-slate-600" />
-                                <p class="text-xs text-slate-400 mt-1">PNG, JPG, SVG up to 2MB</p>
+                                    class="text-sm text-muted-foreground" />
+                                <p class="text-xs text-muted-foreground mt-1">PNG, JPG, SVG up to 2MB</p>
                             </div>
                             <button
                                 v-if="logoPreview && !logoFile"
@@ -146,68 +146,68 @@ function submit() {
                 </div>
 
                 <!-- Company info -->
-                <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="text-sm font-semibold text-slate-700 mb-4">Company Info</h3>
+                <div class="bg-card rounded-xl shadow p-6">
+                    <h3 class="text-sm font-semibold text-foreground mb-4">Company Info</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs text-slate-500 mb-1">Company Name</label>
+                            <label class="block text-xs text-muted-foreground mb-1">Company Name</label>
                             <input v-model="form.company_name" type="text"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-500 mb-1">Email</label>
+                            <label class="block text-xs text-muted-foreground mb-1">Email</label>
                             <input v-model="form.company_email" type="email"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-500 mb-1">Phone</label>
+                            <label class="block text-xs text-muted-foreground mb-1">Phone</label>
                             <input
                                 :value="form.company_phone"
                                 @input="onPhoneInput($event, v => form.company_phone = v)"
                                 type="tel"
                                 placeholder="(555) 555-5555"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-500 mb-1">Website</label>
-                            <div class="flex rounded border border-slate-300 overflow-hidden focus-within:ring-1 focus-within:ring-slate-400 focus-within:border-slate-400">
-                                <span class="flex items-center bg-slate-50 border-r border-slate-300 px-3 text-sm text-slate-400 select-none whitespace-nowrap">https://</span>
+                            <label class="block text-xs text-muted-foreground mb-1">Website</label>
+                            <div class="flex rounded border border-input overflow-hidden focus-within:ring-1 focus-within:ring-slate-400 focus-within:border-slate-400">
+                                <span class="flex items-center bg-background border-r border-input px-3 text-sm text-muted-foreground select-none whitespace-nowrap">https://</span>
                                 <input v-model="form.company_website" type="text"
-                                    class="flex-1 min-w-0 px-3 py-2 text-sm bg-white focus:outline-none" placeholder="yourcompany.com" />
+                                    class="flex-1 min-w-0 px-3 py-2 text-sm bg-background focus:outline-none" placeholder="yourcompany.com" />
                             </div>
                         </div>
                         <div class="sm:col-span-2">
-                            <label class="block text-xs text-slate-500 mb-1">Address</label>
+                            <label class="block text-xs text-muted-foreground mb-1">Address</label>
                             <input v-model="form.company_address" type="text"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                         </div>
                         <div>
-                            <label class="block text-xs text-slate-500 mb-1">City</label>
+                            <label class="block text-xs text-muted-foreground mb-1">City</label>
                             <input v-model="form.company_city" type="text"
-                                class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label class="block text-xs text-slate-500 mb-1">State</label>
+                                <label class="block text-xs text-muted-foreground mb-1">State</label>
                                 <input v-model="form.company_state" type="text" maxlength="10"
-                                    class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                    class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                             </div>
                             <div>
-                                <label class="block text-xs text-slate-500 mb-1">ZIP</label>
+                                <label class="block text-xs text-muted-foreground mb-1">ZIP</label>
                                 <input v-model="form.company_zip" type="text" maxlength="20"
-                                    class="w-full border border-slate-300 rounded px-3 py-2 text-sm" />
+                                    class="w-full border border-input bg-background rounded px-3 py-2 text-sm" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tax -->
-                <div class="bg-white rounded-xl shadow p-6">
-                    <h3 class="text-sm font-semibold text-slate-700 mb-4">Billing Defaults</h3>
+                <div class="bg-card rounded-xl shadow p-6">
+                    <h3 class="text-sm font-semibold text-foreground mb-4">Billing Defaults</h3>
                     <div class="max-w-xs">
-                        <label class="block text-xs text-slate-500 mb-1">Default Tax Rate (%)</label>
+                        <label class="block text-xs text-muted-foreground mb-1">Default Tax Rate (%)</label>
                         <input v-model="form.default_tax_rate" type="number" step="0.01" min="0" max="100"
-                            class="w-full border border-slate-300 rounded px-3 py-2 text-sm"
+                            class="w-full border border-input bg-background rounded px-3 py-2 text-sm"
                             placeholder="e.g. 8.25" />
                     </div>
                 </div>

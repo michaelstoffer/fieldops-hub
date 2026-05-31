@@ -166,39 +166,39 @@ function formatCurrency(val: number): string {
         <Head :title="isEdit ? 'Edit Estimate' : 'New Estimate'" />
 
         <!-- Breadcrumb -->
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/estimates" class="hover:underline">Estimates</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">{{ isEdit ? 'Edit' : 'New' }}</span>
+            <span class="text-foreground">{{ isEdit ? 'Edit' : 'New' }}</span>
         </nav>
 
         <form @submit.prevent="submit" class="space-y-6">
             <!-- Basic details -->
-            <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h3 class="mb-4 text-sm font-semibold text-slate-700">Details</h3>
+            <div class="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border">
+                <h3 class="mb-4 text-sm font-semibold text-foreground">Details</h3>
                 <div class="grid gap-4 sm:grid-cols-2">
                     <!-- Customer -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Customer <span class="text-red-500">*</span></label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Customer <span class="text-red-500">*</span></label>
                         <select
                             v-model="form.customer_id"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                            :class="{ 'border-red-400': form.errors.customer_id }"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            :class="{ 'border-destructive': form.errors.customer_id }"
                         >
                             <option :value="null">Select customer…</option>
                             <option v-for="c in customers" :key="c.id" :value="c.id">
                                 {{ c.first_name }} {{ c.last_name }}
                             </option>
                         </select>
-                        <p v-if="form.errors.customer_id" class="mt-1 text-xs text-red-500">{{ form.errors.customer_id }}</p>
+                        <p v-if="form.errors.customer_id" class="mt-1 text-xs text-destructive">{{ form.errors.customer_id }}</p>
                     </div>
 
                     <!-- Job (optional) -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Related Job</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Related Job</label>
                         <select
                             v-model="form.job_id"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                         >
                             <option :value="null">None</option>
                             <option v-for="j in jobs" :key="j.id" :value="j.id">{{ j.title }}</option>
@@ -207,58 +207,58 @@ function formatCurrency(val: number): string {
 
                     <!-- Title -->
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Title <span class="text-red-500">*</span></label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Title <span class="text-red-500">*</span></label>
                         <input
                             v-model="form.title"
                             type="text"
                             placeholder="e.g. HVAC Service Estimate"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                            :class="{ 'border-red-400': form.errors.title }"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            :class="{ 'border-destructive': form.errors.title }"
                         />
-                        <p v-if="form.errors.title" class="mt-1 text-xs text-red-500">{{ form.errors.title }}</p>
+                        <p v-if="form.errors.title" class="mt-1 text-xs text-destructive">{{ form.errors.title }}</p>
                     </div>
 
                     <!-- Expires at -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Expires</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Expires</label>
                         <input
                             v-model="form.expires_at"
                             type="date"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                         />
                     </div>
 
                     <!-- Tax rate -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Tax Rate (%)</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Tax Rate (%)</label>
                         <input
                             v-model="form.tax_rate"
                             type="number"
                             min="0"
                             max="100"
                             step="0.01"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                         />
                     </div>
 
                     <!-- Intro -->
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Intro (shown above packages)</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Intro (shown above packages)</label>
                         <textarea
                             v-model="form.intro"
                             rows="2"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                             placeholder="Thank you for the opportunity…"
                         />
                     </div>
 
                     <!-- Footer -->
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Footer (shown below packages)</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Footer (shown below packages)</label>
                         <textarea
                             v-model="form.footer"
                             rows="2"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                             placeholder="Prices valid for 30 days…"
                         />
                     </div>
@@ -274,12 +274,12 @@ function formatCurrency(val: number): string {
                     class="rounded-lg border px-3 py-1.5 text-sm font-medium transition"
                     :class="activeTiers.has(tier)
                         ? 'border-slate-800 bg-slate-800 text-white'
-                        : 'border-slate-200 text-slate-500'"
+                        : 'border-border text-muted-foreground'"
                     @click="toggleTier(tier)"
                 >
                     {{ TIER_LABELS[tier] ?? tier }}
                 </button>
-                <p class="ml-2 self-center text-xs text-slate-400">Toggle tiers to include in estimate</p>
+                <p class="ml-2 self-center text-xs text-muted-foreground">Toggle tiers to include in estimate</p>
             </div>
 
             <!-- Package builders -->
@@ -287,36 +287,36 @@ function formatCurrency(val: number): string {
                 v-for="pkg in form.packages"
                 v-show="activeTiers.has(pkg.tier)"
                 :key="pkg.tier"
-                class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200"
+                class="rounded-xl bg-card shadow-sm ring-1 ring-border"
             >
                 <!-- Package header -->
-                <div class="flex flex-wrap items-center gap-4 border-b border-slate-100 px-4 py-3">
-                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">{{ TIER_LABELS[pkg.tier] ?? pkg.tier }}</span>
+                <div class="flex flex-wrap items-center gap-4 border-b border-border px-4 py-3">
+                    <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{{ TIER_LABELS[pkg.tier] ?? pkg.tier }}</span>
                     <input
                         v-model="pkg.label"
                         type="text"
                         placeholder="Package label"
-                        class="flex-1 rounded border-0 bg-transparent text-sm font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-300 px-1 py-0.5"
+                        class="flex-1 rounded border-0 bg-transparent text-sm font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-border px-1 py-0.5"
                     />
-                    <label class="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
+                    <label class="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer">
                         <input v-model="pkg.is_recommended" type="checkbox" class="rounded" />
                         Recommended
                     </label>
-                    <span class="ml-auto text-sm font-bold text-slate-700">{{ formatCurrency(packageTotal(pkg)) }}</span>
+                    <span class="ml-auto text-sm font-bold text-foreground">{{ formatCurrency(packageTotal(pkg)) }}</span>
                 </div>
 
                 <!-- Description -->
-                <div class="px-4 py-2 border-b border-slate-50">
+                <div class="px-4 py-2 border-b border-border/50">
                     <input
                         v-model="pkg.description"
                         type="text"
                         placeholder="Package description (optional)…"
-                        class="w-full rounded border-0 bg-transparent text-sm text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-200 px-1 py-0.5"
+                        class="w-full rounded border-0 bg-transparent text-sm text-muted-foreground focus:outline-none focus:ring-1 focus:ring-border/50 px-1 py-0.5"
                     />
                 </div>
 
                 <!-- Line items -->
-                <div class="divide-y divide-slate-50">
+                <div class="divide-y divide-border/50">
                     <div
                         v-for="(li, idx) in pkg.line_items"
                         :key="idx"
@@ -325,7 +325,7 @@ function formatCurrency(val: number): string {
                         <!-- Catalog picker -->
                         <div class="col-span-12 sm:col-span-4">
                             <select
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-xs text-slate-600 focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:border-slate-400 focus:outline-none"
                                 @change="selectCatalog(pkg, idx, ($event.target as HTMLSelectElement).value ? Number(($event.target as HTMLSelectElement).value) : null)"
                             >
                                 <option value="">From catalog…</option>
@@ -335,7 +335,7 @@ function formatCurrency(val: number): string {
                                 v-model="li.name"
                                 type="text"
                                 placeholder="Item name *"
-                                class="mt-1 w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-slate-800 focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Description -->
@@ -344,7 +344,7 @@ function formatCurrency(val: number): string {
                                 v-model="li.description"
                                 type="text"
                                 placeholder="Description"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-slate-600 focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-muted-foreground focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Qty -->
@@ -355,7 +355,7 @@ function formatCurrency(val: number): string {
                                 min="0.001"
                                 step="any"
                                 placeholder="Qty"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Unit price -->
@@ -366,16 +366,16 @@ function formatCurrency(val: number): string {
                                 min="0"
                                 step="0.01"
                                 placeholder="Price"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Total -->
-                        <div class="col-span-3 sm:col-span-1 text-right text-sm font-medium text-slate-700 pt-2">
+                        <div class="col-span-3 sm:col-span-1 text-right text-sm font-medium text-foreground pt-2">
                             {{ formatCurrency(parseFloat(li.unit_price || '0') * parseFloat(li.quantity || '0')) }}
                         </div>
                         <!-- Taxable + remove -->
                         <div class="col-span-2 sm:col-span-1 flex flex-col items-center gap-1 pt-1">
-                            <label class="text-xs text-slate-400 cursor-pointer" title="Taxable">
+                            <label class="text-xs text-muted-foreground cursor-pointer" title="Taxable">
                                 <input v-model="li.is_taxable" type="checkbox" class="rounded" /> Tax
                             </label>
                             <button
@@ -390,7 +390,7 @@ function formatCurrency(val: number): string {
                 </div>
 
                 <!-- Add line item -->
-                <div class="border-t border-slate-100 px-4 py-2">
+                <div class="border-t border-border px-4 py-2">
                     <button
                         type="button"
                         class="text-xs font-medium text-blue-600 hover:underline"
@@ -405,7 +405,7 @@ function formatCurrency(val: number): string {
             <div class="flex justify-end gap-3">
                 <Link
                     :href="isEdit ? `/owner/estimates/${estimate!.id}` : '/owner/estimates'"
-                    class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                    class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                 >
                     Cancel
                 </Link>

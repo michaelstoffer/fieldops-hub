@@ -27,13 +27,13 @@ const submit = () => form.put('/settings/password', {
         <SettingsLayout>
             <div class="space-y-6">
                 <div>
-                    <h3 class="text-base font-medium text-slate-900">Update password</h3>
-                    <p class="text-sm text-slate-500">Ensure your account uses a long, random password.</p>
+                    <h3 class="text-base font-medium text-foreground">Update password</h3>
+                    <p class="text-sm text-muted-foreground">Ensure your account uses a long, random password.</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5 max-w-md">
                     <div>
-                        <label for="current_password" class="block text-sm font-medium text-slate-700 mb-1.5">Current password</label>
+                        <label for="current_password" class="block text-sm font-medium text-foreground mb-1.5">Current password</label>
                         <input
                             id="current_password"
                             v-model="form.current_password"
@@ -41,14 +41,14 @@ const submit = () => form.put('/settings/password', {
                             autocomplete="current-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
                             :class="{ 'border-red-400': form.errors.current_password }"
                         />
                         <InputError :message="form.errors.current_password" class="mt-1.5" />
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">New password</label>
+                        <label for="password" class="block text-sm font-medium text-foreground mb-1.5">New password</label>
                         <input
                             id="password"
                             v-model="form.password"
@@ -56,14 +56,14 @@ const submit = () => form.put('/settings/password', {
                             autocomplete="new-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
                             :class="{ 'border-red-400': form.errors.password }"
                         />
                         <InputError :message="form.errors.password" class="mt-1.5" />
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1.5">Confirm new password</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-foreground mb-1.5">Confirm new password</label>
                         <input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
@@ -71,7 +71,7 @@ const submit = () => form.put('/settings/password', {
                             autocomplete="new-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
                             :class="{ 'border-red-400': form.errors.password_confirmation }"
                         />
                         <InputError :message="form.errors.password_confirmation" class="mt-1.5" />
@@ -84,7 +84,7 @@ const submit = () => form.put('/settings/password', {
                             class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
                         >Save password</button>
                         <Transition enter-from-class="opacity-0" leave-to-class="opacity-0" enter-active-class="transition" leave-active-class="transition">
-                            <span v-show="form.recentlySuccessful" class="text-sm text-slate-500">Saved.</span>
+                            <span v-show="form.recentlySuccessful" class="text-sm text-muted-foreground">Saved.</span>
                         </Transition>
                     </div>
                 </form>

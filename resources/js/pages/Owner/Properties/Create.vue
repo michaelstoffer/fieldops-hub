@@ -31,20 +31,20 @@ function submit() {
     <OwnerLayout title="Add Property">
         <Head title="Add Property" />
 
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/customers" class="hover:underline">Customers</Link>
             <span class="mx-1">›</span>
             <Link :href="`/owner/customers/${customer.id}`" class="hover:underline">
                 {{ customer.first_name }} {{ customer.last_name }}
             </Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">Add Property</span>
+            <span class="text-foreground">Add Property</span>
         </nav>
 
         <div class="max-w-2xl">
-            <div class="rounded-xl bg-white shadow">
-                <div class="border-b border-slate-100 px-6 py-4">
-                    <h2 class="text-base font-semibold text-slate-800">New Property</h2>
+            <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                <div class="border-b border-border px-6 py-4">
+                    <h2 class="text-base font-semibold text-foreground">New Property</h2>
                 </div>
                 <form @submit.prevent="submit" class="px-6 py-5">
                     <PropertyForm :form="form" />
@@ -53,13 +53,13 @@ function submit() {
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="inline-flex items-center rounded-lg bg-slate-800 px-5 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+                            class="inline-flex items-center rounded-lg bg-slate-800 px-5 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-700 dark:hover:bg-slate-600"
                         >
                             Save Property
                         </button>
                         <Link
                             :href="`/owner/customers/${customer.id}`"
-                            class="text-sm text-slate-500 hover:text-slate-700"
+                            class="text-sm text-muted-foreground hover:text-foreground"
                         >
                             Cancel
                         </Link>

@@ -46,7 +46,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         </div>
 
         <!-- Right form panel -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-background">
 
             <Link href="/" class="lg:hidden flex items-center gap-2 mb-10 group">
                 <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
@@ -54,18 +54,18 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight">FieldOps Hub</span>
+                <span class="font-semibold text-foreground text-base tracking-tight">FieldOps Hub</span>
             </Link>
 
             <div class="w-full max-w-sm">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Check your inbox</h2>
-                    <p class="mt-1 text-sm text-slate-500">
+                    <h2 class="text-2xl font-bold text-foreground">Check your inbox</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">
                         Thanks for signing up. Click the verification link we sent to your email to activate your account.
                     </p>
                 </div>
 
-                <div v-if="verificationLinkSent" class="mb-5 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                <div v-if="verificationLinkSent" class="mb-5 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400">
                     A new verification link has been sent to your email address.
                 </div>
 
@@ -83,7 +83,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     </button>
                 </form>
 
-                <p class="mt-6 text-center text-sm text-slate-500">
+                <p class="mt-6 text-center text-sm text-muted-foreground">
                     Wrong account?
                     <Link :href="logout()" method="post" as="button" class="text-blue-600 hover:text-blue-700 font-medium">Sign out</Link>
                 </p>

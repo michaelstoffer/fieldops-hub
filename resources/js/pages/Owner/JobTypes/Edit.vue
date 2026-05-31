@@ -29,16 +29,16 @@ function submit() {
     <OwnerLayout title="Edit Job Type">
         <Head title="Edit Job Type" />
 
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/job-types" class="hover:underline">Job Types</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">Edit</span>
+            <span class="text-foreground">Edit</span>
         </nav>
 
         <div class="max-w-xl">
-            <div class="rounded-xl bg-white shadow">
-                <div class="border-b border-slate-100 px-6 py-4">
-                    <h2 class="text-base font-semibold text-slate-800">Edit Job Type</h2>
+            <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                <div class="border-b border-border px-6 py-4">
+                    <h2 class="text-base font-semibold text-foreground">Edit Job Type</h2>
                 </div>
                 <form @submit.prevent="submit" class="px-6 py-5">
                     <JobTypeForm :form="form" />
@@ -50,7 +50,7 @@ function submit() {
                         >
                             Update Job Type
                         </button>
-                        <Link href="/owner/job-types" class="text-sm text-slate-500 hover:text-slate-700">Cancel</Link>
+                        <Link href="/owner/job-types" class="text-sm text-muted-foreground hover:text-foreground">Cancel</Link>
                     </div>
                 </form>
             </div>

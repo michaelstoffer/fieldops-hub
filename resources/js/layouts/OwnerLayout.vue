@@ -23,7 +23,7 @@ function navClass(href: string): string {
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-100 flex">
+    <div class="min-h-screen bg-background flex">
         <!-- Mobile sidebar backdrop -->
         <div
             v-if="sidebarOpen"
@@ -31,12 +31,12 @@ function navClass(href: string): string {
             @click="sidebarOpen = false"
         />
 
-        <!-- Sidebar -->
+        <!-- Sidebar — intentionally always dark -->
         <aside
             class="fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 text-slate-100 flex flex-col transform transition-transform duration-200 ease-in-out lg:static lg:translate-x-0"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         >
-            <div class="px-6 py-4 text-xl font-bold border-b border-slate-800 tracking-tight">
+            <div class="px-6 h-14 flex items-center text-xl font-bold border-b border-border tracking-tight">
                 FieldOps Hub
             </div>
 
@@ -127,12 +127,12 @@ function navClass(href: string): string {
         <!-- Main content -->
         <div class="flex-1 flex flex-col min-w-0">
             <!-- Top bar -->
-            <header class="sticky top-0 z-10 h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 shadow-sm">
+            <header class="sticky top-0 z-10 h-14 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 shadow-sm">
                 <div class="flex items-center gap-3">
                     <!-- Mobile hamburger -->
                     <button
                         type="button"
-                        class="lg:hidden -ml-1 flex h-9 w-9 items-center justify-center rounded-md text-slate-500 hover:text-slate-900"
+                        class="lg:hidden -ml-1 flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
                         aria-label="Open navigation"
                         @click="sidebarOpen = !sidebarOpen"
                     >
@@ -140,11 +140,11 @@ function navClass(href: string): string {
                             <path d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <h1 class="text-base font-semibold text-slate-800 truncate">
+                    <h1 class="text-base font-semibold text-foreground truncate">
                         {{ title ?? 'FieldOps Hub' }}
                     </h1>
                 </div>
-                <div class="text-sm text-slate-600 flex items-center gap-3">
+                <div class="text-sm text-muted-foreground flex items-center gap-3">
                     <slot name="header-actions" />
                 </div>
             </header>

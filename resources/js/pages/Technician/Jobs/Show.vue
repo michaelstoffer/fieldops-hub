@@ -111,12 +111,12 @@ const props = defineProps<{
 }>();
 
 const STATUS_CLASSES: Record<string, string> = {
-    scheduled:   'bg-blue-100 text-blue-700',
-    en_route:    'bg-purple-100 text-purple-700',
-    in_progress: 'bg-amber-100 text-amber-700',
-    completed:   'bg-green-100 text-green-700',
-    cancelled:   'bg-slate-100 text-slate-500',
-    on_hold:     'bg-orange-100 text-orange-700',
+    scheduled:   'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    en_route:    'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+    in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+    completed:   'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    cancelled:   'bg-muted text-muted-foreground',
+    on_hold:     'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
 };
 
 // Three-step technician workflow. Labels are PWA-specific and intentionally
@@ -437,27 +437,27 @@ const timeline = computed(() => {
 
         <div class="p-4 space-y-4">
             <!-- Breadcrumb -->
-            <nav class="text-sm text-slate-500">
+            <nav class="text-sm text-muted-foreground">
                 <Link href="/technician/jobs" class="hover:underline">Jobs</Link>
                 <span class="mx-1">›</span>
-                <span class="text-slate-800">{{ job.title }}</span>
+                <span class="text-foreground">{{ job.title }}</span>
             </nav>
 
             <!-- Title + status -->
             <div class="flex items-start justify-between gap-2">
-                <h2 class="text-xl font-bold text-slate-900">{{ job.title }}</h2>
+                <h2 class="text-xl font-bold text-foreground">{{ job.title }}</h2>
                 <span
                     class="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                    :class="STATUS_CLASSES[job.status] ?? 'bg-slate-100 text-slate-600'"
+                    :class="STATUS_CLASSES[job.status] ?? 'bg-muted text-muted-foreground'"
                 >
                     {{ statuses[job.status] ?? job.status }}
                 </span>
             </div>
 
             <!-- Update status -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Update Status</h3>
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Update Status</h3>
                 </div>
                 <div class="flex flex-wrap gap-2 p-4">
                     <button
@@ -467,7 +467,7 @@ const timeline = computed(() => {
                         class="rounded-lg border px-3 py-1.5 text-xs font-medium transition"
                         :class="job.status === action.key
                             ? 'border-slate-800 bg-slate-800 text-white'
-                            : 'border-slate-200 text-slate-600 active:bg-slate-50'"
+                            : 'border-border text-muted-foreground active:bg-accent'"
                         :disabled="job.status === action.key || statusForm.processing"
                         @click="changeStatus(action.key)"
                     >
@@ -477,28 +477,28 @@ const timeline = computed(() => {
             </div>
 
             <!-- Job details -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Details</h3>
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Details</h3>
                 </div>
-                <dl class="divide-y divide-slate-100 text-sm">
+                <dl class="divide-y divide-border text-sm">
                     <div v-if="job.customer" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Customer</dt>
-                        <dd class="font-medium text-slate-800">
+                        <dt class="text-muted-foreground">Customer</dt>
+                        <dd class="font-medium text-foreground">
                             {{ job.customer.first_name }} {{ job.customer.last_name }}
                         </dd>
                     </div>
                     <div v-if="job.customer?.phone" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Phone</dt>
-                        <dd class="font-medium text-slate-800">
-                            <a :href="`tel:${job.customer.phone}`" class="text-blue-600">
+                        <dt class="text-muted-foreground">Phone</dt>
+                        <dd class="font-medium text-foreground">
+                            <a :href="`tel:${job.customer.phone}`" class="text-blue-600 dark:text-blue-400">
                                 {{ job.customer.phone }}
                             </a>
                         </dd>
                     </div>
                     <div v-if="job.property" class="flex justify-between gap-4 px-4 py-3">
-                        <dt class="text-slate-500">Address</dt>
-                        <dd class="text-right font-medium text-slate-800">
+                        <dt class="text-muted-foreground">Address</dt>
+                        <dd class="text-right font-medium text-foreground">
                             <p>
                                 {{ job.property.address_line1 }},
                                 {{ job.property.city }}, {{ job.property.state }}
@@ -509,34 +509,34 @@ const timeline = computed(() => {
                                 :href="directionsUrl"
                                 target="_blank"
                                 rel="noopener"
-                                class="mt-1 inline-block text-xs font-medium text-blue-600"
+                                class="mt-1 inline-block text-xs font-medium text-blue-600 dark:text-blue-400"
                             >
                                 Get directions →
                             </a>
                         </dd>
                     </div>
                     <div v-if="job.job_type" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Type</dt>
-                        <dd class="flex items-center gap-1.5 font-medium text-slate-800">
+                        <dt class="text-muted-foreground">Type</dt>
+                        <dd class="flex items-center gap-1.5 font-medium text-foreground">
                             <span class="h-2 w-2 rounded-full" :style="{ background: job.job_type.color }" />
                             {{ job.job_type.name }}
                         </dd>
                     </div>
                     <div class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Scheduled</dt>
-                        <dd class="font-medium text-slate-800">{{ formatDate(job.scheduled_at) }}</dd>
+                        <dt class="text-muted-foreground">Scheduled</dt>
+                        <dd class="font-medium text-foreground">{{ formatDate(job.scheduled_at) }}</dd>
                     </div>
                     <div v-if="job.arrived_at" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Arrived</dt>
-                        <dd class="font-medium text-slate-800">{{ formatDate(job.arrived_at) }}</dd>
+                        <dt class="text-muted-foreground">Arrived</dt>
+                        <dd class="font-medium text-foreground">{{ formatDate(job.arrived_at) }}</dd>
                     </div>
                     <div v-if="job.started_at" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Started</dt>
-                        <dd class="font-medium text-slate-800">{{ formatDate(job.started_at) }}</dd>
+                        <dt class="text-muted-foreground">Started</dt>
+                        <dd class="font-medium text-foreground">{{ formatDate(job.started_at) }}</dd>
                     </div>
                     <div v-if="job.completed_at" class="flex justify-between px-4 py-3">
-                        <dt class="text-slate-500">Completed</dt>
-                        <dd class="font-medium text-green-700">{{ formatDate(job.completed_at) }}</dd>
+                        <dt class="text-muted-foreground">Completed</dt>
+                        <dd class="font-medium text-green-700 dark:text-green-400">{{ formatDate(job.completed_at) }}</dd>
                     </div>
                 </dl>
             </div>
@@ -544,12 +544,12 @@ const timeline = computed(() => {
             <!-- Checklist -->
             <div
                 v-if="job.checklist_items && job.checklist_items.length > 0"
-                class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200"
+                class="rounded-xl bg-card shadow-sm ring-1 ring-border"
             >
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Checklist</h3>
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Checklist</h3>
                 </div>
-                <ul class="divide-y divide-slate-100">
+                <ul class="divide-y divide-border">
                     <li
                         v-for="item in job.checklist_items"
                         :key="item.id"
@@ -560,7 +560,7 @@ const timeline = computed(() => {
                             class="flex h-7 w-7 shrink-0 items-center justify-center rounded border transition"
                             :class="checklistState[item.id]
                                 ? 'border-green-600 bg-green-600 text-white'
-                                : 'border-slate-300 bg-white'"
+                                : 'border-input bg-background'"
                             :disabled="togglingItem === item.id"
                             :aria-pressed="checklistState[item.id]"
                             :aria-label="`Toggle ${item.label}`"
@@ -584,8 +584,8 @@ const timeline = computed(() => {
                             <p
                                 class="text-sm"
                                 :class="checklistState[item.id]
-                                    ? 'text-slate-400 line-through'
-                                    : 'text-slate-800'"
+                                    ? 'text-muted-foreground line-through'
+                                    : 'text-foreground'"
                             >
                                 {{ item.label }}
                                 <span v-if="item.is_required" class="ml-1 text-red-500">*</span>
@@ -596,18 +596,18 @@ const timeline = computed(() => {
             </div>
 
             <!-- Photos -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Photos</h3>
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Photos</h3>
                 </div>
-                <div class="divide-y divide-slate-100">
+                <div class="divide-y divide-border">
                     <!-- Before -->
                     <div class="p-4">
                         <div class="mb-2 flex items-center justify-between">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Before</span>
+                            <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Before</span>
                             <button
                                 type="button"
-                                class="rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 active:bg-slate-50 disabled:opacity-50"
+                                class="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground active:bg-accent disabled:opacity-50"
                                 :disabled="uploadingTag !== null"
                                 @click="beforeInputRef?.click()"
                             >
@@ -627,7 +627,7 @@ const timeline = computed(() => {
                             <div
                                 v-for="photo in beforePhotos"
                                 :key="photo.id"
-                                class="group relative aspect-square overflow-hidden rounded-lg bg-slate-100"
+                                class="group relative aspect-square overflow-hidden rounded-lg bg-muted"
                             >
                                 <img :src="photo.url" :alt="photo.filename" class="h-full w-full object-cover" />
                                 <button
@@ -643,16 +643,16 @@ const timeline = computed(() => {
                                 </button>
                             </div>
                         </div>
-                        <p v-else class="text-xs text-slate-400">No before photos yet.</p>
+                        <p v-else class="text-xs text-muted-foreground">No before photos yet.</p>
                     </div>
 
                     <!-- After -->
                     <div class="p-4">
                         <div class="mb-2 flex items-center justify-between">
-                            <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">After</span>
+                            <span class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">After</span>
                             <button
                                 type="button"
-                                class="rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600 active:bg-slate-50 disabled:opacity-50"
+                                class="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground active:bg-accent disabled:opacity-50"
                                 :disabled="uploadingTag !== null"
                                 @click="afterInputRef?.click()"
                             >
@@ -672,7 +672,7 @@ const timeline = computed(() => {
                             <div
                                 v-for="photo in afterPhotos"
                                 :key="photo.id"
-                                class="group relative aspect-square overflow-hidden rounded-lg bg-slate-100"
+                                class="group relative aspect-square overflow-hidden rounded-lg bg-muted"
                             >
                                 <img :src="photo.url" :alt="photo.filename" class="h-full w-full object-cover" />
                                 <button
@@ -688,33 +688,33 @@ const timeline = computed(() => {
                                 </button>
                             </div>
                         </div>
-                        <p v-else class="text-xs text-slate-400">No after photos yet.</p>
+                        <p v-else class="text-xs text-muted-foreground">No after photos yet.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Description -->
-            <div v-if="job.description" class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Description</h3>
+            <div v-if="job.description" class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Description</h3>
                 </div>
-                <p class="whitespace-pre-wrap px-4 py-3 text-sm text-slate-600">{{ job.description }}</p>
+                <p class="whitespace-pre-wrap px-4 py-3 text-sm text-muted-foreground">{{ job.description }}</p>
             </div>
 
             <!-- Office notes (read-only) -->
-            <div v-if="job.office_notes" class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Office Notes</h3>
+            <div v-if="job.office_notes" class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Office Notes</h3>
                 </div>
-                <p class="whitespace-pre-wrap px-4 py-3 text-sm text-slate-600">{{ job.office_notes }}</p>
+                <p class="whitespace-pre-wrap px-4 py-3 text-sm text-muted-foreground">{{ job.office_notes }}</p>
             </div>
 
             <!-- Technician notes (internal, editable) -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="flex items-center justify-between border-b border-border px-4 py-3">
                     <div>
-                        <h3 class="text-sm font-semibold text-slate-700">My Notes</h3>
-                        <p class="text-xs text-slate-400">Internal — not shown to the customer</p>
+                        <h3 class="text-sm font-semibold text-foreground">My Notes</h3>
+                        <p class="text-xs text-muted-foreground">Internal — not shown to the customer</p>
                     </div>
                     <button
                         v-if="!editingNotes"
@@ -730,13 +730,13 @@ const timeline = computed(() => {
                     <textarea
                         v-model="notesForm.technician_notes"
                         rows="4"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-slate-500 focus:outline-none"
+                        class="w-full rounded-lg border border-input px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none"
                         placeholder="Add your notes here…"
                     />
                     <div class="mt-2 flex justify-end gap-2">
                         <button
                             type="button"
-                            class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600"
+                            class="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
                             @click="editingNotes = false"
                         >
                             Cancel
@@ -751,18 +751,18 @@ const timeline = computed(() => {
                         </button>
                     </div>
                 </div>
-                <p v-else-if="notesForm.technician_notes" class="whitespace-pre-wrap px-4 py-3 text-sm text-slate-600">
+                <p v-else-if="notesForm.technician_notes" class="whitespace-pre-wrap px-4 py-3 text-sm text-muted-foreground">
                     {{ notesForm.technician_notes }}
                 </p>
-                <p v-else class="px-4 py-3 text-sm text-slate-400">No notes yet. Tap Edit to add.</p>
+                <p v-else class="px-4 py-3 text-sm text-muted-foreground">No notes yet. Tap Edit to add.</p>
             </div>
 
             <!-- Customer notes (customer-facing, editable) -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="flex items-center justify-between border-b border-border px-4 py-3">
                     <div>
-                        <h3 class="text-sm font-semibold text-slate-700">Customer Notes</h3>
-                        <p class="text-xs text-slate-400">Visible to the customer on their summary</p>
+                        <h3 class="text-sm font-semibold text-foreground">Customer Notes</h3>
+                        <p class="text-xs text-muted-foreground">Visible to the customer on their summary</p>
                     </div>
                     <button
                         v-if="!editingCustomerNotes"
@@ -778,13 +778,13 @@ const timeline = computed(() => {
                     <textarea
                         v-model="customerNotesForm.customer_notes"
                         rows="4"
-                        class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-slate-500 focus:outline-none"
+                        class="w-full rounded-lg border border-input px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none"
                         placeholder="Notes for the customer (e.g. what was done, recommendations)…"
                     />
                     <div class="mt-2 flex justify-end gap-2">
                         <button
                             type="button"
-                            class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600"
+                            class="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground"
                             @click="editingCustomerNotes = false"
                         >
                             Cancel
@@ -799,16 +799,16 @@ const timeline = computed(() => {
                         </button>
                     </div>
                 </div>
-                <p v-else-if="customerNotesForm.customer_notes" class="whitespace-pre-wrap px-4 py-3 text-sm text-slate-600">
+                <p v-else-if="customerNotesForm.customer_notes" class="whitespace-pre-wrap px-4 py-3 text-sm text-muted-foreground">
                     {{ customerNotesForm.customer_notes }}
                 </p>
-                <p v-else class="px-4 py-3 text-sm text-slate-400">No customer notes yet. Tap Edit to add.</p>
+                <p v-else class="px-4 py-3 text-sm text-muted-foreground">No customer notes yet. Tap Edit to add.</p>
             </div>
 
             <!-- Activity timeline (#94) -->
-            <div v-if="timeline.length > 0" class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Activity</h3>
+            <div v-if="timeline.length > 0" class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Activity</h3>
                 </div>
                 <ol class="px-4 py-3">
                     <li
@@ -821,24 +821,24 @@ const timeline = computed(() => {
                             <span
                                 class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
                                 :class="entry.type === 'message'
-                                    ? 'bg-blue-100 text-blue-600'
-                                    : 'bg-slate-200 text-slate-500'"
+                                    ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400'
+                                    : 'bg-muted text-muted-foreground'"
                             >
                                 <!-- envelope for messages, dot for status -->
                                 <svg v-if="entry.type === 'message'" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
                                     <path d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
                                 </svg>
-                                <span v-else class="h-1.5 w-1.5 rounded-full bg-slate-500" />
+                                <span v-else class="h-1.5 w-1.5 rounded-full bg-muted-foreground" />
                             </span>
-                            <div v-if="i < timeline.length - 1" class="mt-1 w-px flex-1 bg-slate-100" />
+                            <div v-if="i < timeline.length - 1" class="mt-1 w-px flex-1 bg-border" />
                         </div>
                         <!-- Content -->
                         <div class="min-w-0 flex-1 pt-0.5">
-                            <p class="text-sm font-medium text-slate-800">{{ entry.label }}</p>
+                            <p class="text-sm font-medium text-foreground">{{ entry.label }}</p>
                             <div class="mt-0.5 flex items-center gap-2">
-                                <span v-if="entry.sub" class="rounded bg-slate-100 px-1 py-0.5 text-xs text-slate-500">{{ entry.sub }}</span>
-                                <span class="text-xs text-slate-400">{{ formatTime(new Date(entry.ts).toISOString()) }}</span>
+                                <span v-if="entry.sub" class="rounded bg-muted px-1 py-0.5 text-xs text-muted-foreground">{{ entry.sub }}</span>
+                                <span class="text-xs text-muted-foreground">{{ formatTime(new Date(entry.ts).toISOString()) }}</span>
                             </div>
                         </div>
                     </li>

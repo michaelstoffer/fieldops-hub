@@ -21,7 +21,7 @@ const submit = () => form.post(passwordUpdate.url(), {
 
     <div class="min-h-screen flex">
 
-        <!-- Left branding panel -->
+        <!-- Left branding panel — intentionally always dark -->
         <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 bg-slate-900 overflow-hidden">
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_#1e40af55_0%,_transparent_60%)]"></div>
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_#0f766e44_0%,_transparent_60%)]"></div>
@@ -51,7 +51,7 @@ const submit = () => form.post(passwordUpdate.url(), {
         </div>
 
         <!-- Right form panel -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-background">
 
             <Link href="/" class="lg:hidden flex items-center gap-2 mb-10 group">
                 <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
@@ -59,32 +59,32 @@ const submit = () => form.post(passwordUpdate.url(), {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight">FieldOps Hub</span>
+                <span class="font-semibold text-foreground text-base tracking-tight">FieldOps Hub</span>
             </Link>
 
             <div class="w-full max-w-sm">
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Set a new password</h2>
-                    <p class="mt-1 text-sm text-slate-500">Must be at least 8 characters.</p>
+                    <h2 class="text-2xl font-bold text-foreground">Set a new password</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">Must be at least 8 characters.</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
+                        <label for="email" class="block text-sm font-medium text-foreground mb-1.5">Email address</label>
                         <input
                             id="email"
                             v-model="form.email"
                             type="email"
                             autocomplete="username"
                             required
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.email }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.email }"
                         />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">New password</label>
+                        <label for="password" class="block text-sm font-medium text-foreground mb-1.5">New password</label>
                         <input
                             id="password"
                             v-model="form.password"
@@ -93,14 +93,14 @@ const submit = () => form.post(passwordUpdate.url(), {
                             required
                             autofocus
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.password }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.password }"
                         />
-                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-red-600">{{ form.errors.password }}</p>
+                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-destructive">{{ form.errors.password }}</p>
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1.5">Confirm new password</label>
+                        <label for="password_confirmation" class="block text-sm font-medium text-foreground mb-1.5">Confirm new password</label>
                         <input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
@@ -108,10 +108,10 @@ const submit = () => form.post(passwordUpdate.url(), {
                             autocomplete="new-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.password_confirmation }"
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.password_confirmation }"
                         />
-                        <p v-if="form.errors.password_confirmation" class="mt-1.5 text-xs text-red-600">{{ form.errors.password_confirmation }}</p>
+                        <p v-if="form.errors.password_confirmation" class="mt-1.5 text-xs text-destructive">{{ form.errors.password_confirmation }}</p>
                     </div>
 
                     <button

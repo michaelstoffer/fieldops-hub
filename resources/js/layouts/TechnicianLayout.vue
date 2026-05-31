@@ -13,18 +13,18 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
 </script>
 
 <template>
-    <div class="flex min-h-screen flex-col bg-slate-50">
+    <div class="flex min-h-screen flex-col bg-background">
         <!-- Top bar — pt accounts for iOS status bar notch -->
-        <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 shadow-sm pt-[env(safe-area-inset-top,0px)]" style="height: calc(3.5rem + env(safe-area-inset-top, 0px))">
-            <span class="text-base font-semibold text-slate-800">{{ title ?? 'FieldOps Hub' }}</span>
-            <div class="flex items-center gap-3 text-sm text-slate-500">
+        <header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-border bg-card px-4 shadow-sm pt-[env(safe-area-inset-top,0px)]" style="height: calc(3.5rem + env(safe-area-inset-top, 0px))">
+            <span class="text-base font-semibold text-foreground">{{ title ?? 'FieldOps Hub' }}</span>
+            <div class="flex items-center gap-3 text-sm text-muted-foreground">
                 <!-- Location sharing toggle -->
                 <button
                     type="button"
                     class="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition"
                     :class="locationEnabled
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-slate-100 text-slate-500'"
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400'
+                        : 'bg-muted text-muted-foreground'"
                     :title="permissionDenied ? 'Location permission denied' : (locationEnabled ? 'Sharing location' : 'Share location')"
                     @click="toggleLocation"
                 >
@@ -41,7 +41,7 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
                     href="/logout"
                     method="post"
                     as="button"
-                    class="rounded-md px-2 py-1 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                    class="rounded-md px-2 py-1 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
                 >
                     Sign out
                 </Link>
@@ -54,10 +54,10 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
         </main>
 
         <!-- Bottom navigation — extends into iOS home bar safe area -->
-        <nav class="fixed bottom-0 left-0 right-0 z-10 flex border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom,0px)]">
+        <nav class="fixed bottom-0 left-0 right-0 z-10 flex border-t border-border bg-card pb-[env(safe-area-inset-bottom,0px)]">
             <Link
                 href="/technician/dashboard"
-                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-slate-500 hover:text-slate-900 active:text-slate-900"
+                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-muted-foreground hover:text-foreground active:text-foreground transition-colors"
             >
                 <!-- home icon -->
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -68,7 +68,7 @@ const { enabled: locationEnabled, permissionDenied, toggle: toggleLocation } = u
             </Link>
             <Link
                 href="/technician/jobs"
-                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-slate-500 hover:text-slate-900 active:text-slate-900"
+                class="flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-muted-foreground hover:text-foreground active:text-foreground transition-colors"
             >
                 <!-- briefcase icon -->
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

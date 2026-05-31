@@ -55,12 +55,12 @@ const EVENT_LABELS: Record<string, string> = {
 
 
 const STATUS_CLASSES: Record<string, string> = {
-    scheduled:   'bg-blue-100 text-blue-700',
-    en_route:    'bg-purple-100 text-purple-700',
-    in_progress: 'bg-amber-100 text-amber-700',
-    completed:   'bg-green-100 text-green-700',
-    cancelled:   'bg-slate-100 text-slate-500',
-    on_hold:     'bg-orange-100 text-orange-700',
+    scheduled:   'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    en_route:    'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400',
+    in_progress: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+    completed:   'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    cancelled:   'bg-muted text-muted-foreground',
+    on_hold:     'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
 };
 
 const statusForm = useForm({ status: props.job.status });
@@ -120,19 +120,19 @@ function advanceStatus() {
         <Head :title="job.title" />
 
         <!-- Breadcrumb -->
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/jobs" class="hover:underline">Jobs</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">{{ job.title }}</span>
+            <span class="text-foreground">{{ job.title }}</span>
         </nav>
 
         <!-- Header -->
         <div class="mb-6 flex items-start justify-between">
             <div class="flex items-center gap-3">
-                <h2 class="text-2xl font-semibold text-slate-800">{{ job.title }}</h2>
+                <h2 class="text-2xl font-semibold text-foreground">{{ job.title }}</h2>
                 <span
                     class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium"
-                    :class="STATUS_CLASSES[job.status] ?? 'bg-slate-100 text-slate-600'"
+                    :class="STATUS_CLASSES[job.status] ?? 'bg-muted text-muted-foreground'"
                 >
                     {{ statuses[job.status] ?? job.status }}
                 </span>
@@ -149,13 +149,13 @@ function advanceStatus() {
                 </button>
                 <Link
                     :href="`/owner/jobs/${job.id}/edit`"
-                    class="inline-flex items-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                    class="inline-flex items-center rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-accent"
                 >
                     Edit
                 </Link>
                 <button
                     type="button"
-                    class="inline-flex items-center rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm hover:bg-red-50"
+                    class="inline-flex items-center rounded-lg border border-red-200 bg-card px-4 py-2 text-sm font-medium text-red-600 shadow-sm hover:bg-red-50"
                     @click="cancelJob"
                 >
                     Cancel Job
@@ -167,9 +167,9 @@ function advanceStatus() {
             <!-- Left: details -->
             <div class="space-y-6 lg:col-span-1">
                 <!-- Status actions -->
-                <div class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Update Status</h3>
+                <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Update Status</h3>
                     </div>
                     <div class="flex flex-wrap gap-2 px-5 py-4">
                         <button
@@ -179,7 +179,7 @@ function advanceStatus() {
                             class="rounded-lg border px-3 py-1.5 text-xs font-medium transition"
                             :class="job.status === key
                                 ? 'border-slate-800 bg-slate-800 text-white'
-                                : 'border-slate-200 text-slate-600 hover:border-slate-400'"
+                                : 'border-border text-muted-foreground hover:border-slate-400'"
                             :disabled="job.status === key"
                             @click="changeStatus(key)"
                         >
@@ -189,57 +189,57 @@ function advanceStatus() {
                 </div>
 
                 <!-- Details -->
-                <div class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Details</h3>
+                <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Details</h3>
                     </div>
-                    <dl class="divide-y divide-slate-100">
+                    <dl class="divide-y divide-border">
                         <div class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Customer</dt>
-                            <dd class="font-medium text-slate-800">
+                            <dt class="text-muted-foreground">Customer</dt>
+                            <dd class="font-medium text-foreground">
                                 <Link v-if="job.customer" :href="`/owner/customers/${job.customer.id}`" class="hover:underline">
                                     {{ job.customer.first_name }} {{ job.customer.last_name }}
                                 </Link>
-                                <span v-else class="text-slate-400">—</span>
+                                <span v-else class="text-muted-foreground">—</span>
                             </dd>
                         </div>
                         <div class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Property</dt>
-                            <dd class="text-right font-medium text-slate-800">
+                            <dt class="text-muted-foreground">Property</dt>
+                            <dd class="text-right font-medium text-foreground">
                                 <span v-if="job.property">
                                     {{ job.property.address_line1 }},
                                     {{ job.property.city }}, {{ job.property.state }}
                                 </span>
-                                <span v-else class="text-slate-400">—</span>
+                                <span v-else class="text-muted-foreground">—</span>
                             </dd>
                         </div>
                         <div class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Type</dt>
-                            <dd class="font-medium text-slate-800">
+                            <dt class="text-muted-foreground">Type</dt>
+                            <dd class="font-medium text-foreground">
                                 <span v-if="job.job_type" class="inline-flex items-center gap-1.5">
                                     <span class="h-2.5 w-2.5 rounded-full" :style="{ background: job.job_type.color }" />
                                     {{ job.job_type.name }}
                                 </span>
-                                <span v-else class="text-slate-400">—</span>
+                                <span v-else class="text-muted-foreground">—</span>
                             </dd>
                         </div>
                         <div class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Assigned to</dt>
-                            <dd class="font-medium text-slate-800">
+                            <dt class="text-muted-foreground">Assigned to</dt>
+                            <dd class="font-medium text-foreground">
                                 {{ job.assigned_technician?.name ?? '—' }}
                             </dd>
                         </div>
                         <div class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Scheduled</dt>
-                            <dd class="font-medium text-slate-800">{{ formatDate(job.scheduled_at) }}</dd>
+                            <dt class="text-muted-foreground">Scheduled</dt>
+                            <dd class="font-medium text-foreground">{{ formatDate(job.scheduled_at) }}</dd>
                         </div>
                         <div v-if="job.started_at" class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Started</dt>
-                            <dd class="font-medium text-slate-800">{{ formatDate(job.started_at) }}</dd>
+                            <dt class="text-muted-foreground">Started</dt>
+                            <dd class="font-medium text-foreground">{{ formatDate(job.started_at) }}</dd>
                         </div>
                         <div v-if="job.completed_at" class="flex justify-between px-5 py-3 text-sm">
-                            <dt class="text-slate-500">Completed</dt>
-                            <dd class="font-medium text-green-700">{{ formatDate(job.completed_at) }}</dd>
+                            <dt class="text-muted-foreground">Completed</dt>
+                            <dd class="font-medium text-green-600 dark:text-green-400">{{ formatDate(job.completed_at) }}</dd>
                         </div>
                     </dl>
                 </div>
@@ -247,34 +247,34 @@ function advanceStatus() {
 
             <!-- Right: notes -->
             <div class="space-y-6 lg:col-span-2">
-                <div v-if="job.description" class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Description</h3>
+                <div v-if="job.description" class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Description</h3>
                     </div>
-                    <p class="px-5 py-4 text-sm text-slate-600 whitespace-pre-wrap">{{ job.description }}</p>
+                    <p class="px-5 py-4 text-sm text-muted-foreground whitespace-pre-wrap">{{ job.description }}</p>
                 </div>
 
-                <div class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Office Notes</h3>
+                <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Office Notes</h3>
                     </div>
-                    <p v-if="job.office_notes" class="px-5 py-4 text-sm text-slate-600 whitespace-pre-wrap">{{ job.office_notes }}</p>
-                    <p v-else class="px-5 py-4 text-sm text-slate-400">No office notes.</p>
+                    <p v-if="job.office_notes" class="px-5 py-4 text-sm text-muted-foreground whitespace-pre-wrap">{{ job.office_notes }}</p>
+                    <p v-else class="px-5 py-4 text-sm text-muted-foreground">No office notes.</p>
                 </div>
 
-                <div v-if="job.technician_notes" class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Technician Notes</h3>
+                <div v-if="job.technician_notes" class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Technician Notes</h3>
                     </div>
-                    <p class="px-5 py-4 text-sm text-slate-600 whitespace-pre-wrap">{{ job.technician_notes }}</p>
+                    <p class="px-5 py-4 text-sm text-muted-foreground whitespace-pre-wrap">{{ job.technician_notes }}</p>
                 </div>
 
                 <!-- Message log (#93) -->
-                <div class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Message Log</h3>
+                <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Message Log</h3>
                     </div>
-                    <div v-if="job.messages && job.messages.length > 0" class="divide-y divide-slate-50">
+                    <div v-if="job.messages && job.messages.length > 0" class="divide-y divide-border/50">
                         <div v-for="msg in job.messages" :key="msg.id" class="px-5 py-3">
                             <div class="flex items-start justify-between gap-2">
                                 <div class="min-w-0 flex-1">
@@ -282,41 +282,41 @@ function advanceStatus() {
                                         <span
                                             class="shrink-0 rounded-full px-2 py-0.5 text-xs font-medium"
                                             :class="msg.channel === 'email'
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'bg-amber-100 text-amber-700'"
+                                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
+                                                : 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400'"
                                         >
                                             {{ msg.channel === 'email' ? 'Email' : 'SMS' }}
                                         </span>
-                                        <span class="text-xs font-medium text-slate-700">
+                                        <span class="text-xs font-medium text-foreground">
                                             {{ EVENT_LABELS[msg.event] ?? msg.event }}
                                         </span>
                                         <span
                                             v-if="msg.status === 'failed'"
-                                            class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600"
+                                            class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600 dark:bg-red-900/40 dark:text-red-400"
                                         >
                                             Failed
                                         </span>
                                     </div>
-                                    <p class="mt-1 truncate text-xs text-slate-500">To: {{ msg.recipient }}</p>
-                                    <p v-if="msg.error" class="mt-0.5 text-xs text-red-500">{{ msg.error }}</p>
+                                    <p class="mt-1 truncate text-xs text-muted-foreground">To: {{ msg.recipient }}</p>
+                                    <p v-if="msg.error" class="mt-0.5 text-xs text-destructive">{{ msg.error }}</p>
                                 </div>
-                                <span class="shrink-0 text-xs text-slate-400">{{ formatDate(msg.created_at) }}</span>
+                                <span class="shrink-0 text-xs text-muted-foreground">{{ formatDate(msg.created_at) }}</span>
                             </div>
                         </div>
                     </div>
-                    <p v-else class="px-5 py-4 text-sm text-slate-400">No messages sent yet.</p>
+                    <p v-else class="px-5 py-4 text-sm text-muted-foreground">No messages sent yet.</p>
                 </div>
 
                 <!-- Invoice -->
-                <div class="rounded-xl bg-white shadow">
-                    <div class="border-b border-slate-100 px-5 py-3">
-                        <h3 class="text-sm font-semibold text-slate-700">Invoice</h3>
+                <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                    <div class="border-b border-border px-5 py-3">
+                        <h3 class="text-sm font-semibold text-foreground">Invoice</h3>
                     </div>
                     <div class="px-5 py-4">
                         <div v-if="job.invoice" class="flex items-center justify-between">
                             <div>
-                                <p class="font-mono text-sm font-medium text-slate-700">{{ job.invoice.invoice_number ?? '—' }}</p>
-                                <p class="mt-0.5 text-xs text-slate-500">
+                                <p class="font-mono text-sm font-medium text-foreground">{{ job.invoice.invoice_number ?? '—' }}</p>
+                                <p class="mt-0.5 text-xs text-muted-foreground">
                                     {{ job.invoice.status.charAt(0).toUpperCase() + job.invoice.status.slice(1) }}
                                     · Total {{ formatCurrency(job.invoice.total) }}
                                     · Due {{ formatCurrency(job.invoice.balance_due) }}
@@ -324,13 +324,13 @@ function advanceStatus() {
                             </div>
                             <Link
                                 :href="`/owner/invoices/${job.invoice.id}`"
-                                class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                                class="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-accent"
                             >
                                 View Invoice
                             </Link>
                         </div>
                         <div v-else-if="job.status === 'completed'" class="flex items-center justify-between">
-                            <p class="text-sm text-slate-500">No invoice generated yet.</p>
+                            <p class="text-sm text-muted-foreground">No invoice generated yet.</p>
                             <button
                                 type="button"
                                 class="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
@@ -340,7 +340,7 @@ function advanceStatus() {
                                 Generate Invoice
                             </button>
                         </div>
-                        <p v-else class="text-sm text-slate-400">Available once job is completed.</p>
+                        <p v-else class="text-sm text-muted-foreground">Available once job is completed.</p>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,7 @@ const submit = () => {
 
     <div class="min-h-screen flex">
 
-        <!-- ── Left panel: branding ─────────────────────────────────────────── -->
+        <!-- ── Left panel: branding — intentionally always dark ──────────────── -->
         <div class="hidden lg:flex lg:w-1/2 relative flex-col justify-between p-12 bg-slate-900 overflow-hidden">
 
             <!-- Background radial glow -->
@@ -77,7 +77,7 @@ const submit = () => {
         </div>
 
         <!-- ── Right panel: form ─────────────────────────────────────────────── -->
-        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-slate-50">
+        <div class="flex-1 flex flex-col items-center justify-center px-6 py-12 bg-background">
 
             <!-- Mobile logo -->
             <Link href="/" class="lg:hidden flex items-center gap-2 mb-10 group">
@@ -86,18 +86,18 @@ const submit = () => {
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                 </div>
-                <span class="font-semibold text-slate-800 text-base tracking-tight group-hover:text-blue-600 transition-colors">FieldOps Hub</span>
+                <span class="font-semibold text-foreground text-base tracking-tight group-hover:text-blue-600 transition-colors">FieldOps Hub</span>
             </Link>
 
             <div class="w-full max-w-sm">
 
                 <div class="mb-8">
-                    <h2 class="text-2xl font-bold text-slate-900">Welcome back</h2>
-                    <p class="mt-1 text-sm text-slate-500">Sign in to your account to continue.</p>
+                    <h2 class="text-2xl font-bold text-foreground">Welcome back</h2>
+                    <p class="mt-1 text-sm text-muted-foreground">Sign in to your account to continue.</p>
                 </div>
 
                 <!-- Status message (e.g. password reset success) -->
-                <div v-if="status" class="mb-5 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+                <div v-if="status" class="mb-5 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 px-4 py-3 text-sm text-green-700 dark:text-green-400">
                     {{ status }}
                 </div>
 
@@ -105,7 +105,7 @@ const submit = () => {
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        <label for="email" class="block text-sm font-medium text-foreground mb-1.5">
                             Email address
                         </label>
                         <input
@@ -116,22 +116,22 @@ const submit = () => {
                             required
                             autofocus
                             placeholder="you@company.com"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm
                                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20
                                    transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.email }"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.email }"
                         />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs text-destructive">{{ form.errors.email }}</p>
                     </div>
 
                     <!-- Password -->
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+                            <label for="password" class="block text-sm font-medium text-foreground">Password</label>
                             <Link
                                 v-if="canResetPassword"
                                 href="/forgot-password"
-                                class="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                                class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
                             >
                                 Forgot password?
                             </Link>
@@ -143,12 +143,12 @@ const submit = () => {
                             autocomplete="current-password"
                             required
                             placeholder="••••••••"
-                            class="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm
+                            class="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm text-foreground placeholder:text-muted-foreground shadow-sm
                                    focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20
                                    transition"
-                            :class="{ 'border-red-400 focus:border-red-400 focus:ring-red-400/20': form.errors.password }"
+                            :class="{ 'border-destructive focus:border-destructive focus:ring-destructive/20': form.errors.password }"
                         />
-                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-red-600">{{ form.errors.password }}</p>
+                        <p v-if="form.errors.password" class="mt-1.5 text-xs text-destructive">{{ form.errors.password }}</p>
                     </div>
 
                     <!-- Remember me -->
@@ -157,9 +157,9 @@ const submit = () => {
                             id="remember"
                             v-model="form.remember"
                             type="checkbox"
-                            class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500/30 cursor-pointer"
+                            class="h-4 w-4 rounded border-input text-blue-600 focus:ring-blue-500/30 cursor-pointer"
                         />
-                        <label for="remember" class="text-sm text-slate-600 cursor-pointer select-none">
+                        <label for="remember" class="text-sm text-muted-foreground cursor-pointer select-none">
                             Keep me signed in
                         </label>
                     </div>
@@ -180,9 +180,9 @@ const submit = () => {
                     </button>
                 </form>
 
-                <p class="mt-6 text-center text-sm text-slate-500">
+                <p class="mt-6 text-center text-sm text-muted-foreground">
                     Don't have an account?
-                    <Link href="/register" class="text-blue-600 hover:text-blue-700 font-medium">Sign up</Link>
+                    <Link href="/register" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">Sign up</Link>
                 </p>
             </div>
         </div>

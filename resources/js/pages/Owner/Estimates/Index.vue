@@ -32,11 +32,11 @@ const search = ref(props.filters.search ?? '');
 const status = ref(props.filters.status ?? '');
 
 const STATUS_CLASSES: Record<string, string> = {
-    draft:    'bg-slate-100 text-slate-600',
-    sent:     'bg-blue-100 text-blue-700',
-    accepted: 'bg-green-100 text-green-700',
-    declined: 'bg-red-100 text-red-600',
-    expired:  'bg-amber-100 text-amber-700',
+    draft:    'bg-muted text-muted-foreground',
+    sent:     'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+    accepted: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+    declined: 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400',
+    expired:  'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
 };
 
 let searchTimeout: ReturnType<typeof setTimeout>;
@@ -68,8 +68,8 @@ function formatDate(dt: string | null): string {
         <!-- Header -->
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <h2 class="text-xl font-semibold text-slate-800">Estimates</h2>
-                <p class="mt-0.5 text-sm text-slate-500">{{ estimates.total }} total</p>
+                <h2 class="text-xl font-semibold text-foreground">Estimates</h2>
+                <p class="mt-0.5 text-sm text-muted-foreground">{{ estimates.total }} total</p>
             </div>
             <Link
                 href="/owner/estimates/create"
@@ -85,11 +85,11 @@ function formatDate(dt: string | null): string {
                 v-model="search"
                 type="search"
                 placeholder="Search estimates…"
-                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
             />
             <select
                 v-model="status"
-                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+                class="rounded-lg border border-input bg-background px-3 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
             >
                 <option value="">All statuses</option>
                 <option v-for="(label, key) in statuses" :key="key" :value="key">{{ label }}</option>
@@ -97,9 +97,9 @@ function formatDate(dt: string | null): string {
         </div>
 
         <!-- Table -->
-        <div class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-            <table class="min-w-full divide-y divide-slate-200 text-sm">
-                <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <div class="overflow-hidden rounded-xl bg-card shadow-sm ring-1 ring-border">
+            <table class="min-w-full divide-y divide-border text-sm">
+                <thead class="bg-background text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     <tr>
                         <th class="px-4 py-3 text-left">Number</th>
                         <th class="px-4 py-3 text-left">Title</th>
@@ -109,39 +109,39 @@ function formatDate(dt: string | null): string {
                         <th class="px-4 py-3 text-left">Created</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-border">
                     <tr v-if="estimates.data.length === 0">
                         <td colspan="6" class="px-4 py-16 text-center">
-                            <svg class="mx-auto h-10 w-10 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
-                            <p class="mt-3 text-sm font-semibold text-slate-700">No estimates yet</p>
-                            <p class="mt-1 text-sm text-slate-400">Create your first estimate to get started.</p>
+                            <svg class="mx-auto h-10 w-10 text-muted-foreground/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+                            <p class="mt-3 text-sm font-semibold text-foreground">No estimates yet</p>
+                            <p class="mt-1 text-sm text-muted-foreground">Create your first estimate to get started.</p>
                             <Link href="/owner/estimates/create" class="mt-4 inline-flex items-center rounded-lg bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">+ New Estimate</Link>
                         </td>
                     </tr>
                     <tr
                         v-for="estimate in estimates.data"
                         :key="estimate.id"
-                        class="cursor-pointer hover:bg-slate-50"
+                        class="cursor-pointer hover:bg-accent"
                         @click="router.visit(`/owner/estimates/${estimate.id}`)"
                     >
-                        <td class="px-4 py-3 font-mono text-xs text-slate-500">{{ estimate.estimate_number ?? '—' }}</td>
-                        <td class="px-4 py-3 font-medium text-slate-800">{{ estimate.title }}</td>
-                        <td class="px-4 py-3 text-slate-600">
+                        <td class="px-4 py-3 font-mono text-xs text-muted-foreground">{{ estimate.estimate_number ?? '—' }}</td>
+                        <td class="px-4 py-3 font-medium text-foreground">{{ estimate.title }}</td>
+                        <td class="px-4 py-3 text-muted-foreground">
                             <template v-if="estimate.customer">
                                 {{ estimate.customer.first_name }} {{ estimate.customer.last_name }}
                             </template>
-                            <span v-else class="text-slate-400">—</span>
+                            <span v-else class="text-muted-foreground">—</span>
                         </td>
                         <td class="px-4 py-3">
                             <span
                                 class="rounded-full px-2 py-0.5 text-xs font-medium"
-                                :class="STATUS_CLASSES[estimate.status] ?? 'bg-slate-100 text-slate-600'"
+                                :class="STATUS_CLASSES[estimate.status] ?? 'bg-muted text-muted-foreground'"
                             >
                                 {{ statuses[estimate.status] ?? estimate.status }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-slate-600">{{ formatDate(estimate.expires_at) }}</td>
-                        <td class="px-4 py-3 text-slate-500">{{ formatDate(estimate.created_at) }}</td>
+                        <td class="px-4 py-3 text-muted-foreground">{{ formatDate(estimate.expires_at) }}</td>
+                        <td class="px-4 py-3 text-muted-foreground">{{ formatDate(estimate.created_at) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -154,10 +154,10 @@ function formatDate(dt: string | null): string {
                     v-if="link.url"
                     :href="link.url"
                     class="rounded px-3 py-1 text-sm"
-                    :class="link.active ? 'bg-slate-800 text-white' : 'text-slate-600 hover:bg-slate-100'"
+                    :class="link.active ? 'bg-slate-800 text-white' : 'text-muted-foreground hover:bg-accent'"
                     v-html="link.label"
                 />
-                <span v-else class="rounded px-3 py-1 text-sm text-slate-400" v-html="link.label" />
+                <span v-else class="rounded px-3 py-1 text-sm text-muted-foreground/40" v-html="link.label" />
             </template>
         </div>
     </OwnerLayout>

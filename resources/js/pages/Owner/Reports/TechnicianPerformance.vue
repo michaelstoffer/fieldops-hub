@@ -46,18 +46,18 @@ const totals = computed(() => ({
         <Head title="Technician Performance" />
 
         <div class="mb-6 flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-slate-800">Technician Performance</h2>
+            <h2 class="text-xl font-semibold text-foreground">Technician Performance</h2>
         </div>
 
         <!-- Date filter -->
-        <div class="mb-6 flex flex-wrap items-end gap-3 bg-white rounded-xl shadow p-4">
+        <div class="mb-6 flex flex-wrap items-end gap-3 bg-card rounded-xl shadow ring-1 ring-border p-4">
             <div>
-                <label class="block text-xs text-slate-500 mb-1">From</label>
-                <input v-model="from" type="date" class="border border-slate-300 rounded px-3 py-1.5 text-sm" />
+                <label class="block text-xs text-muted-foreground mb-1">From</label>
+                <input v-model="from" type="date" class="border border-input bg-background rounded px-3 py-1.5 text-sm" />
             </div>
             <div>
-                <label class="block text-xs text-slate-500 mb-1">To</label>
-                <input v-model="to" type="date" class="border border-slate-300 rounded px-3 py-1.5 text-sm" />
+                <label class="block text-xs text-muted-foreground mb-1">To</label>
+                <input v-model="to" type="date" class="border border-input bg-background rounded px-3 py-1.5 text-sm" />
             </div>
             <button @click="apply"
                 class="px-4 py-1.5 bg-slate-800 text-white text-sm rounded hover:bg-slate-700">
@@ -67,43 +67,43 @@ const totals = computed(() => ({
 
         <!-- Summary cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            <div class="bg-white rounded-xl shadow p-4">
-                <p class="text-xs uppercase text-slate-500">Total Jobs Completed</p>
-                <p class="mt-1 text-2xl font-semibold text-slate-800">{{ totals.jobs }}</p>
+            <div class="bg-card rounded-xl shadow ring-1 ring-border p-4">
+                <p class="text-xs uppercase text-muted-foreground">Total Jobs Completed</p>
+                <p class="mt-1 text-2xl font-semibold text-foreground">{{ totals.jobs }}</p>
             </div>
-            <div class="bg-white rounded-xl shadow p-4">
-                <p class="text-xs uppercase text-slate-500">Total Revenue</p>
-                <p class="mt-1 text-2xl font-semibold text-green-600">{{ formatCurrency(totals.revenue) }}</p>
+            <div class="bg-card rounded-xl shadow ring-1 ring-border p-4">
+                <p class="text-xs uppercase text-muted-foreground">Total Revenue</p>
+                <p class="mt-1 text-2xl font-semibold text-green-600 dark:text-green-400">{{ formatCurrency(totals.revenue) }}</p>
             </div>
         </div>
 
         <!-- Table -->
-        <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="bg-card rounded-xl shadow ring-1 ring-border overflow-hidden">
             <table class="w-full text-sm">
-                <thead class="bg-slate-50 border-b border-slate-200">
+                <thead class="bg-background border-b border-border">
                     <tr>
-                        <th class="px-4 py-3 text-left font-medium text-slate-600">Technician</th>
-                        <th class="px-4 py-3 text-center font-medium text-slate-600">Jobs Completed</th>
-                        <th class="px-4 py-3 text-right font-medium text-slate-600">Revenue Generated</th>
-                        <th class="px-4 py-3 text-center font-medium text-slate-600">Avg Job Duration</th>
+                        <th class="px-4 py-3 text-left font-medium text-muted-foreground">Technician</th>
+                        <th class="px-4 py-3 text-center font-medium text-muted-foreground">Jobs Completed</th>
+                        <th class="px-4 py-3 text-right font-medium text-muted-foreground">Revenue Generated</th>
+                        <th class="px-4 py-3 text-center font-medium text-muted-foreground">Avg Job Duration</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-if="technicians.length === 0">
-                        <td colspan="4" class="px-4 py-8 text-center text-slate-400">No technician data for this date range.</td>
+                        <td colspan="4" class="px-4 py-8 text-center text-muted-foreground">No technician data for this date range.</td>
                     </tr>
-                    <tr v-for="tech in technicians" :key="tech.id" class="border-b border-slate-100 hover:bg-slate-50">
-                        <td class="px-4 py-3 font-medium text-slate-800">{{ tech.name }}</td>
-                        <td class="px-4 py-3 text-center text-slate-700">{{ tech.jobs_completed }}</td>
-                        <td class="px-4 py-3 text-right text-green-700">{{ formatCurrency(tech.revenue) }}</td>
-                        <td class="px-4 py-3 text-center text-slate-600">{{ formatDuration(tech.avg_duration_minutes) }}</td>
+                    <tr v-for="tech in technicians" :key="tech.id" class="border-b border-border hover:bg-accent">
+                        <td class="px-4 py-3 font-medium text-foreground">{{ tech.name }}</td>
+                        <td class="px-4 py-3 text-center text-foreground">{{ tech.jobs_completed }}</td>
+                        <td class="px-4 py-3 text-right text-green-600 dark:text-green-400">{{ formatCurrency(tech.revenue) }}</td>
+                        <td class="px-4 py-3 text-center text-muted-foreground">{{ formatDuration(tech.avg_duration_minutes) }}</td>
                     </tr>
                 </tbody>
-                <tfoot v-if="technicians.length > 0" class="bg-slate-50 border-t border-slate-200">
+                <tfoot v-if="technicians.length > 0" class="bg-background border-t border-border">
                     <tr>
-                        <td class="px-4 py-3 font-semibold text-slate-700">Total</td>
-                        <td class="px-4 py-3 text-center font-semibold text-slate-800">{{ totals.jobs }}</td>
-                        <td class="px-4 py-3 text-right font-semibold text-green-700">{{ formatCurrency(totals.revenue) }}</td>
+                        <td class="px-4 py-3 font-semibold text-foreground">Total</td>
+                        <td class="px-4 py-3 text-center font-semibold text-foreground">{{ totals.jobs }}</td>
+                        <td class="px-4 py-3 text-right font-semibold text-green-600 dark:text-green-400">{{ formatCurrency(totals.revenue) }}</td>
                         <td class="px-4 py-3"></td>
                     </tr>
                 </tfoot>

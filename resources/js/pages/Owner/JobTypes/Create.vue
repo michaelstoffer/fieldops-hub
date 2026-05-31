@@ -19,16 +19,16 @@ function submit() {
     <OwnerLayout title="Add Job Type">
         <Head title="Add Job Type" />
 
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/job-types" class="hover:underline">Job Types</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">Add Job Type</span>
+            <span class="text-foreground">Add Job Type</span>
         </nav>
 
         <div class="max-w-xl">
-            <div class="rounded-xl bg-white shadow">
-                <div class="border-b border-slate-100 px-6 py-4">
-                    <h2 class="text-base font-semibold text-slate-800">New Job Type</h2>
+            <div class="rounded-xl bg-card shadow ring-1 ring-border">
+                <div class="border-b border-border px-6 py-4">
+                    <h2 class="text-base font-semibold text-foreground">New Job Type</h2>
                 </div>
                 <form @submit.prevent="submit" class="px-6 py-5">
                     <JobTypeForm :form="form" />
@@ -40,7 +40,7 @@ function submit() {
                         >
                             Save Job Type
                         </button>
-                        <Link href="/owner/job-types" class="text-sm text-slate-500 hover:text-slate-700">Cancel</Link>
+                        <Link href="/owner/job-types" class="text-sm text-muted-foreground hover:text-foreground">Cancel</Link>
                     </div>
                 </form>
             </div>

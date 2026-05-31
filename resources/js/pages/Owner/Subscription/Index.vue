@@ -42,9 +42,9 @@ function subscribe(planKey: string) {
 const trialBadgeColor = computed(() => {
     if (!props.subscription?.is_trialing) return '';
     const days = props.subscription.days_remaining;
-    if (days <= 2) return 'bg-red-100 text-red-700 border-red-200';
-    if (days <= 5) return 'bg-amber-100 text-amber-700 border-amber-200';
-    return 'bg-blue-100 text-blue-700 border-blue-200';
+    if (days <= 2) return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800';
+    if (days <= 5) return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-800';
+    return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:border-blue-800';
 });
 
 function formatDate(iso: string | null): string {
@@ -60,24 +60,24 @@ function formatDate(iso: string | null): string {
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8">
 
             <!-- Current status card -->
-            <div class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
-                <h2 class="text-lg font-semibold text-slate-900 mb-4">Current plan</h2>
+            <div class="rounded-2xl border border-border bg-card p-6 sm:p-8">
+                <h2 class="text-lg font-semibold text-foreground mb-4">Current plan</h2>
 
                 <div v-if="subscription" class="flex flex-col sm:flex-row sm:items-center gap-6">
                     <div class="flex-1 space-y-2">
                         <div class="flex items-center gap-3">
-                            <span class="text-2xl font-bold text-slate-900 capitalize">{{ current_plan }}</span>
+                            <span class="text-2xl font-bold text-foreground capitalize">{{ current_plan }}</span>
                             <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold capitalize"
                                   :class="trialBadgeColor">
                                 {{ subscription.is_trialing ? `Trial — ${subscription.days_remaining} day${subscription.days_remaining === 1 ? '' : 's'} left` : subscription.status }}
                             </span>
                         </div>
 
-                        <p v-if="subscription.is_trialing" class="text-sm text-slate-500">
+                        <p v-if="subscription.is_trialing" class="text-sm text-muted-foreground">
                             Trial ends {{ formatDate(subscription.trial_ends_at) }}.
                             Add a payment method to continue after your trial.
                         </p>
-                        <p v-else class="text-sm text-slate-500">
+                        <p v-else class="text-sm text-muted-foreground">
                             Next billing date: {{ formatDate(subscription.current_period_end) }}.
                         </p>
 
@@ -87,38 +87,38 @@ function formatDate(iso: string | null): string {
                     </div>
                 </div>
 
-                <div v-else class="text-slate-500 text-sm">No active subscription found.</div>
+                <div v-else class="text-muted-foreground text-sm">No active subscription found.</div>
             </div>
 
             <!-- Founding member price lock banner -->
-            <div v-if="founding_member" class="rounded-2xl bg-amber-50 border border-amber-200 px-6 py-4 flex items-start gap-4">
+            <div v-if="founding_member" class="rounded-2xl bg-amber-50 border border-amber-200 px-6 py-4 flex items-start gap-4 dark:bg-amber-900/20 dark:border-amber-800">
                 <svg class="mt-0.5 h-5 w-5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
                 <div>
-                    <p class="text-sm font-semibold text-amber-800">Founding Member — Price Lock Active</p>
-                    <p class="text-xs text-amber-700 mt-0.5">Your account is locked in at the annual rate, billed monthly — forever. Your 20% Founding Member discount will be applied automatically at checkout.</p>
+                    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400">Founding Member — Price Lock Active</p>
+                    <p class="text-xs text-amber-700 mt-0.5 dark:text-amber-400">Your account is locked in at the annual rate, billed monthly — forever. Your 20% Founding Member discount will be applied automatically at checkout.</p>
                 </div>
             </div>
 
             <!-- Billing toggle + plans -->
             <div>
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-lg font-semibold text-slate-900">
+                    <h2 class="text-lg font-semibold text-foreground">
                         {{ subscription?.is_trialing ? 'Subscribe to keep your access' : 'Change plan' }}
                     </h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm" :class="!billingAnnual ? 'text-slate-900 font-medium' : 'text-slate-400'">Monthly</span>
+                        <span class="text-sm" :class="!billingAnnual ? 'text-foreground font-medium' : 'text-muted-foreground'">Monthly</span>
                         <button
                             type="button"
                             @click="billingAnnual = !billingAnnual"
                             class="relative inline-flex h-6 w-11 rounded-full transition-colors"
-                            :class="billingAnnual ? 'bg-blue-600' : 'bg-slate-200'"
+                            :class="billingAnnual ? 'bg-blue-600' : 'bg-muted'"
                         >
                             <span class="inline-block h-4 w-4 rounded-full bg-white shadow translate-y-1 transition-transform"
                                   :class="billingAnnual ? 'translate-x-6' : 'translate-x-1'"></span>
                         </button>
-                        <span class="text-sm" :class="billingAnnual ? 'text-slate-900 font-medium' : 'text-slate-400'">
+                        <span class="text-sm" :class="billingAnnual ? 'text-foreground font-medium' : 'text-muted-foreground'">
                             Annual <span class="text-teal-600 font-semibold">(save 20%)</span>
                         </span>
                     </div>
@@ -131,7 +131,7 @@ function formatDate(iso: string | null): string {
                         class="relative rounded-2xl border-2 p-6 flex flex-col"
                         :class="plan.key === 'growth'
                             ? 'border-blue-500 bg-slate-900'
-                            : 'border-slate-200 bg-white'"
+                            : 'border-border bg-card'"
                     >
                         <div v-if="plan.key === 'growth'" class="absolute -top-3 left-1/2 -translate-x-1/2">
                             <span class="inline-flex rounded-full bg-blue-600 px-3 py-1 text-xs font-bold text-white shadow">Most Popular</span>
@@ -139,19 +139,19 @@ function formatDate(iso: string | null): string {
 
                         <!-- Current badge -->
                         <div v-if="plan.key === current_plan" class="absolute top-4 right-4">
-                            <span class="inline-flex items-center rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">Current</span>
+                            <span class="inline-flex items-center rounded-full bg-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700 dark:bg-teal-900/40 dark:text-teal-400">Current</span>
                         </div>
 
-                        <h3 class="text-base font-bold mb-1" :class="plan.key === 'growth' ? 'text-white' : 'text-slate-900'">{{ plan.label }}</h3>
-                        <p class="text-xs mb-4" :class="plan.key === 'growth' ? 'text-slate-400' : 'text-slate-500'">
+                        <h3 class="text-base font-bold mb-1" :class="plan.key === 'growth' ? 'text-white' : 'text-foreground'">{{ plan.label }}</h3>
+                        <p class="text-xs mb-4" :class="plan.key === 'growth' ? 'text-slate-400' : 'text-muted-foreground'">
                             {{ plan.tech_limit === null ? 'Unlimited technicians' : `Up to ${plan.tech_limit} technicians` }}
                         </p>
 
                         <div class="mb-5">
-                            <span class="text-3xl font-black" :class="plan.key === 'growth' ? 'text-white' : 'text-slate-900'">
+                            <span class="text-3xl font-black" :class="plan.key === 'growth' ? 'text-white' : 'text-foreground'">
                                 ${{ billingAnnual ? plan.annual : plan.monthly }}
                             </span>
-                            <span class="text-sm" :class="plan.key === 'growth' ? 'text-slate-400' : 'text-slate-500'">/mo</span>
+                            <span class="text-sm" :class="plan.key === 'growth' ? 'text-slate-400' : 'text-muted-foreground'">/mo</span>
                         </div>
 
                         <button
@@ -161,14 +161,14 @@ function formatDate(iso: string | null): string {
                             class="w-full rounded-xl py-2.5 text-sm font-semibold transition-colors disabled:opacity-50"
                             :class="plan.key === 'growth'
                                 ? 'bg-blue-600 hover:bg-blue-500 text-white'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-900'"
+                                : 'bg-muted hover:bg-muted/80 text-foreground'"
                         >
                             {{ plan.key === current_plan ? 'Renew' : 'Subscribe' }}
                         </button>
                     </div>
                 </div>
 
-                <p class="mt-4 text-xs text-slate-400 text-center">
+                <p class="mt-4 text-xs text-muted-foreground text-center">
                     You'll be taken to Stripe to complete your payment securely.
                 </p>
             </div>

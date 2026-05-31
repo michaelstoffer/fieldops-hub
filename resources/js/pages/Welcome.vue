@@ -207,7 +207,7 @@ function getPrice(tier: typeof tiers[0]) {
         <meta name="twitter:description" content="Dispatch technicians, track jobs in real time, send estimates, and collect payments — all from one modern platform built for field service teams." />
     </Head>
 
-    <div class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <div class="min-h-screen bg-background text-foreground antialiased">
 
         <!-- ── Nav ──────────────────────────────────────────────────────────── -->
         <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-white/5">
@@ -375,16 +375,16 @@ function getPrice(tier: typeof tiers[0]) {
         </div>
 
         <!-- ── Features ─────────────────────────────────────────────────────── -->
-        <section id="features" class="py-24 bg-white">
+        <section id="features" class="py-24 bg-card">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="reveal reveal-up text-center mb-16">
                     <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-4 py-1.5 mb-4">
                         <span class="text-blue-700 text-sm font-medium">Built for the field</span>
                     </div>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground">
                         Everything your team needs.<br class="hidden sm:block"/> Nothing they don't.
                     </h2>
-                    <p class="mt-4 text-lg text-slate-500 max-w-2xl mx-auto">
+                    <p class="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                         FieldOps Hub is purpose-built for field service businesses — not adapted from generic project management software.
                     </p>
                 </div>
@@ -393,7 +393,7 @@ function getPrice(tier: typeof tiers[0]) {
                     <div
                         v-for="(feature, i) in features"
                         :key="feature.title"
-                        class="reveal reveal-up group relative rounded-2xl border border-slate-100 bg-slate-50 p-8 hover:border-blue-100 hover:bg-blue-50/30 transition-colors"
+                        class="reveal reveal-up group relative rounded-2xl border border-border bg-background p-8 hover:border-blue-100 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-colors"
                         :style="`transition-delay: ${i * 75}ms`"
                     >
                         <div class="h-11 w-11 rounded-xl bg-blue-100 flex items-center justify-center mb-5 group-hover:bg-blue-600 transition-colors">
@@ -401,8 +401,8 @@ function getPrice(tier: typeof tiers[0]) {
                                 <path stroke-linecap="round" stroke-linejoin="round" :d="feature.icon" />
                             </svg>
                         </div>
-                        <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ feature.title }}</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed">{{ feature.description }}</p>
+                        <h3 class="text-lg font-semibold text-foreground mb-2">{{ feature.title }}</h3>
+                        <p class="text-muted-foreground text-sm leading-relaxed">{{ feature.description }}</p>
                     </div>
                 </div>
             </div>
@@ -443,37 +443,37 @@ function getPrice(tier: typeof tiers[0]) {
         </section>
 
         <!-- ── Pricing ──────────────────────────────────────────────────────── -->
-        <section id="pricing" class="py-24 bg-white">
+        <section id="pricing" class="py-24 bg-card">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="reveal reveal-up text-center mb-4">
                     <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-4 py-1.5 mb-4">
                         <span class="text-blue-700 text-sm font-medium">Simple, transparent pricing</span>
                     </div>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground">
                         Pay for your team size.<br class="hidden sm:block"/> Nothing more.
                     </h2>
-                    <p class="mt-4 text-lg text-slate-500 max-w-xl mx-auto">
+                    <p class="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                         One price per organization. Unlimited customers, jobs, invoices, and estimates on every plan.
                     </p>
                 </div>
 
                 <!-- Billing toggle -->
                 <div class="flex items-center justify-center gap-3 mt-8 mb-12">
-                    <span class="text-sm font-medium" :class="!billingAnnual ? 'text-slate-900' : 'text-slate-400'">Monthly</span>
+                    <span class="text-sm font-medium" :class="!billingAnnual ? 'text-foreground' : 'text-muted-foreground'">Monthly</span>
                     <button
                         type="button"
                         @click="billingAnnual = !billingAnnual"
                         class="relative inline-flex h-6 w-11 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        :class="billingAnnual ? 'bg-blue-600' : 'bg-slate-200'"
+                        :class="billingAnnual ? 'bg-blue-600' : 'bg-muted'"
                     >
                         <span
                             class="inline-block h-4 w-4 rounded-full bg-white shadow translate-y-1 transition-transform"
                             :class="billingAnnual ? 'translate-x-6' : 'translate-x-1'"
                         ></span>
                     </button>
-                    <span class="text-sm font-medium" :class="billingAnnual ? 'text-slate-900' : 'text-slate-400'">
+                    <span class="text-sm font-medium" :class="billingAnnual ? 'text-foreground' : 'text-muted-foreground'">
                         Annual
-                        <span class="ml-1.5 inline-flex items-center rounded-full bg-teal-50 border border-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700">Save 20%</span>
+                        <span class="ml-1.5 inline-flex items-center rounded-full bg-teal-50 border border-teal-100 px-2 py-0.5 text-xs font-semibold text-teal-700 dark:bg-teal-900/40 dark:border-teal-800 dark:text-teal-400">Save 20%</span>
                     </span>
                 </div>
 
@@ -487,10 +487,10 @@ function getPrice(tier: typeof tiers[0]) {
                                 </span>
                                 <span class="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                             </div>
-                            <h3 class="text-lg font-bold text-slate-900">
+                            <h3 class="text-lg font-bold text-foreground">
                                 Lock in the annual rate, billed monthly — forever.
                             </h3>
-                            <p class="mt-1 text-sm text-slate-600">
+                            <p class="mt-1 text-sm text-muted-foreground">
                                 Starter ${{ foundingOffer.prices.starter }}&nbsp;&bull;
                                 Growth ${{ foundingOffer.prices.growth }}&nbsp;&bull;
                                 Pro ${{ foundingOffer.prices.pro }}&nbsp;— per month, no annual commitment, price locked for life.
@@ -531,7 +531,7 @@ function getPrice(tier: typeof tiers[0]) {
                         :style="`transition-delay: ${i * 100}ms`"
                         :class="tier.highlight
                             ? 'border-blue-500 bg-slate-900 shadow-xl shadow-blue-500/10 ring-1 ring-blue-500'
-                            : 'border-slate-200 bg-white'"
+                            : 'border-border bg-card'"
                     >
                         <!-- Badge -->
                         <div v-if="tier.badge" class="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -541,10 +541,10 @@ function getPrice(tier: typeof tiers[0]) {
                         </div>
 
                         <div class="mb-6">
-                            <h3 class="text-lg font-bold mb-1" :class="tier.highlight ? 'text-white' : 'text-slate-900'">
+                            <h3 class="text-lg font-bold mb-1" :class="tier.highlight ? 'text-white' : 'text-foreground'">
                                 {{ tier.name }}
                             </h3>
-                            <p class="text-sm" :class="tier.highlight ? 'text-slate-400' : 'text-slate-500'">
+                            <p class="text-sm" :class="tier.highlight ? 'text-slate-400' : 'text-muted-foreground'">
                                 {{ tier.description }}
                             </p>
                         </div>
@@ -552,12 +552,12 @@ function getPrice(tier: typeof tiers[0]) {
                         <!-- Price -->
                         <div class="mb-2">
                             <div class="flex items-baseline gap-1">
-                                <span class="text-4xl font-black" :class="tier.highlight ? 'text-white' : 'text-slate-900'">
+                                <span class="text-4xl font-black" :class="tier.highlight ? 'text-white' : 'text-foreground'">
                                     ${{ getPrice(tier) }}
                                 </span>
-                                <span class="text-sm" :class="tier.highlight ? 'text-slate-400' : 'text-slate-500'">/mo</span>
+                                <span class="text-sm" :class="tier.highlight ? 'text-slate-400' : 'text-muted-foreground'">/mo</span>
                             </div>
-                            <p class="text-xs mt-1" :class="tier.highlight ? 'text-slate-500' : 'text-slate-400'">
+                            <p class="text-xs mt-1" :class="tier.highlight ? 'text-slate-500' : 'text-muted-foreground'">
                                 {{ billingAnnual ? 'Billed annually' : 'Billed monthly' }}
                             </p>
                         </div>
@@ -566,7 +566,7 @@ function getPrice(tier: typeof tiers[0]) {
                         <div class="mb-6">
                             <span
                                 class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
-                                :class="tier.highlight ? 'bg-blue-500/20 text-blue-300' : 'bg-slate-100 text-slate-600'"
+                                :class="tier.highlight ? 'bg-blue-500/20 text-blue-300' : 'bg-muted text-muted-foreground'"
                             >
                                 <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -581,7 +581,7 @@ function getPrice(tier: typeof tiers[0]) {
                             class="block w-full text-center rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors mb-8"
                             :class="tier.highlight
                                 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-900'"
+                                : 'bg-muted hover:bg-muted/80 text-foreground'"
                         >
                             Start free trial
                         </Link>
@@ -592,7 +592,7 @@ function getPrice(tier: typeof tiers[0]) {
                                 v-for="feat in tier.features"
                                 :key="feat"
                                 class="flex items-start gap-2.5 text-sm"
-                                :class="tier.highlight ? 'text-slate-300' : 'text-slate-600'"
+                                :class="tier.highlight ? 'text-slate-300' : 'text-muted-foreground'"
                             >
                                 <svg class="h-4 w-4 mt-0.5 shrink-0" :class="tier.highlight ? 'text-teal-400' : 'text-teal-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -603,7 +603,7 @@ function getPrice(tier: typeof tiers[0]) {
                     </div>
                 </div>
 
-                <p class="mt-8 text-center text-sm text-slate-400">
+                <p class="mt-8 text-center text-sm text-muted-foreground">
                     All plans include a 14-day free trial. No credit card required.
                     <button type="button" @click="scrollToSection('faq')" class="text-blue-600 hover:text-blue-700 font-medium">Questions? See the FAQ.</button>
                 </p>
@@ -611,28 +611,28 @@ function getPrice(tier: typeof tiers[0]) {
         </section>
 
         <!-- ── FAQ ──────────────────────────────────────────────────────────── -->
-        <section id="faq" class="py-24 bg-slate-50">
+        <section id="faq" class="py-24 bg-background">
             <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="reveal reveal-up text-center mb-14">
-                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">Frequently asked questions</h2>
-                    <p class="mt-4 text-lg text-slate-500">Can't find what you're looking for? <a href="mailto:hello@fieldops-hub.com" class="text-blue-600 hover:text-blue-700 font-medium">Reach out.</a></p>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-foreground">Frequently asked questions</h2>
+                    <p class="mt-4 text-lg text-muted-foreground">Can't find what you're looking for? <a href="mailto:hello@fieldops-hub.com" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">Reach out.</a></p>
                 </div>
 
                 <div class="space-y-3">
                     <div
                         v-for="(faq, i) in faqs"
                         :key="i"
-                        class="reveal reveal-up rounded-xl border border-slate-200 bg-white overflow-hidden"
+                        class="reveal reveal-up rounded-xl border border-border bg-card overflow-hidden"
                         :style="`transition-delay: ${i * 60}ms`"
                     >
                         <button
                             type="button"
-                            class="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-slate-50 transition-colors"
+                            class="w-full flex items-center justify-between px-6 py-5 text-left gap-4 hover:bg-accent transition-colors"
                             @click="toggleFaq(i)"
                         >
-                            <span class="font-semibold text-slate-900 text-sm sm:text-base">{{ faq.q }}</span>
+                            <span class="font-semibold text-foreground text-sm sm:text-base">{{ faq.q }}</span>
                             <svg
-                                class="h-5 w-5 text-slate-400 shrink-0 transition-transform duration-200"
+                                class="h-5 w-5 text-muted-foreground shrink-0 transition-transform duration-200"
                                 :class="{ 'rotate-180': openFaq === i }"
                                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
                             >
@@ -640,8 +640,8 @@ function getPrice(tier: typeof tiers[0]) {
                             </svg>
                         </button>
                         <div v-show="openFaq === i" class="px-6 pt-0 pb-5">
-                            <div class="border-t border-slate-100 pt-4">
-                                <p class="text-slate-500 text-sm leading-relaxed">{{ faq.a }}</p>
+                            <div class="border-t border-border pt-4">
+                                <p class="text-muted-foreground text-sm leading-relaxed">{{ faq.a }}</p>
                             </div>
                         </div>
                     </div>

@@ -100,64 +100,64 @@ function submit() {
     <OwnerLayout title="New Invoice">
         <Head title="New Invoice" />
 
-        <nav class="mb-4 text-sm text-slate-500">
+        <nav class="mb-4 text-sm text-muted-foreground">
             <Link href="/owner/invoices" class="hover:underline">Invoices</Link>
             <span class="mx-1">›</span>
-            <span class="text-slate-800">New Invoice</span>
+            <span class="text-foreground">New Invoice</span>
         </nav>
 
         <form @submit.prevent="submit" class="space-y-6">
             <!-- Header fields -->
-            <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <h3 class="mb-4 text-sm font-semibold text-slate-700">Details</h3>
+            <div class="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border">
+                <h3 class="mb-4 text-sm font-semibold text-foreground">Details</h3>
                 <div class="grid gap-4 sm:grid-cols-2">
                     <!-- Customer -->
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Customer <span class="text-red-500">*</span></label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Customer <span class="text-red-500">*</span></label>
                         <select
                             v-model="form.customer_id"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                            :class="{ 'border-red-400': form.errors.customer_id }"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            :class="{ 'border-destructive': form.errors.customer_id }"
                         >
                             <option :value="null">Select customer…</option>
                             <option v-for="c in customers" :key="c.id" :value="c.id">
                                 {{ c.last_name }}, {{ c.first_name }}
                             </option>
                         </select>
-                        <p v-if="form.errors.customer_id" class="mt-1 text-xs text-red-500">{{ form.errors.customer_id }}</p>
+                        <p v-if="form.errors.customer_id" class="mt-1 text-xs text-destructive">{{ form.errors.customer_id }}</p>
                     </div>
 
                     <!-- Issued at -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Issue Date <span class="text-red-500">*</span></label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Issue Date <span class="text-red-500">*</span></label>
                         <input
                             v-model="form.issued_at"
                             type="date"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                            :class="{ 'border-red-400': form.errors.issued_at }"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            :class="{ 'border-destructive': form.errors.issued_at }"
                         />
-                        <p v-if="form.errors.issued_at" class="mt-1 text-xs text-red-500">{{ form.errors.issued_at }}</p>
+                        <p v-if="form.errors.issued_at" class="mt-1 text-xs text-destructive">{{ form.errors.issued_at }}</p>
                     </div>
 
                     <!-- Due at -->
                     <div>
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Due Date <span class="text-red-500">*</span></label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Due Date <span class="text-red-500">*</span></label>
                         <input
                             v-model="form.due_at"
                             type="date"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-                            :class="{ 'border-red-400': form.errors.due_at }"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            :class="{ 'border-destructive': form.errors.due_at }"
                         />
-                        <p v-if="form.errors.due_at" class="mt-1 text-xs text-red-500">{{ form.errors.due_at }}</p>
+                        <p v-if="form.errors.due_at" class="mt-1 text-xs text-destructive">{{ form.errors.due_at }}</p>
                     </div>
 
                     <!-- Notes -->
                     <div class="sm:col-span-2">
-                        <label class="mb-1 block text-xs font-medium text-slate-600">Notes</label>
+                        <label class="mb-1 block text-xs font-medium text-muted-foreground">Notes</label>
                         <textarea
                             v-model="form.notes"
                             rows="2"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
                             placeholder="Optional notes shown on the invoice…"
                         />
                     </div>
@@ -165,12 +165,12 @@ function submit() {
             </div>
 
             <!-- Line items -->
-            <div class="rounded-xl bg-white shadow-sm ring-1 ring-slate-200">
-                <div class="border-b border-slate-100 px-4 py-3">
-                    <h3 class="text-sm font-semibold text-slate-700">Line Items</h3>
+            <div class="rounded-xl bg-card shadow-sm ring-1 ring-border">
+                <div class="border-b border-border px-4 py-3">
+                    <h3 class="text-sm font-semibold text-foreground">Line Items</h3>
                 </div>
 
-                <div class="divide-y divide-slate-50">
+                <div class="divide-y divide-border/50">
                     <div
                         v-for="(li, idx) in form.line_items"
                         :key="idx"
@@ -179,7 +179,7 @@ function submit() {
                         <!-- Catalog picker + name -->
                         <div class="col-span-12 sm:col-span-4">
                             <select
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-xs text-slate-600 focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-xs text-foreground focus:border-slate-400 focus:outline-none"
                                 @change="selectCatalog(idx, ($event.target as HTMLSelectElement).value)"
                             >
                                 <option value="">From catalog…</option>
@@ -189,7 +189,7 @@ function submit() {
                                 v-model="li.name"
                                 type="text"
                                 placeholder="Item name *"
-                                class="mt-1 w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-slate-800 focus:border-slate-400 focus:outline-none"
+                                class="mt-1 w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-foreground focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Description -->
@@ -198,7 +198,7 @@ function submit() {
                                 v-model="li.description"
                                 type="text"
                                 placeholder="Description"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-slate-600 focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-muted-foreground focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Qty -->
@@ -209,7 +209,7 @@ function submit() {
                                 min="0.001"
                                 step="any"
                                 placeholder="Qty"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Unit price -->
@@ -220,16 +220,16 @@ function submit() {
                                 min="0"
                                 step="0.01"
                                 placeholder="Price"
-                                class="w-full rounded border border-slate-200 px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
+                                class="w-full rounded border border-border bg-background px-2 py-1.5 text-sm text-right focus:border-slate-400 focus:outline-none"
                             />
                         </div>
                         <!-- Line total -->
-                        <div class="col-span-3 sm:col-span-1 text-right text-sm font-medium text-slate-700 pt-2">
+                        <div class="col-span-3 sm:col-span-1 text-right text-sm font-medium text-foreground pt-2">
                             {{ fmt(parseFloat(li.unit_price || '0') * parseFloat(li.quantity || '0')) }}
                         </div>
                         <!-- Taxable + remove -->
                         <div class="col-span-2 sm:col-span-1 flex flex-col items-center gap-1 pt-1">
-                            <label class="text-xs text-slate-400 cursor-pointer" title="Taxable">
+                            <label class="text-xs text-muted-foreground cursor-pointer" title="Taxable">
                                 <input v-model="li.is_taxable" type="checkbox" class="rounded" /> Tax
                             </label>
                             <button
@@ -243,7 +243,7 @@ function submit() {
                     </div>
                 </div>
 
-                <div class="border-t border-slate-100 px-4 py-2">
+                <div class="border-t border-border px-4 py-2">
                     <button
                         type="button"
                         class="text-xs font-medium text-blue-600 hover:underline"
@@ -255,13 +255,13 @@ function submit() {
             </div>
 
             <!-- Totals -->
-            <div class="rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <div class="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border">
                 <div class="ml-auto max-w-xs space-y-2 text-sm">
-                    <div class="flex justify-between text-slate-600">
+                    <div class="flex justify-between text-muted-foreground">
                         <span>Subtotal</span>
                         <span>{{ fmt(subtotal) }}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-slate-600">
+                    <div class="flex items-center justify-between gap-4 text-muted-foreground">
                         <label class="flex items-center gap-2">
                             Tax rate
                             <input
@@ -270,13 +270,13 @@ function submit() {
                                 min="0"
                                 max="100"
                                 step="0.01"
-                                class="w-20 rounded border border-slate-200 px-2 py-1 text-right text-xs focus:border-slate-400 focus:outline-none"
+                                class="w-20 rounded border border-border bg-background px-2 py-1 text-right text-xs focus:border-slate-400 focus:outline-none"
                             />
-                            <span class="text-xs text-slate-400">%</span>
+                            <span class="text-xs text-muted-foreground">%</span>
                         </label>
                         <span>{{ fmt(taxAmount) }}</span>
                     </div>
-                    <div class="flex items-center justify-between gap-4 text-slate-600">
+                    <div class="flex items-center justify-between gap-4 text-muted-foreground">
                         <label class="flex items-center gap-2">
                             Discount
                             <input
@@ -284,12 +284,12 @@ function submit() {
                                 type="number"
                                 min="0"
                                 step="0.01"
-                                class="w-24 rounded border border-slate-200 px-2 py-1 text-right text-xs focus:border-slate-400 focus:outline-none"
+                                class="w-24 rounded border border-border bg-background px-2 py-1 text-right text-xs focus:border-slate-400 focus:outline-none"
                             />
                         </label>
                         <span>- {{ fmt(parseFloat(form.discount_amount || '0')) }}</span>
                     </div>
-                    <div class="flex justify-between border-t border-slate-200 pt-2 text-base font-semibold text-slate-800">
+                    <div class="flex justify-between border-t border-border pt-2 text-base font-semibold text-foreground">
                         <span>Total</span>
                         <span>{{ fmt(total) }}</span>
                     </div>
@@ -300,7 +300,7 @@ function submit() {
             <div class="flex justify-end gap-3">
                 <Link
                     href="/owner/invoices"
-                    class="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                    class="rounded-lg border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent"
                 >
                     Cancel
                 </Link>
